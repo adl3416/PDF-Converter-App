@@ -19,6 +19,7 @@ import {
     Move,
     Save
 } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -49,6 +50,8 @@ interface Annotation {
 }
 
 const SimplePdfEditor: React.FC = () => {
+    const { translations } = useLanguage();
+    
     // Ana state tanımlamaları
     const [file, setFile] = useState<File | null>(null);
     const [pdfUrl, setPdfUrl] = useState<string | null>(null);
@@ -92,7 +95,6 @@ const SimplePdfEditor: React.FC = () => {
     const handleDrop = useCallback((e: React.DragEvent) => {
         e.preventDefault();
         setDragActive(false);
-        
         const droppedFile = e.dataTransfer.files[0];
         if (droppedFile && droppedFile.type === 'application/pdf') {
             setFile(droppedFile);
@@ -100,9 +102,9 @@ const SimplePdfEditor: React.FC = () => {
             setPdfUrl(url);
             setError(null);
         } else {
-            setError('Lütfen geçerli bir PDF dosyası yükleyin');
+            setError(translations.common.error + ': ' + translations.pdfEditor.upload.selectFile);
         }
-    }, []);
+    }, [translations]);
 
     const handleDragOver = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -122,7 +124,7 @@ const SimplePdfEditor: React.FC = () => {
             setPdfUrl(url);
             setError(null);
         } else {
-            setError('Lütfen geçerli bir PDF dosyası seçin');
+            setError(translations.common.error + ': ' + translations.pdfEditor.upload.selectFile);
         }
     };
 
@@ -431,10 +433,10 @@ const SimplePdfEditor: React.FC = () => {
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                        PDF Düzenleyici
+                        {translations.pdfEditor.title}
                     </h1>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        PDF dosyalarınızı görüntüleyin, düzenleyin ve açıklama ekleyin
+                        {translations.pdfEditor.subtitle}
                     </p>
                 </div>
 
@@ -442,17 +444,15 @@ const SimplePdfEditor: React.FC = () => {
                     {/* Kenar Çubuğu */}
                     {file && (
                         <div className="lg:w-80 bg-white rounded-xl shadow-lg p-6">
-                            <h2 className="text-lg font-semibold text-gray-900 mb-4">Araçlar</h2>
-                            
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">{translations.pdfEditor.sidebar.tools}</h2>
                             {/* Dosya Bilgisi */}
                             <div className="mb-6">
-                                <h3 className="font-medium text-gray-900 mb-2">Dosya Bilgisi</h3>
+                                <h3 className="font-medium text-gray-900 mb-2">{translations.pdfEditor.sidebar.fileInfo}</h3>
                                 <p className="text-sm text-gray-600 break-words">{file.name}</p>
                                 <p className="text-sm text-gray-500">
-                                    Boyut: {Math.round(file.size / 1024)} KB
+                                    {translations.pdfEditor.sidebar.size}: {Math.round(file.size / 1024)} KB
                                 </p>
                             </div>
-
                             {/* Araçlar */}
                             <div className="space-y-3">
                                 <button 
@@ -462,9 +462,8 @@ const SimplePdfEditor: React.FC = () => {
                                     }`}
                                 >
                                     <Move className="h-5 w-5" />
-                                    <span>Seç & Taşı</span>
+                                    <span>{translations.pdfEditor.sidebar.selectMove}</span>
                                 </button>
-
                                 <button 
                                     onClick={() => setCurrentTool(currentTool === 'text' ? 'select' : 'text')}
                                     className={`w-full flex items-center space-x-3 p-3 text-left rounded-lg transition-colors ${
@@ -472,9 +471,8 @@ const SimplePdfEditor: React.FC = () => {
                                     }`}
                                 >
                                     <Type className="h-5 w-5 text-blue-600" />
-                                    <span>Metin Ekle</span>
+                                    <span>{translations.pdfEditor.sidebar.addText}</span>
                                 </button>
-                                
                                 <button 
                                     onClick={() => setCurrentTool(currentTool === 'rectangle' ? 'select' : 'rectangle')}
                                     className={`w-full flex items-center space-x-3 p-3 text-left rounded-lg transition-colors ${
@@ -482,9 +480,8 @@ const SimplePdfEditor: React.FC = () => {
                                     }`}
                                 >
                                     <Square className="h-5 w-5 text-green-600" />
-                                    <span>Dikdörtgen Ekle</span>
+                                    <span>{translations.pdfEditor.sidebar.addRectangle}</span>
                                 </button>
-                                
                                 <button 
                                     onClick={() => setCurrentTool(currentTool === 'circle' ? 'select' : 'circle')}
                                     className={`w-full flex items-center space-x-3 p-3 text-left rounded-lg transition-colors ${
@@ -492,22 +489,20 @@ const SimplePdfEditor: React.FC = () => {
                                     }`}
                                 >
                                     <Circle className="h-5 w-5 text-purple-600" />
-                                    <span>Daire Ekle</span>
+                                    <span>{translations.pdfEditor.sidebar.addCircle}</span>
                                 </button>
-
                                 <button 
                                     onClick={() => setShowSignatureModal(true)}
                                     className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors border-2 border-orange-200 bg-orange-50"
                                 >
                                     <PenTool className="h-5 w-5 text-orange-600" />
-                                    <span className="font-medium text-orange-700">İmza Oluştur</span>
+                                    <span className="font-medium text-orange-700">{translations.pdfEditor.sidebar.createSignature}</span>
                                 </button>
                             </div>
-
                             {/* Kaydedilmiş İmzalar */}
                             {signatures.length > 0 && (
                                 <div className="mt-6">
-                                    <h3 className="font-medium text-gray-900 mb-3">Kaydedilmiş İmzalar</h3>
+                                    <h3 className="font-medium text-gray-900 mb-3">{translations.pdfEditor.sidebar.savedSignatures}</h3>
                                     <div className="space-y-2">
                                         {signatures.map((signature) => (
                                             <div 
@@ -520,7 +515,7 @@ const SimplePdfEditor: React.FC = () => {
                                             >
                                                 <div className="flex items-center justify-between mb-2">
                                                     <span className="text-sm font-medium text-gray-700">
-                                                        {signature.type === 'draw' ? 'Çizilmiş' : 'Metin'} İmza
+                                                        {signature.type === 'draw' ? translations.pdfEditor.signatureTypes.drawn : translations.pdfEditor.signatureTypes.text} {translations.pdfEditor.signatureTypes.signature}
                                                     </span>
                                                     <button
                                                         onClick={() => deleteSignature(signature.id)}
@@ -529,13 +524,12 @@ const SimplePdfEditor: React.FC = () => {
                                                         <Trash2 size={14} />
                                                     </button>
                                                 </div>
-                                                
                                                 {/* İmza Önizlemesi */}
                                                 <div className="mb-2 h-12 bg-white border rounded flex items-center justify-center overflow-hidden">
                                                     {signature.type === 'draw' ? (
                                                         <img 
                                                             src={signature.data} 
-                                                            alt="İmza" 
+                                                            alt={translations.pdfEditor.signatureTypes.signature} 
                                                             className="max-h-full max-w-full object-contain"
                                                         />
                                                     ) : (
@@ -550,7 +544,6 @@ const SimplePdfEditor: React.FC = () => {
                                                         </span>
                                                     )}
                                                 </div>
-                                                
                                                 <button
                                                     onClick={() => {
                                                         setSelectedSignature(signature.id);
@@ -559,18 +552,17 @@ const SimplePdfEditor: React.FC = () => {
                                                     className="w-full text-sm bg-blue-600 text-white py-2 px-3 rounded hover:bg-blue-700 transition-colors flex items-center justify-center space-x-1"
                                                 >
                                                     <Move size={14} />
-                                                    <span>PDF'e Yerleştir</span>
+                                                    <span>{translations.pdfEditor.buttons.placeToPdf}</span>
                                                 </button>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             )}
-
                             {/* Açıklamalar */}
                             {annotations.length > 0 && (
                                 <div className="mt-6">
-                                    <h3 className="font-medium text-gray-900 mb-3">Açıklamalar</h3>
+                                    <h3 className="font-medium text-gray-900 mb-3">{translations.pdfEditor.sidebar.annotations}</h3>
                                     <div className="space-y-2">
                                         {annotations.map((annotation) => (
                                             <div 
@@ -583,9 +575,9 @@ const SimplePdfEditor: React.FC = () => {
                                             >
                                                 <div className="flex items-center justify-between mb-2">
                                                     <span className="text-sm font-medium text-gray-700 capitalize">
-                                                        {annotation.type === 'text' ? 'Metin' : 
-                                                         annotation.type === 'rectangle' ? 'Dikdörtgen' : 
-                                                         annotation.type === 'circle' ? 'Daire' : annotation.type} Açıklaması
+                                                        {annotation.type === 'text' ? translations.pdfEditor.sidebar.addText : 
+                                                         annotation.type === 'rectangle' ? translations.pdfEditor.sidebar.addRectangle : 
+                                                         annotation.type === 'circle' ? translations.pdfEditor.sidebar.addCircle : annotation.type} {translations.pdfEditor.sidebar.annotations}
                                                     </span>
                                                     <button
                                                         onClick={() => deleteAnnotation(annotation.id)}
@@ -594,7 +586,6 @@ const SimplePdfEditor: React.FC = () => {
                                                         <Trash2 size={14} />
                                                     </button>
                                                 </div>
-                                                
                                                 {annotation.type === 'text' && (
                                                     <div className="mb-2">
                                                         <input
@@ -602,11 +593,10 @@ const SimplePdfEditor: React.FC = () => {
                                                             value={annotation.text || ''}
                                                             onChange={(e) => updateAnnotationText(annotation.id, e.target.value)}
                                                             className="w-full text-xs px-2 py-1 border rounded"
-                                                            placeholder="Metin girin..."
+                                                            placeholder={translations.pdfEditor.viewer.toolInstructions.addText}
                                                         />
                                                     </div>
                                                 )}
-                                                
                                                 <button
                                                     onClick={() => {
                                                         setSelectedAnnotation(annotation.id);
@@ -614,7 +604,7 @@ const SimplePdfEditor: React.FC = () => {
                                                     }}
                                                     className="w-full text-sm bg-green-600 text-white py-1 px-2 rounded hover:bg-green-700 transition-colors"
                                                 >
-                                                    Seç
+                                                    {translations.pdfEditor.buttons.select}
                                                 </button>
                                             </div>
                                         ))}
@@ -663,14 +653,13 @@ const SimplePdfEditor: React.FC = () => {
                     {/* Ana İçerik */}
                     <div className="flex-1">
                         {!file ? (
-                            /* Yükleme Alanı */
+                            // Yükleme Alanı
                             <div className="max-w-2xl mx-auto">
                                 {error && (
                                     <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
                                         {error}
                                     </div>
                                 )}
-                                
                                 <div
                                     className={`
                                         relative border-2 border-dashed rounded-xl p-12 text-center transition-all duration-300
@@ -679,35 +668,31 @@ const SimplePdfEditor: React.FC = () => {
                                     onDrop={handleDrop}
                                     onDragOver={handleDragOver}
                                     onDragLeave={handleDragLeave}
+                                    onClick={() => fileInputRef.current?.click()}
+                                    style={{ cursor: 'pointer' }}
                                 >
-                                    <FileText className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                                        Düzenlemek için PDF Yükleyin
-                                    </h3>
-                                    <p className="text-gray-600 mb-6">
-                                        PDF dosyanızı buraya sürükleyin veya seçmek için tıklayın
-                                    </p>
-                                    
+                                    <Upload className="mx-auto h-16 w-16 text-gray-400 mb-4" />
+                                    <h2 className="text-2xl font-bold mb-2">{translations.pdfEditor.upload.title}</h2>
+                                    <p className="text-gray-600 mb-6">{translations.pdfEditor.upload.description}</p>
+                                    <button
+                                        type="button"
+                                        className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold shadow hover:bg-blue-700 transition-colors"
+                                    >
+                                        <FileText className="w-5 h-5 mr-2" />
+                                        {translations.pdfEditor.upload.selectFile}
+                                    </button>
                                     <input
                                         ref={fileInputRef}
                                         type="file"
-                                        accept=".pdf"
-                                        onChange={handleFileSelect}
+                                        accept="application/pdf"
                                         className="hidden"
+                                        onChange={handleFileSelect}
                                     />
-                                    
-                                    <button
-                                        onClick={() => fileInputRef.current?.click()}
-                                        className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-                                    >
-                                        <Upload size={20} />
-                                        <span>PDF Dosyası Seç</span>
-                                    </button>
                                 </div>
                             </div>
                         ) : (
-                            /* PDF Görüntüleyici */
-                            <div className="bg-white rounded-xl shadow-lg p-6">
+                            // PDF Editör ve Görüntüleyici Alanı
+                            <div className="relative" ref={pdfContainerRef}>
                                 <div className="flex justify-between items-center mb-6">
                                     <h2 className="text-lg font-semibold text-gray-900">PDF Görüntüleyici</h2>
                                     <div className="flex items-center space-x-2">
@@ -880,16 +865,16 @@ const SimplePdfEditor: React.FC = () => {
                                     {/* Araç Talimatları */}
                                     {isPlacingSignature && (
                                         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg">
-                                            <p className="text-sm font-medium">İmzayı yerleştirmek istediğiniz yere tıklayın</p>
+                                            <p className="text-sm font-medium">{translations.pdfEditor.viewer.toolInstructions.placeSignature}</p>
                                         </div>
                                     )}
                                     
                                     {currentTool !== 'select' && !isPlacingSignature && (
                                         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg">
                                             <p className="text-sm font-medium">
-                                                {currentTool === 'text' ? 'Metin eklemek için tıklayın' : 
-                                                 currentTool === 'rectangle' ? 'Dikdörtgen eklemek için tıklayın' : 
-                                                 currentTool === 'circle' ? 'Daire eklemek için tıklayın' : ''}
+                                                {currentTool === 'text' ? translations.pdfEditor.viewer.toolInstructions.addText :
+                                                 currentTool === 'rectangle' ? translations.pdfEditor.viewer.toolInstructions.addRectangle :
+                                                 currentTool === 'circle' ? translations.pdfEditor.viewer.toolInstructions.addCircle : ''}
                                             </p>
                                         </div>
                                     )}
@@ -897,18 +882,50 @@ const SimplePdfEditor: React.FC = () => {
 
                                 <div className="mt-4 text-center text-sm text-gray-600">
                                     <p>
-                                        PDF başarıyla yüklendi. Düzenlemek için kenar çubuğundaki araçları kullanın.
-                                        {signatures.length > 0 && ` • ${signatures.length} imza`}
-                                        {annotations.length > 0 && ` • ${annotations.length} açıklama`}
-                                        {(selectedSignature || selectedAnnotation) && ' • Seçili öğe sürüklenebilir'}
+                                        {translations.pdfEditor.viewer.successMessage}
+                                        {signatures.length > 0 && ` • ${signatures.length} ${translations.pdfEditor.sidebar.savedSignatures.toLowerCase()}`}
+                                        {annotations.length > 0 && ` • ${annotations.length} ${translations.pdfEditor.sidebar.annotations.toLowerCase()}`}
+                                        {(selectedSignature || selectedAnnotation) && ` • ${translations.pdfEditor.viewer.toolInstructions.clickToAdd}`}
                                     </p>
                                     {currentTool !== 'select' && (
                                         <p className="text-blue-600 font-medium mt-1">
-                                            {currentTool === 'text' ? 'Metin Aracı Aktif' : 
-                                             currentTool === 'rectangle' ? 'Dikdörtgen Aracı Aktif' : 
-                                             currentTool === 'circle' ? 'Daire Aracı Aktif' : ''} - Eklemek için PDF'e tıklayın
+                                            {currentTool === 'text' ? translations.pdfEditor.viewer.toolInstructions.textToolActive :
+                                             currentTool === 'rectangle' ? translations.pdfEditor.viewer.toolInstructions.rectangleToolActive :
+                                             currentTool === 'circle' ? translations.pdfEditor.viewer.toolInstructions.circleToolActive : ''}
+                                            {currentTool !== 'select' && ' - ' + translations.pdfEditor.viewer.toolInstructions.clickToAdd}
                                         </p>
                                     )}
+                                </div>
+                                {/* İşlem Butonları */}
+                                <div className="mt-8 space-y-3">
+                                    <button
+                                        onClick={exportEditedPdf}
+                                        disabled={signatures.length === 0 && annotations.length === 0}
+                                        className="w-full flex items-center justify-center space-x-2 bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <Save size={20} />
+                                        <span>{translations.pdfEditor.buttons.exportEditedPdf}</span>
+                                    </button>
+                                    <button
+                                        onClick={handleDownload}
+                                        className="w-full flex items-center justify-center space-x-2 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                                    >
+                                        <Download size={20} />
+                                        <span>{translations.pdfEditor.buttons.downloadOriginalPdf}</span>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setFile(null);
+                                            setPdfUrl(null);
+                                            setError(null);
+                                            setSignatures([]);
+                                            setAnnotations([]);
+                                            setCurrentTool('select');
+                                        }}
+                                        className="w-full py-3 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                    >
+                                        {translations.pdfEditor.buttons.uploadNewFile}
+                                    </button>
                                 </div>
                             </div>
                         )}
