@@ -1,0 +1,34 @@
+{
+  "components": [
+    {
+      "name": "FileUpload",
+      "description": "Handles file input and uploads for the PDF conversion process.",
+      "path": "src/components/FileUpload.tsx"
+    },
+    {
+      "name": "Header",
+      "description": "Displays the navigation and branding for the application.",
+      "path": "src/components/Header.tsx"
+    },
+    {
+      "name": "Footer",
+      "description": "Displays footer information and links.",
+      "path": "src/components/Footer.tsx"
+    },
+    {
+      "name": "Home",
+      "description": "Landing page for the application.",
+      "path": "src/pages/Home.tsx"
+    },
+    {
+      "name": "WordToPdf",
+      "description": "Allows users to upload Word documents for conversion to PDF.",
+      "path": "src/pages/WordToPdf.tsx"
+    },
+    {
+      "name": "PdfEditor",
+      "description": "Provides functionality for editing PDF files.",
+      "path": "src/pages/PdfEditor.tsx"
+    }
+  ]
+}
