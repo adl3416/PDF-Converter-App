@@ -57,12 +57,293 @@ interface Annotation {
     signatureData?: string;
 }
 
+interface DraggableAnnotationProps {
+    annotation: Annotation;
+    onUpdate: (id: string, updates: Partial<Annotation>) => void;
+    onDelete: (id: string) => void;
+    isSelected: boolean;
+    onSelect: (id: string) => void;
+    children: React.ReactNode;
+}
+
+const DraggableAnnotation: React.FC<DraggableAnnotationProps> = ({ 
+    annotation, 
+    onUpdate, 
+    onDelete, 
+    isSelected, 
+    onSelect, 
+    children 
+}) => {
+    const [isDragging, setIsDragging] = useState(false);
+    const [isResizing, setIsResizing] = useState(false);
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+    const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0 });
+
+    const handleClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onSelect(annotation.id);
+    };
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onSelect(annotation.id);
+        
+        setIsDragging(true);
+        setDragStart({
+            x: e.clientX - annotation.x,
+            y: e.clientY - annotation.y
+        });
+    };
+
+    const handleResizeStart = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsResizing(true);
+        setResizeStart({
+            x: e.clientX,
+            y: e.clientY,
+            width: annotation.width || 100,
+            height: annotation.height || 60
+        });
+    };
+
+    // Global mouse events for dragging
+    useEffect(() => {
+        if (isDragging) {
+            const handleGlobalMouseMove = (e: MouseEvent) => {
+                const newX = e.clientX - dragStart.x;
+                const newY = e.clientY - dragStart.y;
+                onUpdate(annotation.id, { x: newX, y: newY });
+            };
+
+            const handleGlobalMouseUp = () => {
+                setIsDragging(false);
+            };
+
+            document.addEventListener('mousemove', handleGlobalMouseMove);
+            document.addEventListener('mouseup', handleGlobalMouseUp);
+
+            return () => {
+                document.removeEventListener('mousemove', handleGlobalMouseMove);
+                document.removeEventListener('mouseup', handleGlobalMouseUp);
+            };
+        }
+    }, [isDragging, dragStart, annotation.id, onUpdate]);
+
+    // Global mouse events for resizing
+    useEffect(() => {
+        if (isResizing) {
+            const handleGlobalResizeMove = (e: MouseEvent) => {
+                const deltaX = e.clientX - resizeStart.x;
+                const deltaY = e.clientY - resizeStart.y;
+                
+                const newWidth = Math.max(50, resizeStart.width + deltaX);
+                const newHeight = Math.max(30, resizeStart.height + deltaY);
+                
+                onUpdate(annotation.id, { width: newWidth, height: newHeight });
+            };
+
+            const handleGlobalResizeEnd = () => {
+                setIsResizing(false);
+            };
+
+            document.addEventListener('mousemove', handleGlobalResizeMove);
+            document.addEventListener('mouseup', handleGlobalResizeEnd);
+
+            return () => {
+                document.removeEventListener('mousemove', handleGlobalResizeMove);
+                document.removeEventListener('mouseup', handleGlobalResizeEnd);
+            };
+        }
+    }, [isResizing, resizeStart, annotation.id, onUpdate]);
+
+    return (
+        <div 
+            className={`group relative cursor-move ${isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''}`}
+            style={{
+                width: annotation.width,
+                height: annotation.height
+            }}
+            onMouseDown={handleMouseDown}
+            onClick={handleClick}
+        >
+            {children}
+            
+            {/* Delete Button */}
+            <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(annotation.id);
+                    }}
+                    className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
+                    title="Sil"
+                >
+                    <X size={12} />
+                </button>
+            </div>
+
+            {/* Resize Handle */}
+            {isSelected && annotation.type !== 'freehand' && (
+                <div
+                    onMouseDown={handleResizeStart}
+                    className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-500 border border-white rounded-full cursor-se-resize hover:bg-blue-600 transition-colors"
+                    title="Yeniden boyutlandır"
+                />
+            )}
+        </div>
+    );
+};
+
 interface SignaturePadProps {
     onSave: (signature: string) => void;
     onCancel: () => void;
     color: string;
     strokeWidth: number;
 }
+
+interface SignatureAnnotationProps {
+    annotation: Annotation;
+    onUpdate: (id: string, updates: Partial<Annotation>) => void;
+    onDelete: (id: string) => void;
+    isSelected: boolean;
+    onSelect: (id: string) => void;
+}
+
+const SignatureAnnotation: React.FC<SignatureAnnotationProps> = ({ annotation, onUpdate, onDelete, isSelected, onSelect }) => {
+    const [isDragging, setIsDragging] = useState(false);
+    const [isResizing, setIsResizing] = useState(false);
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+    const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0 });
+
+    const handleClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onSelect(annotation.id);
+    };
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onSelect(annotation.id);
+        
+        setIsDragging(true);
+        setDragStart({
+            x: e.clientX - annotation.x,
+            y: e.clientY - annotation.y
+        });
+    };
+
+    const handleResizeStart = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsResizing(true);
+        setResizeStart({
+            x: e.clientX,
+            y: e.clientY,
+            width: annotation.width || 200,
+            height: annotation.height || 100
+        });
+    };
+
+    // Global mouse events for dragging
+    useEffect(() => {
+        if (isDragging) {
+            const handleGlobalMouseMove = (e: MouseEvent) => {
+                const newX = e.clientX - dragStart.x;
+                const newY = e.clientY - dragStart.y;
+                onUpdate(annotation.id, { x: newX, y: newY });
+            };
+
+            const handleGlobalMouseUp = () => {
+                setIsDragging(false);
+            };
+
+            document.addEventListener('mousemove', handleGlobalMouseMove);
+            document.addEventListener('mouseup', handleGlobalMouseUp);
+
+            return () => {
+                document.removeEventListener('mousemove', handleGlobalMouseMove);
+                document.removeEventListener('mouseup', handleGlobalMouseUp);
+            };
+        }
+    }, [isDragging, dragStart, annotation.id, onUpdate]);
+
+    // Global mouse events for resizing
+    useEffect(() => {
+        if (isResizing) {
+            const handleGlobalResizeMove = (e: MouseEvent) => {
+                const deltaX = e.clientX - resizeStart.x;
+                const deltaY = e.clientY - resizeStart.y;
+                
+                const newWidth = Math.max(100, resizeStart.width + deltaX);
+                const newHeight = Math.max(50, resizeStart.height + deltaY);
+                
+                onUpdate(annotation.id, { width: newWidth, height: newHeight });
+            };
+
+            const handleGlobalResizeEnd = () => {
+                setIsResizing(false);
+            };
+
+            document.addEventListener('mousemove', handleGlobalResizeMove);
+            document.addEventListener('mouseup', handleGlobalResizeEnd);
+
+            return () => {
+                document.removeEventListener('mousemove', handleGlobalResizeMove);
+                document.removeEventListener('mouseup', handleGlobalResizeEnd);
+            };
+        }
+    }, [isResizing, resizeStart, annotation.id, onUpdate]);
+
+    return (
+        <div 
+            className={`border-2 border-dashed border-blue-500 bg-blue-50 rounded-lg flex items-center justify-center group relative overflow-hidden cursor-move ${
+                isSelected ? 'ring-2 ring-blue-500' : ''
+            }`}
+            style={{ 
+                width: annotation.width, 
+                height: annotation.height,
+                opacity: annotation.opacity 
+            }}
+            onMouseDown={handleMouseDown}
+            onClick={handleClick}
+        >
+            {annotation.signatureData ? (
+                <img 
+                    src={annotation.signatureData} 
+                    alt="İmza"
+                    className="w-full h-full object-contain"
+                    style={{ opacity: annotation.opacity }}
+                />
+            ) : (
+                <div className="text-blue-700 font-medium flex items-center">
+                    <PenTool size={20} className="mr-2" />
+                    İmza Alanı
+                </div>
+            )}
+            
+            {/* Delete Button */}
+            <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(annotation.id);
+                    }}
+                    className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
+                    title="Sil"
+                >
+                    <X size={12} />
+                </button>
+            </div>
+
+            {/* Resize Handle */}
+            {isSelected && (
+                <div
+                    onMouseDown={handleResizeStart}
+                    className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-500 border border-white rounded-full cursor-se-resize hover:bg-blue-600 transition-colors"
+                    title="Yeniden boyutlandır"
+                />
+            )}
+        </div>
+    );
+};
 
 const SignaturePad: React.FC<SignaturePadProps> = ({ onSave, onCancel, color, strokeWidth }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -195,13 +476,21 @@ interface EditableTextProps {
     annotation: Annotation;
     onUpdate: (id: string, updates: Partial<Annotation>) => void;
     onDelete: (id: string) => void;
+    isSelected: boolean;
+    onSelect: (id: string) => void;
 }
 
-const EditableText: React.FC<EditableTextProps> = ({ annotation, onUpdate, onDelete }) => {
+const EditableText: React.FC<EditableTextProps> = ({ annotation, onUpdate, onDelete, isSelected, onSelect }) => {
     const [isEditing, setIsEditing] = useState(annotation.isEditing || false);
     const [text, setText] = useState(annotation.text || 'Metin yazın...');
+    const [isDragging, setIsDragging] = useState(false);
+    const [isResizing, setIsResizing] = useState(false);
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+    const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0 });
+    
     const textRef = useRef<HTMLTextAreaElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (isEditing) {
@@ -218,7 +507,8 @@ const EditableText: React.FC<EditableTextProps> = ({ annotation, onUpdate, onDel
 
     const handleClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (!isEditing) {
+        onSelect(annotation.id);
+        if (!isEditing && !isDragging && !isResizing) {
             setIsEditing(true);
         }
     };
@@ -247,9 +537,122 @@ const EditableText: React.FC<EditableTextProps> = ({ annotation, onUpdate, onDel
         setText(e.target.value);
     };
 
+    // Dragging functionality
+    const handleMouseDown = (e: React.MouseEvent) => {
+        if (isEditing) return;
+        
+        e.stopPropagation();
+        onSelect(annotation.id);
+        
+        setIsDragging(true);
+        setDragStart({
+            x: e.clientX - annotation.x,
+            y: e.clientY - annotation.y
+        });
+    };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!isDragging || isEditing) return;
+        
+        e.preventDefault();
+        const newX = e.clientX - dragStart.x;
+        const newY = e.clientY - dragStart.y;
+        
+        onUpdate(annotation.id, { x: newX, y: newY });
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    // Resizing functionality
+    const handleResizeStart = (e: React.MouseEvent, corner: string) => {
+        e.stopPropagation();
+        setIsResizing(true);
+        setResizeStart({
+            x: e.clientX,
+            y: e.clientY,
+            width: annotation.width || 100,
+            height: annotation.height || 30
+        });
+    };
+
+    const handleResizeMove = (e: React.MouseEvent) => {
+        if (!isResizing) return;
+        
+        e.preventDefault();
+        const deltaX = e.clientX - resizeStart.x;
+        const deltaY = e.clientY - resizeStart.y;
+        
+        const newWidth = Math.max(50, resizeStart.width + deltaX);
+        const newHeight = Math.max(20, resizeStart.height + deltaY);
+        
+        onUpdate(annotation.id, { width: newWidth, height: newHeight });
+    };
+
+    const handleResizeEnd = () => {
+        setIsResizing(false);
+    };
+
+    // Global mouse events
+    useEffect(() => {
+        if (isDragging) {
+            const handleGlobalMouseMove = (e: MouseEvent) => {
+                const newX = e.clientX - dragStart.x;
+                const newY = e.clientY - dragStart.y;
+                onUpdate(annotation.id, { x: newX, y: newY });
+            };
+
+            const handleGlobalMouseUp = () => {
+                setIsDragging(false);
+            };
+
+            document.addEventListener('mousemove', handleGlobalMouseMove);
+            document.addEventListener('mouseup', handleGlobalMouseUp);
+
+            return () => {
+                document.removeEventListener('mousemove', handleGlobalMouseMove);
+                document.removeEventListener('mouseup', handleGlobalMouseUp);
+            };
+        }
+    }, [isDragging, dragStart, annotation.id, onUpdate]);
+
+    useEffect(() => {
+        if (isResizing) {
+            const handleGlobalResizeMove = (e: MouseEvent) => {
+                const deltaX = e.clientX - resizeStart.x;
+                const deltaY = e.clientY - resizeStart.y;
+                
+                const newWidth = Math.max(50, resizeStart.width + deltaX);
+                const newHeight = Math.max(20, resizeStart.height + deltaY);
+                
+                onUpdate(annotation.id, { width: newWidth, height: newHeight });
+            };
+
+            const handleGlobalResizeEnd = () => {
+                setIsResizing(false);
+            };
+
+            document.addEventListener('mousemove', handleGlobalResizeMove);
+            document.addEventListener('mouseup', handleGlobalResizeEnd);
+
+            return () => {
+                document.removeEventListener('mousemove', handleGlobalResizeMove);
+                document.removeEventListener('mouseup', handleGlobalResizeEnd);
+            };
+        }
+    }, [isResizing, resizeStart, annotation.id, onUpdate]);
+
     if (isEditing) {
         return (
-            <div className="relative">
+            <div 
+                ref={containerRef}
+                className="relative"
+                style={{
+                    width: annotation.width || 100,
+                    height: annotation.height || 30
+                }}
+            >
                 {annotation.type === 'sticky-note' ? (
                     <textarea
                         ref={textRef}
@@ -262,9 +665,7 @@ const EditableText: React.FC<EditableTextProps> = ({ annotation, onUpdate, onDel
                             color: annotation.color,
                             fontSize: annotation.fontSize,
                             fontFamily: annotation.fontFamily || 'Arial',
-                            backgroundColor: 'white',
-                            minWidth: '150px',
-                            minHeight: '100px'
+                            backgroundColor: 'white'
                         }}
                         placeholder="Not yazın..."
                     />
@@ -276,13 +677,12 @@ const EditableText: React.FC<EditableTextProps> = ({ annotation, onUpdate, onDel
                         onChange={handleChange}
                         onBlur={handleSave}
                         onKeyDown={handleKeyDown}
-                        className="p-2 border-2 border-blue-500 rounded focus:outline-none shadow-lg"
+                        className="w-full h-full p-2 border-2 border-blue-500 rounded focus:outline-none shadow-lg"
                         style={{
                             color: annotation.color,
                             fontSize: annotation.fontSize,
                             fontFamily: annotation.fontFamily || 'Arial',
-                            backgroundColor: 'white',
-                            minWidth: '100px'
+                            backgroundColor: 'white'
                         }}
                         placeholder="Metin yazın..."
                     />
@@ -292,26 +692,36 @@ const EditableText: React.FC<EditableTextProps> = ({ annotation, onUpdate, onDel
     }
 
     return (
-        <div className="relative group">
+        <div 
+            ref={containerRef}
+            className={`relative group ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+            style={{
+                width: annotation.width || 100,
+                height: annotation.height || 30
+            }}
+        >
             <div
+                onMouseDown={handleMouseDown}
                 onClick={handleClick}
-                className={`outline-none min-w-[100px] min-h-[30px] p-2 rounded cursor-text border-2 border-dashed border-transparent hover:border-blue-300 hover:bg-blue-50 transition-all ${
+                className={`w-full h-full p-2 rounded cursor-move border-2 transition-all ${
+                    isSelected ? 'border-blue-500' : 'border-dashed border-transparent hover:border-blue-300'
+                } ${
                     annotation.type === 'sticky-note' ? 'bg-yellow-100 border-yellow-300' : 'bg-white bg-opacity-80'
-                }`}
+                } hover:bg-blue-50`}
                 style={{
                     color: annotation.color,
                     fontSize: annotation.fontSize,
                     fontFamily: annotation.fontFamily || 'Arial',
                     opacity: annotation.opacity,
-                    minWidth: annotation.type === 'sticky-note' ? '150px' : '100px',
-                    minHeight: annotation.type === 'sticky-note' ? '100px' : '30px',
                     whiteSpace: annotation.type === 'sticky-note' ? 'pre-wrap' : 'nowrap',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    userSelect: 'none'
                 }}
             >
                 {text}
             </div>
             
+            {/* Delete Button */}
             <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                     onClick={(e) => {
@@ -324,6 +734,15 @@ const EditableText: React.FC<EditableTextProps> = ({ annotation, onUpdate, onDel
                     <X size={12} />
                 </button>
             </div>
+
+            {/* Resize Handle */}
+            {isSelected && (
+                <div
+                    onMouseDown={handleResizeStart}
+                    className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-500 border border-white rounded-full cursor-se-resize hover:bg-blue-600 transition-colors"
+                    title="Yeniden boyutlandır"
+                />
+            )}
         </div>
     );
 };
@@ -344,9 +763,9 @@ const SmallPdfEditor: React.FC = () => {
     const [strokeWidth, setStrokeWidth] = useState(2);
     const [opacity, setOpacity] = useState(1);
     const [isDrawing, setIsDrawing] = useState(false);    const [currentPath, setCurrentPath] = useState<{ x: number; y: number }[]>([]);
-    const [undoStack, setUndoStack] = useState<Annotation[][]>([]);
-    const [redoStack, setRedoStack] = useState<Annotation[][]>([]);
+    const [undoStack, setUndoStack] = useState<Annotation[][]>([]);    const [redoStack, setRedoStack] = useState<Annotation[][]>([]);
     const [showSignaturePad, setShowSignaturePad] = useState(false);
+    const [selectedAnnotation, setSelectedAnnotation] = useState<string | null>(null);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const pageRef = useRef<HTMLDivElement>(null);
@@ -514,10 +933,14 @@ const SmallPdfEditor: React.FC = () => {
     const deleteAnnotation = (id: string) => {
         addToUndoStack();
         setAnnotations(prev => prev.filter(ann => ann.id !== id));
-    };
+    };    const handleCanvasClick = (e: React.MouseEvent) => {
+        // Clear selection when clicking on empty canvas
+        if (selectedTool === 'select') {
+            setSelectedAnnotation(null);
+            return;
+        }
 
-    const handleCanvasClick = (e: React.MouseEvent) => {
-        if (!pageRef.current || selectedTool === 'select' || selectedTool === 'hand') return;
+        if (!pageRef.current || selectedTool === 'hand') return;
 
         // Special handling for signature tool
         if (selectedTool === 'signature') {
@@ -551,6 +974,9 @@ const SmallPdfEditor: React.FC = () => {
         };
 
         setAnnotations(prev => [...prev, newAnnotation]);
+        
+        // Select the newly created annotation
+        setSelectedAnnotation(newAnnotation.id);
     };
 
     // Signature handling
@@ -599,17 +1025,24 @@ const SmallPdfEditor: React.FC = () => {
                 setCurrentPath(prev => [...prev, { x: e.clientX - rect.left, y: e.clientY - rect.top }]);
             }
         }
-    };
-
-    const handleMouseUp = () => {
+    };    const handleMouseUp = () => {
         if (isDrawing && selectedTool === 'freehand' && currentPath.length > 1) {
             addToUndoStack();
+            
+            // Calculate bounds of the path
+            const minX = Math.min(...currentPath.map(p => p.x));
+            const minY = Math.min(...currentPath.map(p => p.y));
+            const maxX = Math.max(...currentPath.map(p => p.x));
+            const maxY = Math.max(...currentPath.map(p => p.y));
+            
             const newAnnotation: Annotation = {
                 id: Date.now().toString(),
                 type: 'freehand',
                 pageNumber: currentPage,
-                x: Math.min(...currentPath.map(p => p.x)),
-                y: Math.min(...currentPath.map(p => p.y)),
+                x: minX,
+                y: minY,
+                width: maxX - minX + strokeWidth * 2,
+                height: maxY - minY + strokeWidth * 2,
                 color: selectedColor,
                 strokeWidth,
                 opacity,
@@ -1152,12 +1585,13 @@ const SmallPdfEditor: React.FC = () => {
                                             height: annotation.height,
                                             zIndex: 10
                                         }}
-                                    >
-                                        {annotation.type === 'text' && (
+                                    >                                        {annotation.type === 'text' && (
                                             <EditableText
                                                 annotation={annotation}
                                                 onUpdate={updateAnnotation}
                                                 onDelete={deleteAnnotation}
+                                                isSelected={selectedAnnotation === annotation.id}
+                                                onSelect={setSelectedAnnotation}
                                             />
                                         )}
                                         
@@ -1167,109 +1601,88 @@ const SmallPdfEditor: React.FC = () => {
                                                     annotation={annotation}
                                                     onUpdate={updateAnnotation}
                                                     onDelete={deleteAnnotation}
+                                                    isSelected={selectedAnnotation === annotation.id}
+                                                    onSelect={setSelectedAnnotation}
                                                 />
                                                 <div className="absolute -top-1 -left-1 w-3 h-3 bg-yellow-400 rounded-full"></div>
                                             </div>
+                                        )}                                        {annotation.type === 'signature' && (
+                                            <SignatureAnnotation
+                                                annotation={annotation}
+                                                onUpdate={updateAnnotation}
+                                                onDelete={deleteAnnotation}
+                                                isSelected={selectedAnnotation === annotation.id}
+                                                onSelect={setSelectedAnnotation}
+                                            />
                                         )}
-                                          {annotation.type === 'signature' && (
-                                            <div 
-                                                className="border-2 border-dashed border-blue-500 bg-blue-50 rounded-lg flex items-center justify-center group relative overflow-hidden"
-                                                style={{ 
-                                                    width: annotation.width, 
-                                                    height: annotation.height,
-                                                    opacity: annotation.opacity 
-                                                }}
+                                          {annotation.type === 'rectangle' && (
+                                            <DraggableAnnotation
+                                                annotation={annotation}
+                                                onUpdate={updateAnnotation}
+                                                onDelete={deleteAnnotation}
+                                                isSelected={selectedAnnotation === annotation.id}
+                                                onSelect={setSelectedAnnotation}
                                             >
-                                                {annotation.signatureData ? (
-                                                    <img 
-                                                        src={annotation.signatureData} 
-                                                        alt="İmza"
-                                                        className="w-full h-full object-contain"
-                                                        style={{ opacity: annotation.opacity }}
-                                                    />                                                ) : (
-                                                    <div className="text-blue-700 font-medium flex items-center">
-                                                        <PenTool size={20} className="mr-2" />
-                                                        İmza Alanı
-                                                    </div>
-                                                )}
-                                                <button
-                                                    onClick={() => deleteAnnotation(annotation.id)}
-                                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-                                                >
-                                                    <X size={12} />
-                                                </button>
-                                            </div>
-                                        )}
-                                        
-                                        {annotation.type === 'rectangle' && (
-                                            <div 
-                                                className="border group relative"
-                                                style={{
-                                                    width: annotation.width,
-                                                    height: annotation.height,
-                                                    borderColor: annotation.color,
-                                                    borderWidth: annotation.strokeWidth,
-                                                    opacity: annotation.opacity
-                                                }}
-                                            >
-                                                <button
-                                                    onClick={() => deleteAnnotation(annotation.id)}
-                                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-                                                >
-                                                    <X size={12} />
-                                                </button>
-                                            </div>
+                                                <div 
+                                                    className="border w-full h-full"
+                                                    style={{
+                                                        borderColor: annotation.color,
+                                                        borderWidth: annotation.strokeWidth,
+                                                        opacity: annotation.opacity
+                                                    }}
+                                                />
+                                            </DraggableAnnotation>
                                         )}
                                         
                                         {annotation.type === 'circle' && (
-                                            <div 
-                                                className="border rounded-full group relative"
-                                                style={{
-                                                    width: annotation.width,
-                                                    height: annotation.height,
-                                                    borderColor: annotation.color,
-                                                    borderWidth: annotation.strokeWidth,
-                                                    opacity: annotation.opacity
-                                                }}
+                                            <DraggableAnnotation
+                                                annotation={annotation}
+                                                onUpdate={updateAnnotation}
+                                                onDelete={deleteAnnotation}
+                                                isSelected={selectedAnnotation === annotation.id}
+                                                onSelect={setSelectedAnnotation}
                                             >
-                                                <button
-                                                    onClick={() => deleteAnnotation(annotation.id)}
-                                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-                                                >
-                                                    <X size={12} />
-                                                </button>
-                                            </div>
+                                                <div 
+                                                    className="border rounded-full w-full h-full"
+                                                    style={{
+                                                        borderColor: annotation.color,
+                                                        borderWidth: annotation.strokeWidth,
+                                                        opacity: annotation.opacity
+                                                    }}
+                                                />
+                                            </DraggableAnnotation>
                                         )}
                                         
                                         {annotation.type === 'highlight' && (
-                                            <div 
-                                                className="group relative"
-                                                style={{
-                                                    width: annotation.width,
-                                                    height: annotation.height,
-                                                    backgroundColor: annotation.backgroundColor,
-                                                    opacity: annotation.opacity
-                                                }}
+                                            <DraggableAnnotation
+                                                annotation={annotation}
+                                                onUpdate={updateAnnotation}
+                                                onDelete={deleteAnnotation}
+                                                isSelected={selectedAnnotation === annotation.id}
+                                                onSelect={setSelectedAnnotation}
                                             >
-                                                <button
-                                                    onClick={() => deleteAnnotation(annotation.id)}
-                                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-                                                >
-                                                    <X size={12} />
-                                                </button>
-                                            </div>
+                                                <div 
+                                                    className="w-full h-full"
+                                                    style={{
+                                                        backgroundColor: annotation.backgroundColor,
+                                                        opacity: annotation.opacity
+                                                    }}
+                                                />
+                                            </DraggableAnnotation>
                                         )}
                                         
                                         {annotation.type === 'freehand' && annotation.path && (
-                                            <div className="group relative">
+                                            <DraggableAnnotation
+                                                annotation={annotation}
+                                                onUpdate={updateAnnotation}
+                                                onDelete={deleteAnnotation}
+                                                isSelected={selectedAnnotation === annotation.id}
+                                                onSelect={setSelectedAnnotation}
+                                            >
                                                 <svg
-                                                    className="absolute top-0 left-0 pointer-events-none"
+                                                    className="absolute top-0 left-0 pointer-events-none w-full h-full"
                                                     width={annotation.width}
                                                     height={annotation.height}
-                                                    style={{
-                                                        left: annotation.x - Math.min(...annotation.path.map(p => p.x)),
-                                                        top: annotation.y - Math.min(...annotation.path.map(p => p.y))
-                                                    }}
                                                 >
                                                     <path
                                                         d={`M ${annotation.path.map(p => 
@@ -1283,13 +1696,7 @@ const SmallPdfEditor: React.FC = () => {
                                                         opacity={annotation.opacity}
                                                     />
                                                 </svg>
-                                                <button
-                                                    onClick={() => deleteAnnotation(annotation.id)}
-                                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-                                                >
-                                                    <X size={12} />
-                                                </button>
-                                            </div>
+                                            </DraggableAnnotation>
                                         )}
                                     </div>
                                 ))}
