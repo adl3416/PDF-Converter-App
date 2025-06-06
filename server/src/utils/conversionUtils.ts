@@ -1,9 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Document, Packer, Paragraph, TextRun } from 'docx';
-import { PDFDocument, rgb } from 'pdf-lib';
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from 'docx';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import * as mammoth from 'mammoth';
 import * as XLSX from 'xlsx';
+import pdfParse from 'pdf-parse';
+import * as sharp from 'sharp';
+import pdf2pic from 'pdf2pic';
 // @ts-ignore - pptxgenjs doesn't have proper TypeScript definitions
 import PptxGenJS from 'pptxgenjs';
 
@@ -29,8 +32,7 @@ export const convertWordToPdf = async (inputPath: string): Promise<string> => {
         // Eğer içerik çıkarılamazsa placeholder kullan
         if (!textContent || textContent.trim().length < 5) {
           textContent = 'Word document converted to PDF\n\nOriginal file: ' + path.basename(inputPath) + '\n\nNote: Document content could not be extracted properly.';
-        }
-      } catch (error) {
+        }      } catch (error: any) {
         console.error('Error extracting DOCX content:', error);
         textContent = 'Word document converted to PDF\n\nOriginal file: ' + path.basename(inputPath) + '\n\nError: Could not process the document content.';
       }
@@ -115,8 +117,7 @@ export const convertWordToPdf = async (inputPath: string): Promise<string> => {
     const pdfBytes = await pdfDoc.save();
     fs.writeFileSync(outputPath, pdfBytes);
     
-    return outputPath;
-  } catch (error) {
+    return outputPath;  } catch (error: any) {
     console.error('Word to PDF conversion error:', error);
     throw new Error('Failed to convert Word document to PDF');
   }
@@ -126,47 +127,181 @@ export const convertPdfToWord = async (inputPath: string): Promise<string> => {
   try {
     const outputPath = inputPath.replace(/\.pdf$/i, '.docx');
     
-    // PDF'den text çıkar (basit implementasyon)
+    // PDF'den gerçek text içerik çıkarma
     const pdfBuffer = fs.readFileSync(inputPath);
+    const pdfData = await pdfParse(pdfBuffer);
     
-    // Basit DOCX oluştur
+    // PDF'den çıkarılan metin
+    const extractedText = pdfData.text || '';
+    const pageCount = pdfData.numpages || 1;
+    
+    // Metni paragraflarına ayır
+    const paragraphs = extractedText.split(/\n\s*\n/).filter(p => p.trim());
+    
+    // Word document oluştur
+    const docChildren = [];
+    
+    // Başlık ekle
+    docChildren.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: `PDF'den Word'e Dönüştürülmüş Doküman`,
+            bold: true,
+            size: 32,
+          }),
+        ],
+        heading: HeadingLevel.HEADING_1,
+        alignment: AlignmentType.CENTER,
+      })
+    );
+    
+    // Boş satır
+    docChildren.push(new Paragraph({}));
+    
+    // Dosya bilgileri
+    docChildren.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: `Kaynak Dosya: ${path.basename(inputPath)}`,
+            bold: true,
+          }),
+        ],
+      })
+    );
+    
+    docChildren.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: `Sayfa Sayısı: ${pageCount}`,
+            bold: true,
+          }),
+        ],
+      })
+    );
+    
+    docChildren.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: `Dönüştürme Tarihi: ${new Date().toLocaleString('tr-TR')}`,
+            bold: true,
+          }),
+        ],
+      })
+    );
+    
+    // Boş satır
+    docChildren.push(new Paragraph({}));
+    
+    // Ayırıcı çizgi
+    docChildren.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: "─".repeat(50),
+            color: "999999",
+          }),
+        ],
+      })
+    );
+    
+    // Boş satır
+    docChildren.push(new Paragraph({}));
+    
+    // İçerik başlığı
+    docChildren.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: "PDF İçeriği:",
+            bold: true,
+            size: 24,
+          }),
+        ],
+        heading: HeadingLevel.HEADING_2,
+      })
+    );
+    
+    // Boş satır
+    docChildren.push(new Paragraph({}));
+      // Eğer metin varsa, paragrafları ekle
+    if (paragraphs.length > 0) {
+      paragraphs.forEach((paragraph: string, index: number) => {
+        if (paragraph.trim()) {
+          // Her paragrafı ayrı paragraph olarak ekle
+          const lines = paragraph.split('\n').filter((line: string) => line.trim());
+          lines.forEach((line: string) => {
+            docChildren.push(
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: line.trim(),
+                  }),
+                ],
+              })
+            );
+          });
+          
+          // Paragraflar arası boşluk
+          if (index < paragraphs.length - 1) {
+            docChildren.push(new Paragraph({}));
+          }
+        }
+      });
+    } else {
+      // Eğer metin çıkarılamazsa bilgi ver
+      docChildren.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: "Not: PDF'den metin içeriği çıkarılamadı. Bu durum aşağıdaki sebeplerden kaynaklanabilir:",
+              italics: true,
+              color: "666666",
+            }),
+          ],
+        })
+      );
+      
+      docChildren.push(new Paragraph({}));
+      
+      const reasons = [
+        "• PDF dosyası görsel tabanlı olabilir (taranmış doküman)",
+        "• PDF şifreli olabilir",
+        "• PDF özel formatlar içerebilir",
+        "• Metin seçilebilir formatta olmayabilir"
+      ];
+      
+      reasons.forEach((reason: string) => {
+        docChildren.push(
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: reason,
+                color: "666666",
+              }),
+            ],
+          })
+        );
+      });
+    }
+    
+    // Word document oluştur
     const doc = new Document({
       sections: [{
         properties: {},
-        children: [
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: "PDF content converted to Word document",
-                bold: true,
-              }),
-            ],
-          }),
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: `Original file: ${path.basename(inputPath)}`,
-              }),
-            ],
-          }),
-          new Paragraph({
-            children: [
-              new TextRun({
-                text: "Note: This is a basic conversion. For full PDF text extraction, additional libraries are needed.",
-              }),
-            ],
-          }),
-        ],
+        children: docChildren,
       }],
     });
     
     const buffer = await Packer.toBuffer(doc);
     fs.writeFileSync(outputPath, buffer);
     
-    return outputPath;
-  } catch (error) {
+    return outputPath;  } catch (error: any) {
     console.error('PDF to Word conversion error:', error);
-    throw new Error('Failed to convert PDF to Word document');
+    throw new Error('PDF to Word dönüştürme hatası: ' + error.message);
   }
 };
 
@@ -204,8 +339,7 @@ export const convertExcelToPdf = async (inputPath: string): Promise<string> => {
     const pdfBytes = await pdfDoc.save();
     fs.writeFileSync(outputPath, pdfBytes);
     
-    return outputPath;
-  } catch (error) {
+    return outputPath;  } catch (error: any) {
     console.error('Excel to PDF conversion error:', error);
     throw new Error('Failed to convert Excel file to PDF');
   }
@@ -215,100 +349,146 @@ export const convertPdfToExcel = async (inputPath: string): Promise<string> => {
   try {
     const outputPath = inputPath.replace(/\.pdf$/i, '.xlsx');
     
-    // PDF'den metin çıkarma (basit implementasyon)
-    // Gerçek projelerde pdf-parse gibi kütüphaneler kullanılabilir
+    // PDF'den gerçek metin çıkarma
     const pdfBuffer = fs.readFileSync(inputPath);
+    const pdfData = await pdfParse(pdfBuffer);
     
-    // Basit Excel dosyası oluştur
+    const extractedText = pdfData.text || '';
+    const pageCount = pdfData.numpages || 1;
+    const metadata = pdfData.info || {};
+    
+    // Workbook oluştur
     const workbook = XLSX.utils.book_new();
     
-    // Enhanced data structure for better PDF to Excel conversion
-    const worksheetData = [
+    // Ana bilgi sayfası
+    const mainData = [
       ['PDF to Excel Conversion Report', '', '', ''],
       ['', '', '', ''],
       ['File Information', '', '', ''],
       ['Original File:', path.basename(inputPath), '', ''],
-      ['Conversion Date:', new Date().toLocaleString(), '', ''],
+      ['Conversion Date:', new Date().toLocaleString('tr-TR'), '', ''],
       ['File Size:', `${Math.round(pdfBuffer.length / 1024)} KB`, '', ''],
+      ['Page Count:', pageCount.toString(), '', ''],
       ['', '', '', ''],
-      ['Extracted Content', '', '', ''],
+      ['PDF Metadata', '', '', ''],
+      ['Title:', metadata.Title || 'N/A', '', ''],
+      ['Author:', metadata.Author || 'N/A', '', ''],
+      ['Subject:', metadata.Subject || 'N/A', '', ''],
+      ['Creator:', metadata.Creator || 'N/A', '', ''],
+      ['Producer:', metadata.Producer || 'N/A', '', ''],
+      ['Creation Date:', metadata.CreationDate || 'N/A', '', ''],
+      ['Modification Date:', metadata.ModDate || 'N/A', '', ''],
       ['', '', '', ''],
-      // Headers for potential table data
-      ['Item', 'Description', 'Value', 'Notes'],
-      ['Page 1 Content', 'Text and data from first page', 'Sample data', 'Extracted automatically'],
-      ['Tables', 'Any table data found in PDF', 'Will be structured here', 'Formatted for Excel'],
-      ['Text Blocks', 'Paragraph and text content', 'Organized by sections', 'Maintains structure'],
-      ['', '', '', ''],
-      ['Processing Notes', '', '', ''],
-      ['Note 1:', 'This is a basic PDF to Excel conversion', '', ''],
-      ['Note 2:', 'For advanced data extraction, additional', '', ''],
-      ['', 'parsing libraries like pdf-parse or', '', ''],
-      ['', 'pdfplumber can be integrated', '', ''],
-      ['', '', '', ''],
-      ['Sample Data Section', '', '', ''],
-      ['Field', 'Type', 'Content', 'Status'],
-      ['Header Text', 'String', 'PDF Document Title', 'Extracted'],
-      ['Body Content', 'Text', 'Main document content', 'Processed'],
-      ['Footer Info', 'String', 'Page numbers, dates', 'Available'],
-      ['Metadata', 'Various', 'Document properties', 'Accessible'],
-      ['', '', '', ''],
-      ['Data Quality', 'High', 'Formatting preserved', 'Ready for use'],
-      ['Compatibility', 'Excel 2007+', 'XLSX format', 'Universal support'],
+      ['Extracted Content Analysis', '', '', ''],
+      ['Total Characters:', extractedText.length.toString(), '', ''],
+      ['Total Words:', extractedText.split(/\s+/).filter((word: string) => word.trim()).length.toString(), '', ''],
+      ['Total Lines:', extractedText.split('\n').length.toString(), '', ''],
+      ['Total Paragraphs:', extractedText.split(/\n\s*\n/).filter((p: string) => p.trim()).length.toString(), '', ''],
     ];
     
-    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-    
-    // Enhanced column widths for better readability
-    worksheet['!cols'] = [
-      { wch: 25 },  // Column A - wider for labels
-      { wch: 30 },  // Column B - wider for descriptions
-      { wch: 25 },  // Column C - moderate width
-      { wch: 20 }   // Column D - notes column
-    ];
-    
-    // Add some cell styling information (basic)
-    const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
-    
-    // Worksheet'i workbook'a ekle
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'PDF Content');
-    
-    // Add a second worksheet for raw data
-    const rawDataSheet = [
-      ['Raw PDF Data Extraction', '', ''],
-      ['', '', ''],
-      ['Timestamp:', new Date().toISOString(), ''],
-      ['Source File:', path.basename(inputPath), ''],
-      ['Processing Method:', 'Direct binary analysis', ''],
-      ['', '', ''],
-      ['Data Points:', 'Value', 'Type'],
-      ['File Header:', 'PDF-1.x format detected', 'Metadata'],
-      ['Content Stream:', 'Binary data processed', 'Content'],
-      ['Page Count:', 'Estimated from structure', 'Structure'],
-      ['Text Encoding:', 'UTF-8 compatible', 'Encoding'],
-      ['', '', ''],
-      ['Future Enhancements:', '', ''],
-      ['• OCR text recognition', '', ''],
-      ['• Table structure detection', '', ''],
-      ['• Image extraction', '', ''],
-      ['• Advanced formatting preservation', '', ''],
-    ];
-    
-    const rawWorksheet = XLSX.utils.aoa_to_sheet(rawDataSheet);
-    rawWorksheet['!cols'] = [
-      { wch: 30 },
+    const mainWorksheet = XLSX.utils.aoa_to_sheet(mainData);
+    mainWorksheet['!cols'] = [
+      { wch: 25 },
       { wch: 35 },
+      { wch: 15 },
       { wch: 15 }
     ];
+    XLSX.utils.book_append_sheet(workbook, mainWorksheet, 'File Info');
     
-    XLSX.utils.book_append_sheet(workbook, rawWorksheet, 'Technical Details');
+    // İçerik sayfası
+    if (extractedText.trim()) {
+      const contentLines = extractedText.split('\n').filter((line: string) => line.trim());
+      const contentData = [
+        ['PDF Content', '', ''],
+        ['Line No.', 'Content', 'Length'],
+        ['', '', ''],
+      ];
+      
+      contentLines.forEach((line: string, index: number) => {
+        if (line.trim()) {
+          contentData.push([
+            (index + 1).toString(),
+            line.trim(),
+            line.trim().length.toString()
+          ]);
+        }
+      });
+      
+      const contentWorksheet = XLSX.utils.aoa_to_sheet(contentData);
+      contentWorksheet['!cols'] = [
+        { wch: 10 },
+        { wch: 60 },
+        { wch: 10 }
+      ];
+      XLSX.utils.book_append_sheet(workbook, contentWorksheet, 'Content');
+      
+      // Kelime analizi sayfası
+      const words = extractedText.toLowerCase().split(/\s+/).filter((word: string) => word.trim());
+      const wordCount: { [key: string]: number } = {};
+      
+      words.forEach((word: string) => {
+        const cleanWord = word.replace(/[^\w]/g, '');
+        if (cleanWord.length > 2) {
+          wordCount[cleanWord] = (wordCount[cleanWord] || 0) + 1;
+        }
+      });
+      
+      const sortedWords = Object.entries(wordCount)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 50);
+      
+      const wordData = [
+        ['Word Frequency Analysis', '', ''],
+        ['Word', 'Count', 'Percentage'],
+        ['', '', ''],
+      ];
+      
+      const totalWords = words.length;
+      sortedWords.forEach(([word, count]) => {
+        const percentage = ((count / totalWords) * 100).toFixed(2);
+        wordData.push([word, count.toString(), `${percentage}%`]);
+      });
+      
+      const wordWorksheet = XLSX.utils.aoa_to_sheet(wordData);
+      wordWorksheet['!cols'] = [
+        { wch: 20 },
+        { wch: 10 },
+        { wch: 15 }
+      ];
+      XLSX.utils.book_append_sheet(workbook, wordWorksheet, 'Word Analysis');
+    } else {
+      // İçerik çıkarılamazsa bilgi sayfası
+      const noContentData = [
+        ['Content Extraction Failed', '', ''],
+        ['', '', ''],
+        ['Possible Reasons:', '', ''],
+        ['• PDF contains only images', '', ''],
+        ['• PDF is password protected', '', ''],
+        ['• PDF uses special encoding', '', ''],
+        ['• PDF is scanned document', '', ''],
+        ['', '', ''],
+        ['Solutions:', '', ''],
+        ['• Try OCR tools for image-based PDFs', '', ''],
+        ['• Check if PDF is password protected', '', ''],
+        ['• Use specialized PDF processing tools', '', ''],
+      ];
+      
+      const noContentWorksheet = XLSX.utils.aoa_to_sheet(noContentData);
+      noContentWorksheet['!cols'] = [
+        { wch: 30 },
+        { wch: 15 },
+        { wch: 15 }
+      ];
+      XLSX.utils.book_append_sheet(workbook, noContentWorksheet, 'No Content');
+    }
     
     // Excel dosyasını kaydet
     XLSX.writeFile(workbook, outputPath);
     
     return outputPath;
-  } catch (error) {
+  } catch (error: any) {
     console.error('PDF to Excel conversion error:', error);
-    throw new Error('Failed to convert PDF to Excel file');
+    throw new Error('PDF to Excel dönüştürme hatası: ' + error.message);
   }
 };
 
@@ -316,60 +496,74 @@ export const convertPdfToPowerPoint = async (inputPath: string): Promise<string>
   try {
     const outputPath = inputPath.replace(/\.pdf$/i, '.pptx');
     
-    // PDF dosyasını oku
-    const pdfData = fs.readFileSync(inputPath);
+    // PDF'den gerçek içerik çıkarma
+    const pdfBuffer = fs.readFileSync(inputPath);
+    const pdfData = await pdfParse(pdfBuffer);
+    
+    const extractedText = pdfData.text || '';
+    const pageCount = pdfData.numpages || 1;
+    const metadata = pdfData.info || {};
     
     // Yeni PowerPoint sunumu oluştur
     const pptx = new PptxGenJS();
     
     // Sunum özelliklerini ayarla
-    pptx.layout = 'LAYOUT_16x9'; // 16:9 aspect ratio
+    pptx.layout = 'LAYOUT_16x9';
     pptx.author = 'PDF Converter App';
     pptx.company = 'PDF Tools';
     pptx.subject = `Converted from ${path.basename(inputPath)}`;
-    pptx.title = `PDF to PowerPoint - ${path.basename(inputPath, '.pdf')}`;
+    pptx.title = metadata.Title || `PDF to PowerPoint - ${path.basename(inputPath, '.pdf')}`;
     
-    // Ana başlık slaydı
+    // Ana başlık slaydı  
     const titleSlide = pptx.addSlide();
     
-    // Başlık
-    titleSlide.addText('PDF İçeriği PowerPoint\'e Dönüştürüldü', {
+    titleSlide.addText(metadata.Title || 'PDF İçeriği PowerPoint\'e Dönüştürüldü', {
       x: 1,
       y: 1.5,
       w: 8,
       h: 1.5,
-      fontSize: 32,
+      fontSize: 28,
       bold: true,
       color: '2F5597',
       align: 'center'
     });
     
-    // Alt başlık
-    titleSlide.addText(`Kaynak Dosya: ${path.basename(inputPath)}`, {
+    titleSlide.addText(`Kaynak: ${path.basename(inputPath)}`, {
       x: 1,
       y: 3,
       w: 8,
       h: 0.8,
-      fontSize: 18,
+      fontSize: 16,
       color: '666666',
       align: 'center'
     });
     
-    // Dönüştürme tarihi
-    titleSlide.addText(`Dönüştürme Tarihi: ${new Date().toLocaleDateString('tr-TR')}`, {
+    if (metadata.Author) {
+      titleSlide.addText(`Yazar: ${metadata.Author}`, {
+        x: 1,
+        y: 3.8,
+        w: 8,
+        h: 0.6,
+        fontSize: 14,
+        color: '888888',
+        align: 'center'
+      });
+    }
+    
+    titleSlide.addText(`Dönüştürme: ${new Date().toLocaleDateString('tr-TR')}`, {
       x: 1,
-      y: 4,
+      y: 4.5,
       w: 8,
       h: 0.6,
-      fontSize: 14,
+      fontSize: 12,
       color: '888888',
       align: 'center'
     });
     
-    // PDF analiz bilgileri slaydı
+    // PDF bilgileri slaydı
     const infoSlide = pptx.addSlide();
     
-    infoSlide.addText('PDF Dosya Bilgileri', {
+    infoSlide.addText('Doküman Bilgileri', {
       x: 0.5,
       y: 0.5,
       w: 9,
@@ -379,38 +573,184 @@ export const convertPdfToPowerPoint = async (inputPath: string): Promise<string>
       color: '2F5597'
     });
     
-    // PDF bilgilerini analiz et
     const stats = fs.statSync(inputPath);
     const fileSize = Math.round(stats.size / 1024);
     
-    const infoContent = [
-      `📄 Dosya Adı: ${path.basename(inputPath)}`,
-      `📊 Dosya Boyutu: ${fileSize} KB`,
-      `📅 Oluşturulma Tarihi: ${stats.birthtime.toLocaleDateString('tr-TR')}`,
-      `🔄 İşlem Türü: PDF → PowerPoint`,
-      `⚡ İşlem Durumu: Başarıyla tamamlandı`,
-      '',
-      '🎯 PowerPoint Özellikleri:',
-      '• Modern 16:9 sunum formatı',
-      '• Profesyonel tasarım şablonu',
-      '• Düzenlenebilir metin içeriği',
-      '• Uyumlu PPTX formatı'
+    const infoItems = [
+      `📄 Dosya: ${path.basename(inputPath)}`,
+      `📊 Boyut: ${fileSize} KB`,
+      `📋 Sayfa Sayısı: ${pageCount}`,
+      `📅 Oluşturma: ${stats.birthtime.toLocaleDateString('tr-TR')}`,
+      `🔄 Dönüştürme: ${new Date().toLocaleDateString('tr-TR')}`,
     ];
     
-    infoSlide.addText(infoContent.join('\n'), {
+    if (metadata.Subject) infoItems.push(`📝 Konu: ${metadata.Subject}`);
+    if (metadata.Creator) infoItems.push(`🛠️ Oluşturan: ${metadata.Creator}`);
+    if (metadata.Producer) infoItems.push(`⚙️ Üretici: ${metadata.Producer}`);
+    
+    infoSlide.addText(infoItems.join('\n'), {
       x: 0.5,
       y: 1.5,
       w: 9,
-      h: 5,
+      h: 4,
       fontSize: 16,
       color: '333333',
       valign: 'top'
     });
     
-    // İçerik özeti slaydı
-    const contentSlide = pptx.addSlide();
+    // İçerik analizi slaydı
+    if (extractedText.trim()) {
+      const analysisSlide = pptx.addSlide();
+      
+      analysisSlide.addText('İçerik Analizi', {
+        x: 0.5,
+        y: 0.5,
+        w: 9,
+        h: 0.8,
+        fontSize: 24,
+        bold: true,
+        color: '2F5597'
+      });
+      
+      const wordCount = extractedText.split(/\s+/).filter((word: string) => word.trim()).length;
+      const lineCount = extractedText.split('\n').length;
+      const paragraphCount = extractedText.split(/\n\s*\n/).filter((p: string) => p.trim()).length;
+      
+      const analysisItems = [
+        `📝 Toplam Karakter: ${extractedText.length.toLocaleString()}`,
+        `🔤 Toplam Kelime: ${wordCount.toLocaleString()}`,
+        `📄 Toplam Satır: ${lineCount.toLocaleString()}`,
+        `📋 Toplam Paragraf: ${paragraphCount.toLocaleString()}`,
+        '',
+        '✅ İçerik başarıyla çıkarıldı',
+        '🎯 Metin analizi tamamlandı',
+        '📊 Yapısal bilgiler hazırlandı'
+      ];
+      
+      analysisSlide.addText(analysisItems.join('\n'), {
+        x: 0.5,
+        y: 1.5,
+        w: 9,
+        h: 4,
+        fontSize: 16,
+        color: '333333',
+        valign: 'top'
+      });
+      
+      // İçerik örnekleri slaydı
+      const contentSlide = pptx.addSlide();
+      
+      contentSlide.addText('İçerik Örnekleri', {
+        x: 0.5,
+        y: 0.5,
+        w: 9,
+        h: 0.8,
+        fontSize: 24,
+        bold: true,
+        color: '2F5597'
+      });
+      
+      // İlk birkaç paragrafı göster
+      const paragraphs = extractedText.split(/\n\s*\n/).filter((p: string) => p.trim()).slice(0, 3);
+      const contentPreview = paragraphs.map((p: string, index: number) => {
+        const preview = p.trim().substring(0, 150);
+        return `${index + 1}. ${preview}${preview.length < p.trim().length ? '...' : ''}`;
+      }).join('\n\n');
+      
+      contentSlide.addText(contentPreview || 'İçerik önizlemesi mevcut değil', {
+        x: 0.5,
+        y: 1.5,
+        w: 9,
+        h: 4,
+        fontSize: 14,
+        color: '444444',
+        valign: 'top'
+      });
+      
+      // Kelime bulutu slaydı
+      const words = extractedText.toLowerCase().split(/\s+/).filter((word: string) => word.trim());
+      const wordCount2: { [key: string]: number } = {};
+      
+      words.forEach((word: string) => {
+        const cleanWord = word.replace(/[^\w]/g, '');
+        if (cleanWord.length > 3) {
+          wordCount2[cleanWord] = (wordCount2[cleanWord] || 0) + 1;
+        }
+      });
+      
+      const topWords = Object.entries(wordCount2)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 15)
+        .map(([word, count]) => `${word} (${count})`);
+      
+      if (topWords.length > 0) {
+        const wordCloudSlide = pptx.addSlide();
+        
+        wordCloudSlide.addText('En Sık Kullanılan Kelimeler', {
+          x: 0.5,
+          y: 0.5,
+          w: 9,
+          h: 0.8,
+          fontSize: 24,
+          bold: true,
+          color: '2F5597'
+        });
+        
+        wordCloudSlide.addText(topWords.join('\n'), {
+          x: 0.5,
+          y: 1.5,
+          w: 9,
+          h: 4,
+          fontSize: 14,
+          color: '555555',
+          valign: 'top'
+        });
+      }
+    } else {
+      // İçerik çıkarılamazsa
+      const errorSlide = pptx.addSlide();
+      
+      errorSlide.addText('İçerik Çıkarma Sorunu', {
+        x: 0.5,
+        y: 1.5,
+        w: 9,
+        h: 1,
+        fontSize: 24,
+        bold: true,
+        color: 'CC0000',
+        align: 'center'
+      });
+      
+      const errorReasons = [
+        '❌ PDF\'den metin çıkarılamadı',
+        '',
+        'Olası Sebepler:',
+        '• Görsel tabanlı PDF (taranmış)',
+        '• Şifreli PDF dosyası',
+        '• Özel kodlama kullanımı',
+        '• Bozuk PDF yapısı',
+        '',
+        'Çözüm Önerileri:',
+        '• OCR araçları kullanın',
+        '• Şifre kontrolü yapın',
+        '• PDF\'i yeniden oluşturun'
+      ];
+      
+      errorSlide.addText(errorReasons.join('\n'), {
+        x: 0.5,
+        y: 2.5,
+        w: 9,
+        h: 3,
+        fontSize: 14,
+        color: '666666',
+        align: 'center'
+      });
+    }
     
-    contentSlide.addText('Dönüştürme Özeti', {
+    // Özet slaydı
+    const summarySlide = pptx.addSlide();
+    
+    summarySlide.addText('Dönüştürme Özeti', {
       x: 0.5,
       y: 0.5,
       w: 9,
@@ -420,81 +760,35 @@ export const convertPdfToPowerPoint = async (inputPath: string): Promise<string>
       color: '2F5597'
     });
     
-    // İçerik kutusu
-    contentSlide.addShape('rect', {
-      x: 1,
-      y: 2,
-      w: 8,
-      h: 3.5,
-      fill: { color: 'F8F9FA' },
-      line: { color: 'DDDDDD', width: 1 }
-    });
-    
-    const summaryText = [
-      '✅ PDF başarıyla PowerPoint formatına dönüştürüldü',
+    const summaryItems = [
+      '✅ PDF başarıyla PowerPoint\'e dönüştürüldü',
       '',
-      '📋 Dönüştürülen İçerik:',
-      '• PDF dosya yapısı analiz edildi',
-      '• Metadata bilgileri çıkarıldı',
-      '• Sunum slaytları oluşturuldu',
-      '• Profesyonel format uygulandı',
+      '📋 Elde Edilen Bilgiler:',
+      `• ${pageCount} sayfalık PDF analiz edildi`,
+      `• ${extractedText ? 'Metin içeriği çıkarıldı' : 'Metin içeriği çıkarılamadı'}`,
+      '• Metadata bilgileri işlendi',
+      '• Profesyonel sunum formatı uygulandı',
       '',
-      '💡 Not: PDF\'deki metin ve görsel içerikler için',
-      'gelişmiş analiz özellikleri gelecek güncellemelerde',
-      'eklenecektir.'
+      '🎯 Bu sunum düzenlenebilir ve kullanıma hazırdır!'
     ];
     
-    contentSlide.addText(summaryText.join('\n'), {
-      x: 1.2,
-      y: 2.2,
-      w: 7.6,
-      h: 3.1,
-      fontSize: 14,
-      color: '444444',
+    summarySlide.addText(summaryItems.join('\n'), {
+      x: 0.5,
+      y: 1.5,
+      w: 9,
+      h: 4,
+      fontSize: 16,
+      color: '333333',
       valign: 'top'
-    });
-    
-    // Sonuç slaydı
-    const finalSlide = pptx.addSlide();
-    
-    finalSlide.addText('Dönüştürme Tamamlandı! 🎉', {
-      x: 1,
-      y: 2,
-      w: 8,
-      h: 1.2,
-      fontSize: 28,
-      bold: true,
-      color: '28A745',
-      align: 'center'
-    });
-    
-    finalSlide.addText('PowerPoint dosyanız hazır!', {
-      x: 1,
-      y: 3.5,
-      w: 8,
-      h: 0.8,
-      fontSize: 18,
-      color: '666666',
-      align: 'center'
-    });
-    
-    finalSlide.addText('Bu sunum düzenlenebilir ve sunumlarınızda kullanılabilir.', {
-      x: 1,
-      y: 4.5,
-      w: 8,
-      h: 0.6,
-      fontSize: 14,
-      color: '888888',
-      align: 'center'
     });
     
     // PowerPoint dosyasını kaydet
     await pptx.writeFile({ fileName: outputPath });
     
     return outputPath;
-  } catch (error) {
+  } catch (error: any) {
     console.error('PDF to PowerPoint conversion error:', error);
-    throw new Error('Failed to convert PDF to PowerPoint file');
+    throw new Error('PDF to PowerPoint dönüştürme hatası: ' + error.message);
   }
 };
 
@@ -572,8 +866,7 @@ export const convertImageToPdf = async (imagePaths: string[]): Promise<string> =
         });
         
         console.log(`Image ${path.basename(imagePath)} added to PDF`);
-        
-      } catch (imageError) {
+          } catch (imageError: any) {
         console.error(`Error processing image ${imagePath}:`, imageError);
         // Continue with other images
       }
@@ -583,10 +876,9 @@ export const convertImageToPdf = async (imagePaths: string[]): Promise<string> =
     const pdfBytes = await pdfDoc.save();
     fs.writeFileSync(outputPath, pdfBytes);
     
-    console.log(`PDF created successfully: ${outputPath}`);
-    return outputPath;
+    console.log(`PDF created successfully: ${outputPath}`);    return outputPath;
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Image to PDF conversion error:', error);
     throw new Error('Failed to convert images to PDF');
   }
@@ -594,124 +886,118 @@ export const convertImageToPdf = async (imagePaths: string[]): Promise<string> =
 
 export const convertPdfToImage = async (inputPath: string): Promise<string> => {
   try {
-    // For this basic implementation, we'll create a simple placeholder
-    // In a production environment, you would use libraries like pdf2pic or pdf-poppler
-    
     const outputDir = path.join(path.dirname(inputPath), 'pdf-images');
     const zipPath = inputPath.replace(/\.pdf$/i, '-images.zip');
+    const fileName = path.basename(inputPath, '.pdf');
     
     // Create output directory if it doesn't exist
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
     
-    // Read PDF to get basic info
-    const pdfBuffer = fs.readFileSync(inputPath);
-    const fileName = path.basename(inputPath, '.pdf');
-    
-    // Create sample image files (placeholders)
-    // In a real implementation, you would extract actual PDF pages as images
-    const placeholderImages = [];
-    
-    for (let i = 1; i <= 3; i++) { // Assume 3 pages for demo
-      const imagePath = path.join(outputDir, `${fileName}-page-${i}.png`);
-      
-      // Create a simple placeholder image using PDF-lib to draw text
-      const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([595.28, 841.89]);
-      
-      page.drawText(`Page ${i} from PDF`, {
-        x: 50,
-        y: 750,
-        size: 24,
-        color: rgb(0, 0, 0),
+    try {
+      // pdf2pic kullanarak gerçek görüntü dönüştürme
+      const convert = pdf2pic.fromPath(inputPath, {
+        density: 150,           // DPI
+        saveFilename: fileName,
+        savePath: outputDir,
+        format: "png",
+        width: 1000,
+        height: 1400
       });
       
-      page.drawText(`Original file: ${path.basename(inputPath)}`, {
-        x: 50,
-        y: 700,
-        size: 14,
-        color: rgb(0.5, 0.5, 0.5),
-      });
+      // PDF sayfalarını görüntülere dönüştür
+      const results = await convert.bulk(-1); // -1 means all pages
       
-      page.drawText(`Extracted as PNG image`, {
-        x: 50,
-        y: 670,
-        size: 12,
-        color: rgb(0.7, 0.7, 0.7),
-      });
+      if (results && results.length > 0) {
+        // Başarılı dönüştürme - ZIP dosyası bilgilerini oluştur
+        const zipInfo = {
+          type: 'PDF to Images Conversion',
+          originalFile: path.basename(inputPath),
+          extractedImages: results.length,
+          format: 'PNG',
+          resolution: '150 DPI',
+          size: '1000x1400',
+          created: new Date().toISOString(),
+          success: true,
+          files: results.map((result: any, idx: number) => ({
+            name: `${fileName}.${idx + 1}.png`,
+            path: result.path,
+            page: idx + 1,
+            type: 'PNG Image',
+            size: fs.existsSync(result.path) ? `${Math.round(fs.statSync(result.path).size / 1024)} KB` : 'Unknown'
+          }))
+        };
+        
+        fs.writeFileSync(zipPath, JSON.stringify(zipInfo, null, 2));
+        
+        console.log(`PDF to images conversion completed: ${results.length} images created`);
+        return zipPath;
+        
+      } else {
+        throw new Error('PDF sayfaları görüntüye dönüştürülemedi');
+      }
+        } catch (pdf2picError: any) {
+      console.warn('pdf2pic failed, using fallback method:', pdf2picError);
       
-      page.drawText(`Note: This is a placeholder implementation.`, {
-        x: 50,
-        y: 640,
-        size: 12,
-        color: rgb(0.8, 0.3, 0.3),
-      });
+      // Fallback: PDF içeriğini analiz edip bilgi dosyası oluştur
+      const pdfBuffer = fs.readFileSync(inputPath);
+      const pdfData = await pdfParse(pdfBuffer);
       
-      page.drawText(`For production use, integrate pdf2pic or similar library.`, {
-        x: 50,
-        y: 610,
-        size: 12,
-        color: rgb(0.8, 0.3, 0.3),
-      });
-      
-      // Draw a simple border
-      page.drawRectangle({
-        x: 30,
-        y: 30,
-        width: 535.28,
-        height: 781.89,
-        borderColor: rgb(0.8, 0.8, 0.8),
-        borderWidth: 2,
-      });
-      
-      const imagePageBytes = await pdfDoc.save();
-      
-      // For demo purposes, we'll save this as a "converted" image info file
-      // In real implementation, this would be actual PNG/JPG image data
+      // PDF bilgileri ile placeholder oluştur
       const imageInfo = {
-        page: i,
+        type: 'PDF Analysis (Fallback)',
         originalFile: path.basename(inputPath),
-        format: 'PNG',
-        timestamp: new Date().toISOString(),
-        note: 'Placeholder image data - replace with actual PDF-to-image conversion'
+        error: 'Could not extract images directly',
+        reason: 'pdf2pic conversion failed',
+        fallback: true,
+        pdfInfo: {
+          pages: pdfData.numpages,
+          text: pdfData.text ? 'Text content available' : 'No extractable text',
+          metadata: pdfData.info,
+          size: `${Math.round(pdfBuffer.length / 1024)} KB`
+        },
+        suggestions: [
+          'Install system dependencies for pdf2pic',
+          'Check if PDF is password protected',
+          'Try with a different PDF file',
+          'Use specialized PDF image extraction tools'
+        ],
+        created: new Date().toISOString()
       };
       
-      fs.writeFileSync(imagePath.replace('.png', '.json'), JSON.stringify(imageInfo, null, 2));
-      placeholderImages.push(imagePath.replace('.png', '.json'));
+      // Her sayfa için placeholder bilgi dosyası oluştur
+      for (let i = 1; i <= (pdfData.numpages || 1); i++) {
+        const pageInfoPath = path.join(outputDir, `${fileName}-page-${i}.info.json`);
+        const pageInfo = {
+          page: i,
+          originalFile: path.basename(inputPath),
+          format: 'INFO (Placeholder)',
+          note: 'This is placeholder information. Actual image extraction failed.',
+          timestamp: new Date().toISOString(),
+          content: pdfData.text ? 
+            pdfData.text.substring((i-1) * 500, i * 500) : 
+            'No text content available'
+        };
+        
+        fs.writeFileSync(pageInfoPath, JSON.stringify(pageInfo, null, 2));
+      }
+      
+      fs.writeFileSync(zipPath, JSON.stringify(imageInfo, null, 2));
+      
+      // Clean up temp directory
+      try {
+        fs.rmSync(outputDir, { recursive: true, force: true });      } catch (cleanupError: any) {
+        console.warn('Could not clean up temp directory:', cleanupError);
+      }
+      
+      console.log(`PDF analysis completed (fallback mode): ${zipPath}`);
+      return zipPath;
     }
     
-    // Create a simple ZIP file simulation (for demo)
-    // In real implementation, use archiver or similar library
-    const zipInfo = {
-      type: 'PDF to Images ZIP',
-      originalFile: path.basename(inputPath),
-      extractedImages: placeholderImages.length,
-      format: 'PNG',
-      created: new Date().toISOString(),
-      note: 'This is a placeholder ZIP file. In production, this would contain actual image files.',
-      files: placeholderImages.map((img, idx) => ({
-        name: `${fileName}-page-${idx + 1}.png`,
-        type: 'PNG Image',
-        size: '~150KB (estimated)'
-      }))
-    };
-    
-    fs.writeFileSync(zipPath, JSON.stringify(zipInfo, null, 2));
-    
-    // Clean up temporary directory
-    try {
-      fs.rmSync(outputDir, { recursive: true, force: true });
-    } catch (cleanupError) {
-      console.warn('Could not clean up temp directory:', cleanupError);
-    }
-    
-    console.log(`PDF to images conversion completed: ${zipPath}`);
-    return zipPath;
-    
-  } catch (error) {
+  } catch (error: any) {
     console.error('PDF to Image conversion error:', error);
-    throw new Error('Failed to convert PDF to images');
+    throw new Error('PDF to Image dönüştürme hatası: ' + error.message);
   }
 };
 
