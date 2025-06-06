@@ -205,9 +205,9 @@ const Home: React.FC = () => {
             <section className="bg-gray-50 py-20">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose Our Platform?</h2>
+                        <h2 className="text-4xl font-bold text-gray-900 mb-4">{translations.home.whyChooseTitle}</h2>
                         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                            We provide the best tools with enterprise-grade security and performance
+                            {translations.home.whyChooseSubtitle}
                         </p>
                     </div>
 
@@ -216,9 +216,9 @@ const Home: React.FC = () => {
                             <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                 <Zap className="w-8 h-8 text-blue-600" />
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-3">⚡ Super Fast</h3>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-3">{translations.home.features.superFast.title}</h3>
                             <p className="text-gray-600">
-                                Convert your documents in seconds. No waiting, no delays - just instant results with our optimized processing engine.
+                                {translations.home.features.superFast.description}
                             </p>
                         </div>
 
@@ -226,9 +226,9 @@ const Home: React.FC = () => {
                             <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                 <Shield className="w-8 h-8 text-green-600" />
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-3">🔒 100% Secure</h3>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-3">{translations.home.features.secure.title}</h3>
                             <p className="text-gray-600">
-                                Your files are processed safely and deleted immediately after conversion. Complete privacy guaranteed with SSL encryption.
+                                {translations.home.features.secure.description}
                             </p>
                         </div>
 
@@ -236,9 +236,9 @@ const Home: React.FC = () => {
                             <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                 <Smartphone className="w-8 h-8 text-purple-600" />
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-3">📱 Works Everywhere</h3>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-3">{translations.home.features.worksEverywhere.title}</h3>
                             <p className="text-gray-600">
-                                Use on any device - desktop, tablet, or mobile. No downloads or installations required. Just open and start converting.
+                                {translations.home.features.worksEverywhere.description}
                             </p>
                         </div>
 
@@ -246,9 +246,9 @@ const Home: React.FC = () => {
                             <div className="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                 <Target className="w-8 h-8 text-yellow-600" />
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-3">🎯 High Quality</h3>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-3">{translations.home.features.highQuality.title}</h3>
                             <p className="text-gray-600">
-                                Preserve your document quality with smart compression. Your PDFs will look exactly as you want them to be.
+                                {translations.home.features.highQuality.description}
                             </p>
                         </div>
 
@@ -256,9 +256,9 @@ const Home: React.FC = () => {
                             <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                 <DollarSign className="w-8 h-8 text-emerald-600" />
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-3">💰 Completely Free</h3>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-3">{translations.home.features.completelyFree.title}</h3>
                             <p className="text-gray-600">
-                                No hidden fees, no subscriptions, no limits. Convert as many documents as you want, forever free with no restrictions.
+                                {translations.home.features.completelyFree.description}
                             </p>
                         </div>
 
@@ -266,9 +266,9 @@ const Home: React.FC = () => {
                             <div className="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                 <RefreshCw className="w-8 h-8 text-indigo-600" />
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-3">🔄 Multiple Files</h3>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-3">{translations.home.features.multipleFiles.title}</h3>
                             <p className="text-gray-600">
-                                Upload multiple files at once and convert them all into a single PDF or separate files. Batch processing made easy.
+                                {translations.home.features.multipleFiles.description}
                             </p>
                         </div>
                     </div>
@@ -278,21 +278,21 @@ const Home: React.FC = () => {
             {/* CTA Section */}
             <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-20">
                 <div className="container mx-auto px-4 text-center">
-                    <h2 className="text-4xl font-bold text-white mb-6">Ready to Get Started?</h2>
+                    <h2 className="text-4xl font-bold text-white mb-6">{translations.home.cta.title}</h2>
                     <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-                        Join thousands of users who trust our platform for their document conversion needs
+                        {translations.home.cta.subtitle}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Link 
                             to="/word-to-pdf"
                             className="bg-white text-blue-600 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 flex items-center gap-2"
                         >
-                            Start Converting Now
+                            {translations.home.cta.startNow}
                             <ArrowRight className="w-5 h-5" />
                         </Link>
                         <div className="flex items-center gap-2 text-blue-100">
                             <Users className="w-5 h-5" />
-                            <span>Trusted by 10,000+ users worldwide</span>
+                            <span>{translations.home.cta.trustedText}</span>
                         </div>
                     </div>
                 </div>

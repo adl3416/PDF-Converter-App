@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Upload, FileText, Download, CheckCircle, AlertCircle } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const PdfToWord: React.FC = () => {
+    const { translations } = useLanguage();
     const [file, setFile] = useState<File | null>(null);
     const [isConverting, setIsConverting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -17,11 +19,10 @@ const PdfToWord: React.FC = () => {
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         setDragActive(false);
-        const droppedFile = e.dataTransfer.files[0];
-        if (droppedFile && droppedFile.type === 'application/pdf') {
+        const droppedFile = e.dataTransfer.files[0];        if (droppedFile && droppedFile.type === 'application/pdf') {
             handleFileChange(droppedFile);
         } else {
-            setError('Please upload a valid PDF file');
+            setError(translations.toolPages.pdfToWord.uploadArea.supportedFormats);
         }
     };
 
@@ -62,15 +63,14 @@ const PdfToWord: React.FC = () => {
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
-                setIsSuccess(true);
-            } else {
+                setIsSuccess(true);            } else {
                 const errorText = await response.text();
                 console.error('Server response error:', errorText);
-                setError('Conversion failed. Please try again.');
+                setError(translations.toolPages.pdfToWord.errors.conversionFailed);
             }
         } catch (error) {
             console.error('Network error:', error);
-            setError('An error occurred during conversion.');
+            setError(translations.toolPages.pdfToWord.errors.networkError);
         } finally {
             setIsConverting(false);
         }
@@ -78,18 +78,16 @@ const PdfToWord: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
-            <div className="container mx-auto px-4 py-16">
-                {/* Header Section */}
+            <div className="container mx-auto px-4 py-16">                {/* Header Section */}
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-6">
                         <FileText className="w-8 h-8 text-purple-600" />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                        PDF to Word Converter
+                        {translations.toolPages.pdfToWord.title}
                     </h1>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Convert your PDF documents to Word format quickly and easily. 
-                        Extract text and content from PDFs into editable Word documents.
+                        {translations.toolPages.pdfToWord.subtitle}
                     </p>
                 </div>
 
@@ -113,26 +111,24 @@ const PdfToWord: React.FC = () => {
                                     accept=".pdf,application/pdf"
                                     onChange={(e) => e.target.files?.[0] && handleFileChange(e.target.files[0])}
                                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                />
-                                
-                                {!file ? (
+                                />                                {!file ? (
                                     <>
                                         <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                                         <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                            Drop your PDF file here
+                                            {translations.toolPages.pdfToWord.uploadArea.title}
                                         </h3>
                                         <p className="text-gray-500 mb-4">
-                                            or click to browse files
+                                            {translations.toolPages.pdfToWord.uploadArea.description}
                                         </p>
                                         <p className="text-sm text-gray-400">
-                                            Supports PDF files only
+                                            {translations.toolPages.pdfToWord.uploadArea.supportedFormats}
                                         </p>
                                     </>
                                 ) : (
                                     <>
                                         <CheckCircle className="w-12 h-12 text-purple-500 mx-auto mb-4" />
                                         <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                            File Selected
+                                            {translations.toolPages.pdfToWord.uploadArea.fileSelected}
                                         </h3>
                                         <p className="text-gray-600 font-medium">
                                             {file.name}
@@ -150,13 +146,11 @@ const PdfToWord: React.FC = () => {
                                     <AlertCircle className="w-5 h-5 text-red-500" />
                                     <span className="text-red-700">{error}</span>
                                 </div>
-                            )}
-
-                            {/* Success Message */}
+                            )}                            {/* Success Message */}
                             {isSuccess && (
                                 <div className="flex items-center gap-2 p-4 bg-purple-50 border border-purple-200 rounded-lg">
                                     <CheckCircle className="w-5 h-5 text-purple-500" />
-                                    <span className="text-purple-700">File converted successfully!</span>
+                                    <span className="text-purple-700">{translations.toolPages.pdfToWord.success.message}</span>
                                 </div>
                             )}
 
@@ -171,46 +165,43 @@ const PdfToWord: React.FC = () => {
                                         : 'bg-gray-300 cursor-not-allowed'
                                     }
                                 `}
-                            >
-                                {isConverting ? (
+                            >                                {isConverting ? (
                                     <>
                                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                        Converting...
+                                        {translations.toolPages.pdfToWord.button.converting}
                                     </>
                                 ) : (
                                     <>
                                         <Download className="w-5 h-5" />
-                                        Convert to Word
+                                        {translations.toolPages.pdfToWord.button.convert}
                                     </>
                                 )}
                             </button>
                         </form>
-                    </div>
-
-                    {/* Features Section */}
+                    </div>                    {/* Features Section */}
                     <div className="mt-12 grid md:grid-cols-3 gap-6">
                         <div className="text-center p-6">
                             <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <CheckCircle className="w-6 h-6 text-purple-600" />
                             </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">Text Extraction</h3>
-                            <p className="text-gray-600 text-sm">Extract text and content from PDF files</p>
+                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.pdfToWord.features.textExtraction.title}</h3>
+                            <p className="text-gray-600 text-sm">{translations.toolPages.pdfToWord.features.textExtraction.description}</p>
                         </div>
                         
                         <div className="text-center p-6">
                             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Upload className="w-6 h-6 text-blue-600" />
                             </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">Easy Upload</h3>
-                            <p className="text-gray-600 text-sm">Drag & drop or click to upload PDF files</p>
+                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.pdfToWord.features.easyUpload.title}</h3>
+                            <p className="text-gray-600 text-sm">{translations.toolPages.pdfToWord.features.easyUpload.description}</p>
                         </div>
                         
                         <div className="text-center p-6">
                             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Download className="w-6 h-6 text-green-600" />
                             </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">Instant Download</h3>
-                            <p className="text-gray-600 text-sm">Get your Word file immediately</p>
+                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.pdfToWord.features.preserveFormatting.title}</h3>
+                            <p className="text-gray-600 text-sm">{translations.toolPages.pdfToWord.features.preserveFormatting.description}</p>
                         </div>
                     </div>
                 </div>

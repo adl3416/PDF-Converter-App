@@ -23,6 +23,184 @@ export interface Translations {
     sectionTitle: string;
     sectionSubtitle: string;
     tryNow: string;
+    whyChooseTitle: string;
+    whyChooseSubtitle: string;
+    features: {
+      superFast: {
+        title: string;
+        description: string;
+      };
+      secure: {
+        title: string;
+        description: string;
+      };
+      worksEverywhere: {
+        title: string;
+        description: string;
+      };
+      highQuality: {
+        title: string;
+        description: string;
+      };
+      completelyFree: {
+        title: string;
+        description: string;
+      };
+      multipleFiles: {
+        title: string;
+        description: string;
+      };
+    };
+    cta: {
+      title: string;
+      subtitle: string;
+      startNow: string;
+      trustedText: string;
+    };
+  };
+  
+  // Tool Pages
+  toolPages: {
+    wordToPdf: {
+      title: string;
+      subtitle: string;
+      uploadArea: {
+        title: string;
+        description: string;
+        supportedFormats: string;
+        fileSelected: string;
+      };
+      button: {
+        convert: string;
+        converting: string;
+      };
+      features: {
+        highQuality: {
+          title: string;
+          description: string;
+        };
+        easyUpload: {
+          title: string;
+          description: string;
+        };
+        fast: {
+          title: string;
+          description: string;
+        };
+      };
+      errors: {
+        conversionFailed: string;
+        networkError: string;
+      };
+      success: {
+        message: string;
+      };
+    };
+    pdfToExcel: {
+      title: string;
+      subtitle: string;
+      uploadArea: {
+        title: string;
+        description: string;
+        supportedFormats: string;
+        fileSelected: string;
+      };
+      button: {
+        convert: string;
+        converting: string;
+      };
+      features: {
+        dataExtraction: {
+          title: string;
+          description: string;
+        };
+        preserveFormatting: {
+          title: string;
+          description: string;
+        };
+        fast: {
+          title: string;
+          description: string;
+        };
+      };
+      errors: {
+        conversionFailed: string;
+        networkError: string;
+      };
+      success: {
+        message: string;
+      };
+    };
+    pdfToWord: {
+      title: string;
+      subtitle: string;
+      uploadArea: {
+        title: string;
+        description: string;
+        supportedFormats: string;
+        fileSelected: string;
+      };
+      button: {
+        convert: string;
+        converting: string;
+      };
+      features: {
+        textExtraction: {
+          title: string;
+          description: string;
+        };
+        easyUpload: {
+          title: string;
+          description: string;
+        };
+        preserveFormatting: {
+          title: string;
+          description: string;
+        };
+      };
+      errors: {
+        conversionFailed: string;
+        networkError: string;
+      };
+      success: {
+        message: string;
+      };
+    };
+    pdfToPowerPoint: {
+      title: string;
+      subtitle: string;
+      uploadArea: {
+        title: string;
+        description: string;
+        supportedFormats: string;
+        fileSelected: string;
+      };
+      button: {
+        convert: string;
+        converting: string;
+      };
+      features: {
+        slideExtraction: {
+          title: string;
+          description: string;
+        };
+        preserveLayout: {
+          title: string;
+          description: string;
+        };
+        fast: {
+          title: string;
+          description: string;
+        };
+      };
+      errors: {
+        conversionFailed: string;
+        networkError: string;
+      };
+      success: {
+        message: string;
+      };
+    };
   };
   
   // Tools
@@ -145,8 +323,7 @@ export const translations: Record<string, Translations> = {
       home: "Ana Sayfa",
       allTools: "Tüm Araçlar",
       language: "Dil",
-    },
-    home: {
+    },    home: {
       title: "İş Akışınızı Geliştirin",
       subtitle: "Güçlü PDF araçları, kullanışlı yardımcı programlar ve zaman kazandıran dönüştürücüler keşfedin. Belgelerle çalışmak için ihtiyacınız olan her şey tek yerde.",
       exploreTools: "Araçları Keşfet",
@@ -159,6 +336,40 @@ export const translations: Record<string, Translations> = {
       sectionTitle: "En Popüler PDF Araçları",
       sectionSubtitle: "Tüm PDF dönüştürme ve düzenleme ihtiyaçlarınızı karşılayan profesyonel araçlar",
       tryNow: "Şimdi Dene",
+      whyChooseTitle: "Neden Platformumuzu Seçmelisiniz?",
+      whyChooseSubtitle: "Kurumsal düzeyde güvenlik ve performansla en iyi araçları sağlıyoruz",
+      features: {
+        superFast: {
+          title: "⚡ Süper Hızlı",
+          description: "Belgelerinizi saniyeler içinde dönüştürün. Bekleme yok, gecikme yok - optimize edilmiş işleme motorumuzla anında sonuçlar alın."
+        },
+        secure: {
+          title: "🔒 %100 Güvenli",
+          description: "Dosyalarınız güvenli bir şekilde işlenir ve dönüştürme sonrasında hemen silinir. SSL şifreleme ile tam gizlilik garantisi."
+        },
+        worksEverywhere: {
+          title: "📱 Her Yerde Çalışır",
+          description: "Herhangi bir cihazda kullanın - masaüstü, tablet veya mobil. İndirme veya kurulum gerekmez. Sadece açın ve dönüştürmeye başlayın."
+        },
+        highQuality: {
+          title: "🎯 Yüksek Kalite",
+          description: "Akıllı sıkıştırma ile belge kalitenizi koruyun. PDF'leriniz tam olarak istediğiniz gibi görünecek."
+        },
+        completelyFree: {
+          title: "💰 Tamamen Ücretsiz",
+          description: "Gizli ücret yok, abonelik yok, sınır yok. İstediğiniz kadar belgeyi kısıtlama olmadan sonsuza kadar ücretsiz dönüştürün."
+        },
+        multipleFiles: {
+          title: "🔄 Çoklu Dosya",
+          description: "Birden fazla dosyayı tek seferde yükleyin ve hepsini tek bir PDF'e veya ayrı dosyalara dönüştürün. Toplu işleme artık kolay."
+        }
+      },
+      cta: {
+        title: "Başlamaya Hazır mısınız?",
+        subtitle: "Belge dönüştürme ihtiyaçları için platformumuza güvenen binlerce kullanıcıya katılın",
+        startNow: "Şimdi Dönüştürmeye Başla",
+        trustedText: "Dünya çapında 10.000+ kullanıcı tarafından güveniliyor"
+      }
     },
     tools: {
       wordToPdf: {
@@ -188,11 +399,152 @@ export const translations: Record<string, Translations> = {
       pdfToImage: {
         name: "PDF'den Resim'e",
         description: "PDF dosyalarından resimleri çıkarın",
-      },
-      excelToPdf: {
+      },      excelToPdf: {
         name: "Excel'den PDF'e",
         description: "Excel dosyalarını PDF formatına dönüştürün",
       },
+    },
+    toolPages: {
+      wordToPdf: {
+        title: "Word'den PDF'e Dönüştürücü",
+        subtitle: "Word belgelerinizi hızlı ve kolay bir şekilde PDF formatına dönüştürün. Formatı ve kaliteyi koruyarak profesyonel dönüştürücümüzle çalışın.",
+        uploadArea: {
+          title: "Word dosyanızı buraya bırakın",
+          description: "veya dosyaları taramak için tıklayın",
+          supportedFormats: "Yalnızca Word dosyalarını destekler",
+          fileSelected: "Dosya Seçildi"
+        },
+        button: {
+          convert: "PDF'e Dönüştür",
+          converting: "Dönüştürülüyor..."
+        },
+        features: {
+          highQuality: {
+            title: "Yüksek Kalite",
+            description: "Orijinal biçimlendirme ve düzeni korur"
+          },
+          easyUpload: {
+            title: "Kolay Yükleme",
+            description: "Dosyaları sürükle & bırak veya tıklayarak yükle"
+          },
+          fast: {
+            title: "Hızlı İşlem",
+            description: "Saniyeler içinde dönüştürme"
+          }
+        },
+        errors: {
+          conversionFailed: "Dönüştürme başarısız. Lütfen tekrar deneyin.",
+          networkError: "Dönüştürme sırasında bir hata oluştu."
+        },
+        success: {
+          message: "Dosya başarıyla dönüştürüldü!"
+        }
+      },
+      pdfToExcel: {
+        title: "PDF'den Excel'e Dönüştürücü",
+        subtitle: "PDF belgelerinizi hızlı ve kolay bir şekilde Excel formatına dönüştürün. PDF'lerden veri ve tabloları düzenlenebilir elektronik tablolara çıkarın.",
+        uploadArea: {
+          title: "PDF dosyanızı buraya bırakın",
+          description: "veya dosyaları taramak için tıklayın",
+          supportedFormats: "Yalnızca PDF dosyalarını destekler",
+          fileSelected: "Dosya Seçildi"
+        },
+        button: {
+          convert: "Excel'e Dönüştür",
+          converting: "Dönüştürülüyor..."
+        },
+        features: {
+          dataExtraction: {
+            title: "Veri Çıkarma",
+            description: "PDF dosyalarından verileri ve tabloları çıkarın"
+          },
+          preserveFormatting: {
+            title: "Biçim Korunur",
+            description: "Orijinal tablo yapısını ve biçimlendirmesini korur"
+          },
+          fast: {
+            title: "Hızlı İşlem",
+            description: "Saniyeler içinde dönüştürme"
+          }
+        },
+        errors: {
+          conversionFailed: "Dönüştürme başarısız. Lütfen tekrar deneyin.",
+          networkError: "Dönüştürme sırasında bir hata oluştu."
+        },
+        success: {
+          message: "Dosya başarıyla dönüştürüldü!"
+        }
+      },
+      pdfToWord: {
+        title: "PDF'den Word'e Dönüştürücü",
+        subtitle: "PDF belgelerinizi hızlı ve kolay bir şekilde Word formatına dönüştürün. PDF dosyalarından metni ve içeriği çıkarın.",
+        uploadArea: {
+          title: "PDF dosyanızı buraya bırakın",
+          description: "veya dosyaları taramak için tıklayın",
+          supportedFormats: "Yalnızca PDF dosyalarını destekler",
+          fileSelected: "Dosya Seçildi"
+        },
+        button: {
+          convert: "Word'e Dönüştür",
+          converting: "Dönüştürülüyor..."
+        },
+        features: {
+          textExtraction: {
+            title: "Metin Çıkarma",
+            description: "PDF dosyalarından metin ve içeriği çıkarın"
+          },
+          easyUpload: {
+            title: "Kolay Yükleme",
+            description: "PDF dosyalarını sürükle & bırak veya tıklayarak yükle"
+          },
+          preserveFormatting: {
+            title: "Biçim Korunur",
+            description: "Orijinal düzen ve biçimlendirmeyi korur"
+          }
+        },
+        errors: {
+          conversionFailed: "Dönüştürme başarısız. Lütfen tekrar deneyin.",
+          networkError: "Dönüştürme sırasında bir hata oluştu."
+        },
+        success: {
+          message: "Dosya başarıyla dönüştürüldü!"
+        }
+      },
+      pdfToPowerPoint: {
+        title: "PDF'den PowerPoint'e Dönüştürücü",
+        subtitle: "PDF belgelerinizi hızlı ve kolay bir şekilde PowerPoint formatına dönüştürün. PDF'leri düzenlenebilir sunumlara dönüştürün.",
+        uploadArea: {
+          title: "PDF dosyanızı buraya bırakın",
+          description: "veya dosyaları taramak için tıklayın",
+          supportedFormats: "Yalnızca PDF dosyalarını destekler",
+          fileSelected: "Dosya Seçildi"
+        },
+        button: {
+          convert: "PowerPoint'e Dönüştür",
+          converting: "Dönüştürülüyor..."
+        },
+        features: {
+          slideExtraction: {
+            title: "Slayt Çıkarma",
+            description: "PDF sayfalarını düzenlenebilir slaytlara dönüştürün"
+          },
+          preserveLayout: {
+            title: "Düzen Korunur",
+            description: "Orijinal sayfa düzenini ve tasarımını korur"
+          },
+          fast: {
+            title: "Hızlı İşlem",
+            description: "Saniyeler içinde dönüştürme"
+          }
+        },
+        errors: {
+          conversionFailed: "Dönüştürme başarısız. Lütfen tekrar deneyin.",
+          networkError: "Dönüştürme sırasında bir hata oluştu."
+        },
+        success: {
+          message: "Dosya başarıyla dönüştürüldü!"
+        }
+      }
     },
     pdfEditor: {
       title: "PDF Düzenleyici",
@@ -267,8 +619,7 @@ export const translations: Record<string, Translations> = {
       upload: "Yükle",
     },
   },
-  
-  en: {
+    en: {
     header: {
       appName: "PDF Converter",
       home: "Home",
@@ -288,6 +639,181 @@ export const translations: Record<string, Translations> = {
       sectionTitle: "Most Popular PDF Tools",
       sectionSubtitle: "Professional-grade tools to handle all your PDF conversion and editing needs",
       tryNow: "Try now",
+      whyChooseTitle: "Why Choose Our Platform?",
+      whyChooseSubtitle: "We provide the best tools with enterprise-grade security and performance",
+      features: {
+        superFast: {
+          title: "⚡ Super Fast",
+          description: "Convert your documents in seconds. No waiting, no delays - instant results with our optimized processing engine."
+        },
+        secure: {
+          title: "🔒 100% Secure",
+          description: "Your files are processed securely and deleted immediately after conversion. Complete privacy guaranteed with SSL encryption."
+        },
+        worksEverywhere: {
+          title: "📱 Works Everywhere",
+          description: "Use on any device - desktop, tablet, or mobile. No downloads or installations required. Just open and start converting."
+        },
+        highQuality: {
+          title: "🎯 High Quality",
+          description: "Preserve your document quality with smart compression. Your PDFs will look exactly as you want them to."
+        },
+        completelyFree: {
+          title: "💰 Completely Free",
+          description: "No hidden fees, no subscriptions, no limits. Convert as many documents as you want forever, without restrictions."
+        },
+        multipleFiles: {
+          title: "🔄 Multiple Files",
+          description: "Upload multiple files at once and convert them all to a single PDF or separate files. Batch processing made easy."
+        }
+      },
+      cta: {
+        title: "Ready to Get Started?",
+        subtitle: "Join thousands of users who trust our platform for their document conversion needs",
+        startNow: "Start Converting Now",        trustedText: "Trusted by 10,000+ users worldwide"
+      }
+    },
+    toolPages: {
+      wordToPdf: {
+        title: "Word to PDF Converter",
+        subtitle: "Convert your Word documents to PDF format quickly and easily. Work with our professional converter while preserving format and quality.",
+        uploadArea: {
+          title: "Drop your Word file here",
+          description: "or click to browse files",
+          supportedFormats: "Only supports Word files",
+          fileSelected: "File Selected"
+        },
+        button: {
+          convert: "Convert to PDF",
+          converting: "Converting..."
+        },
+        features: {
+          highQuality: {
+            title: "High Quality",
+            description: "Preserves original formatting and layout"
+          },
+          easyUpload: {
+            title: "Easy Upload",
+            description: "Drag & drop files or click to upload"
+          },
+          fast: {
+            title: "Fast Processing",
+            description: "Conversion in seconds"
+          }
+        },
+        errors: {
+          conversionFailed: "Conversion failed. Please try again.",
+          networkError: "An error occurred during conversion."
+        },
+        success: {
+          message: "File converted successfully!"
+        }
+      },
+      pdfToExcel: {
+        title: "PDF to Excel Converter",
+        subtitle: "Convert your PDF documents to Excel format quickly and easily. Extract data and tables from PDFs to editable spreadsheets.",
+        uploadArea: {
+          title: "Drop your PDF file here",
+          description: "or click to browse files",
+          supportedFormats: "Only supports PDF files",
+          fileSelected: "File Selected"
+        },
+        button: {
+          convert: "Convert to Excel",
+          converting: "Converting..."
+        },
+        features: {
+          dataExtraction: {
+            title: "Data Extraction",
+            description: "Extract data and tables from PDF files"
+          },
+          preserveFormatting: {
+            title: "Preserve Formatting",
+            description: "Maintains original table structure and formatting"
+          },
+          fast: {
+            title: "Fast Processing",
+            description: "Conversion in seconds"
+          }
+        },
+        errors: {
+          conversionFailed: "Conversion failed. Please try again.",
+          networkError: "An error occurred during conversion."
+        },
+        success: {
+          message: "File converted successfully!"
+        }
+      },
+      pdfToWord: {
+        title: "PDF to Word Converter",
+        subtitle: "Convert your PDF documents to Word format quickly and easily. Extract text and content from PDF files.",
+        uploadArea: {
+          title: "Drop your PDF file here",
+          description: "or click to browse files",
+          supportedFormats: "Only supports PDF files",
+          fileSelected: "File Selected"
+        },
+        button: {
+          convert: "Convert to Word",
+          converting: "Converting..."
+        },
+        features: {
+          textExtraction: {
+            title: "Text Extraction",
+            description: "Extract text and content from PDF files"
+          },
+          easyUpload: {
+            title: "Easy Upload",
+            description: "Drag & drop PDF files or click to upload"
+          },
+          preserveFormatting: {
+            title: "Preserve Formatting",
+            description: "Maintains original layout and formatting"
+          }
+        },
+        errors: {
+          conversionFailed: "Conversion failed. Please try again.",
+          networkError: "An error occurred during conversion."
+        },
+        success: {
+          message: "File converted successfully!"
+        }
+      },
+      pdfToPowerPoint: {
+        title: "PDF to PowerPoint Converter",
+        subtitle: "Convert your PDF documents to PowerPoint format quickly and easily. Transform PDFs into editable presentations.",
+        uploadArea: {
+          title: "Drop your PDF file here",
+          description: "or click to browse files",
+          supportedFormats: "Only supports PDF files",
+          fileSelected: "File Selected"
+        },
+        button: {
+          convert: "Convert to PowerPoint",
+          converting: "Converting..."
+        },
+        features: {
+          slideExtraction: {
+            title: "Slide Extraction",
+            description: "Convert PDF pages to editable slides"
+          },
+          preserveLayout: {
+            title: "Preserve Layout",
+            description: "Maintains original page layout and design"
+          },
+          fast: {
+            title: "Fast Processing",
+            description: "Conversion in seconds"
+          }
+        },
+        errors: {
+          conversionFailed: "Conversion failed. Please try again.",
+          networkError: "An error occurred during conversion."
+        },
+        success: {
+          message: "File converted successfully!"
+        }
+      }
     },
     tools: {
       wordToPdf: {
@@ -403,8 +929,7 @@ export const translations: Record<string, Translations> = {
       home: "Startseite",
       allTools: "Alle Tools",
       language: "Sprache",
-    },
-    home: {
+    },    home: {
       title: "Verbessern Sie Ihren Workflow",
       subtitle: "Entdecken Sie leistungsstarke PDF-Tools, nützliche Dienstprogramme und zeitsparende Konverter. Alles, was Sie für die Arbeit mit Dokumenten benötigen, an einem Ort.",
       exploreTools: "Tools Erkunden",
@@ -417,6 +942,182 @@ export const translations: Record<string, Translations> = {
       sectionTitle: "Beliebteste PDF-Tools",
       sectionSubtitle: "Professionelle Tools für alle Ihre PDF-Konvertierungs- und Bearbeitungsanforderungen",
       tryNow: "Jetzt testen",
+      whyChooseTitle: "Warum Unsere Plattform Wählen?",
+      whyChooseSubtitle: "Wir bieten die besten Tools mit Enterprise-Grade-Sicherheit und -Leistung",
+      features: {
+        superFast: {
+          title: "⚡ Superschnell",
+          description: "Konvertieren Sie Ihre Dokumente in Sekunden. Kein Warten, keine Verzögerungen - sofortige Ergebnisse mit unserer optimierten Verarbeitungsengine."
+        },
+        secure: {
+          title: "🔒 100% Sicher",
+          description: "Ihre Dateien werden sicher verarbeitet und sofort nach der Konvertierung gelöscht. Vollständige Privatsphäre garantiert mit SSL-Verschlüsselung."
+        },
+        worksEverywhere: {
+          title: "📱 Funktioniert Überall",
+          description: "Verwenden Sie es auf jedem Gerät - Desktop, Tablet oder Handy. Keine Downloads oder Installationen erforderlich. Einfach öffnen und mit dem Konvertieren beginnen."
+        },
+        highQuality: {
+          title: "🎯 Hohe Qualität",
+          description: "Bewahren Sie Ihre Dokumentqualität mit intelligenter Komprimierung. Ihre PDFs werden genau so aussehen, wie Sie es wünschen."
+        },
+        completelyFree: {
+          title: "💰 Völlig Kostenlos",
+          description: "Keine versteckten Gebühren, keine Abonnements, keine Limits. Konvertieren Sie so viele Dokumente wie Sie möchten, für immer und ohne Einschränkungen."
+        },
+        multipleFiles: {
+          title: "🔄 Mehrere Dateien",
+          description: "Laden Sie mehrere Dateien gleichzeitig hoch und konvertieren Sie sie alle zu einer einzigen PDF oder separaten Dateien. Stapelverarbeitung leicht gemacht."
+        }
+      },
+      cta: {
+        title: "Bereit Loszulegen?",
+        subtitle: "Schließen Sie sich Tausenden von Nutzern an, die unserer Plattform für ihre Dokumentkonvertierungsanforderungen vertrauen",
+        startNow: "Jetzt Mit Konvertieren Beginnen",
+        trustedText: "Von über 10.000 Nutzern weltweit vertraut"
+      }
+    },
+    toolPages: {
+      wordToPdf: {
+        title: "Word zu PDF Konverter",
+        subtitle: "Konvertieren Sie Ihre Word-Dokumente schnell und einfach in das PDF-Format. Arbeiten Sie mit unserem professionellen Konverter unter Beibehaltung von Format und Qualität.",
+        uploadArea: {
+          title: "Legen Sie Ihre Word-Datei hier ab",
+          description: "oder klicken Sie, um Dateien zu durchsuchen",
+          supportedFormats: "Unterstützt nur Word-Dateien",
+          fileSelected: "Datei Ausgewählt"
+        },
+        button: {
+          convert: "In PDF Konvertieren",
+          converting: "Konvertierung..."
+        },
+        features: {
+          highQuality: {
+            title: "Hohe Qualität",
+            description: "Bewahrt ursprüngliche Formatierung und Layout"
+          },
+          easyUpload: {
+            title: "Einfacher Upload",
+            description: "Dateien per Drag & Drop oder Klick hochladen"
+          },
+          fast: {
+            title: "Schnelle Verarbeitung",
+            description: "Konvertierung in Sekunden"
+          }
+        },
+        errors: {
+          conversionFailed: "Konvertierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+          networkError: "Ein Fehler ist während der Konvertierung aufgetreten."
+        },
+        success: {
+          message: "Datei erfolgreich konvertiert!"
+        }
+      },
+      pdfToExcel: {
+        title: "PDF zu Excel Konverter",
+        subtitle: "Konvertieren Sie Ihre PDF-Dokumente schnell und einfach in das Excel-Format. Extrahieren Sie Daten und Tabellen aus PDFs in bearbeitbare Tabellenkalkulationen.",
+        uploadArea: {
+          title: "Legen Sie Ihre PDF-Datei hier ab",
+          description: "oder klicken Sie, um Dateien zu durchsuchen",
+          supportedFormats: "Unterstützt nur PDF-Dateien",
+          fileSelected: "Datei Ausgewählt"
+        },
+        button: {
+          convert: "In Excel Konvertieren",
+          converting: "Konvertierung..."
+        },
+        features: {
+          dataExtraction: {
+            title: "Datenextraktion",
+            description: "Extrahieren Sie Daten und Tabellen aus PDF-Dateien"
+          },
+          preserveFormatting: {
+            title: "Formatierung Beibehalten",
+            description: "Behält ursprüngliche Tabellenstruktur und Formatierung bei"
+          },
+          fast: {
+            title: "Schnelle Verarbeitung",
+            description: "Konvertierung in Sekunden"
+          }
+        },
+        errors: {
+          conversionFailed: "Konvertierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+          networkError: "Ein Fehler ist während der Konvertierung aufgetreten."
+        },
+        success: {
+          message: "Datei erfolgreich konvertiert!"
+        }
+      },
+      pdfToWord: {
+        title: "PDF zu Word Konverter",
+        subtitle: "Konvertieren Sie Ihre PDF-Dokumente schnell und einfach in das Word-Format. Extrahieren Sie Text und Inhalte aus PDF-Dateien.",
+        uploadArea: {
+          title: "Legen Sie Ihre PDF-Datei hier ab",
+          description: "oder klicken Sie, um Dateien zu durchsuchen",
+          supportedFormats: "Unterstützt nur PDF-Dateien",
+          fileSelected: "Datei Ausgewählt"
+        },
+        button: {
+          convert: "In Word Konvertieren",
+          converting: "Konvertierung..."
+        },
+        features: {
+          textExtraction: {
+            title: "Textextraktion",
+            description: "Extrahieren Sie Text und Inhalte aus PDF-Dateien"
+          },
+          easyUpload: {
+            title: "Einfacher Upload",
+            description: "PDF-Dateien per Drag & Drop oder Klick hochladen"
+          },
+          preserveFormatting: {
+            title: "Formatierung Beibehalten",
+            description: "Behält ursprüngliches Layout und Formatierung bei"
+          }
+        },
+        errors: {
+          conversionFailed: "Konvertierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+          networkError: "Ein Fehler ist während der Konvertierung aufgetreten."
+        },
+        success: {
+          message: "Datei erfolgreich konvertiert!"
+        }
+      },
+      pdfToPowerPoint: {
+        title: "PDF zu PowerPoint Konverter",
+        subtitle: "Konvertieren Sie Ihre PDF-Dokumente schnell und einfach in das PowerPoint-Format. Verwandeln Sie PDFs in bearbeitbare Präsentationen.",
+        uploadArea: {
+          title: "Legen Sie Ihre PDF-Datei hier ab",
+          description: "oder klicken Sie, um Dateien zu durchsuchen",
+          supportedFormats: "Unterstützt nur PDF-Dateien",
+          fileSelected: "Datei Ausgewählt"
+        },
+        button: {
+          convert: "In PowerPoint Konvertieren",
+          converting: "Konvertierung..."
+        },
+        features: {
+          slideExtraction: {
+            title: "Folienextraktion",
+            description: "Konvertieren Sie PDF-Seiten in bearbeitbare Folien"
+          },
+          preserveLayout: {
+            title: "Layout Beibehalten",
+            description: "Behält ursprüngliches Seitenlayout und Design bei"
+          },
+          fast: {
+            title: "Schnelle Verarbeitung",
+            description: "Konvertierung in Sekunden"
+          }
+        },
+        errors: {
+          conversionFailed: "Konvertierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+          networkError: "Ein Fehler ist während der Konvertierung aufgetreten."
+        },
+        success: {
+          message: "Datei erfolgreich konvertiert!"
+        }
+      }
     },
     tools: {
       wordToPdf: {

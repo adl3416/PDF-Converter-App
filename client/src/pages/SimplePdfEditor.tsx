@@ -427,6 +427,9 @@ const SimplePdfEditor: React.FC = () => {
         };
     }, [pdfUrl]);
 
+    // Type guard for currentTool
+    const isSelectTool = (tool: typeof currentTool): tool is 'select' => tool === 'select';
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
             <div className="container mx-auto px-4 py-8">
@@ -458,7 +461,7 @@ const SimplePdfEditor: React.FC = () => {
                                 <button 
                                     onClick={() => setCurrentTool('select')}
                                     className={`w-full flex items-center space-x-3 p-3 text-left rounded-lg transition-colors ${
-                                        currentTool === 'select' ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-50'
+                                        isSelectTool(currentTool) ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-50'
                                     }`}
                                 >
                                     <Move className="h-5 w-5" />
@@ -892,7 +895,7 @@ const SimplePdfEditor: React.FC = () => {
                                             {currentTool === 'text' ? translations.pdfEditor.viewer.toolInstructions.textToolActive :
                                              currentTool === 'rectangle' ? translations.pdfEditor.viewer.toolInstructions.rectangleToolActive :
                                              currentTool === 'circle' ? translations.pdfEditor.viewer.toolInstructions.circleToolActive : ''}
-                                            {currentTool !== 'select' && ' - ' + translations.pdfEditor.viewer.toolInstructions.clickToAdd}
+                                            {!isSelectTool(currentTool) ? ' - ' + translations.pdfEditor.viewer.toolInstructions.clickToAdd : ''}
                                         </p>
                                     )}
                                 </div>
@@ -938,7 +941,7 @@ const SimplePdfEditor: React.FC = () => {
                         <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                             <div className="p-6">
                                 <div className="flex justify-between items-center mb-6">
-                                    <h2 className="text-2xl font-bold text-gray-900">İmza Ekle</h2>
+                                    <h2 className="text-2xl font-bold text-gray-900">{translations.pdfEditor.signatureModal.title}</h2>
                                     <button
                                         onClick={() => setShowSignatureModal(false)}
                                         className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
@@ -946,7 +949,6 @@ const SimplePdfEditor: React.FC = () => {
                                         <X size={24} />
                                     </button>
                                 </div>
-
                                 {/* İmza Türü Sekmeleri */}
                                 <div className="flex border-b border-gray-200 mb-6">
                                     <button
@@ -958,7 +960,7 @@ const SimplePdfEditor: React.FC = () => {
                                         }`}
                                     >
                                         <PenTool className="inline-block w-4 h-4 mr-2" />
-                                        İmza Çiz
+                                        {translations.pdfEditor.signatureModal.drawTab}
                                     </button>
                                     <button
                                         onClick={() => setSignatureType('text')}
@@ -969,76 +971,64 @@ const SimplePdfEditor: React.FC = () => {
                                         }`}
                                     >
                                         <Edit2 className="inline-block w-4 h-4 mr-2" />
-                                        İmza Yaz
+                                        {translations.pdfEditor.signatureModal.typeTab}
                                     </button>
                                 </div>
-
                                 {/* İmza Çizme Sekmesi */}
                                 {signatureType === 'draw' && (
-                                    <div className="space-y-4">
-                                        <div className="text-center">
-                                            <p className="text-gray-600 mb-4">İmzanızı aşağıdaki kutuya çizin</p>
-                                            <div className="border-2 border-gray-300 rounded-lg bg-white inline-block">
-                                                <canvas
-                                                    ref={canvasRef}
-                                                    width={400}
-                                                    height={200}
-                                                    className="cursor-crosshair"
-                                                    onMouseDown={startDrawing}
-                                                    onMouseMove={draw}
-                                                    onMouseUp={stopDrawing}
-                                                    onMouseLeave={stopDrawing}
-                                                />
-                                            </div>
-                                            <div className="mt-4">
-                                                <button
-                                                    onClick={clearCanvas}
-                                                    className="px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                                                >
-                                                    Temizle
-                                                </button>
-                                            </div>
+                                    <div>
+                                        <p className="mb-2 text-gray-700 text-sm">{translations.pdfEditor.signatureModal.drawInstruction}</p>
+                                        <canvas
+                                            ref={canvasRef}
+                                            width={400}
+                                            height={120}
+                                            className="border-2 border-dashed border-gray-300 rounded-lg w-full h-32 bg-white cursor-crosshair"
+                                            onMouseDown={startDrawing}
+                                            onMouseMove={draw}
+                                            onMouseUp={stopDrawing}
+                                            onMouseLeave={stopDrawing}
+                                        />
+                                        <div className="flex justify-between mt-2">
+                                            <button
+                                                onClick={clearCanvas}
+                                                className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+                                            >
+                                                {translations.pdfEditor.signatureModal.clear}
+                                            </button>
                                         </div>
                                     </div>
                                 )}
-
                                 {/* İmza Yazma Sekmesi */}
                                 {signatureType === 'text' && (
-                                    <div className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                İmzanızı yazın
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={textSignature}
-                                                onChange={(e) => setTextSignature(e.target.value)}
-                                                placeholder="Adınızı girin"
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Font Stili
-                                            </label>
-                                            <select
-                                                value={signatureFont}
-                                                onChange={(e) => setSignatureFont(e.target.value)}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                                            >
-                                                <option value="Brush Script MT, cursive">Brush Script</option>
-                                                <option value="Dancing Script, cursive">Dancing Script</option>
-                                                <option value="Great Vibes, cursive">Great Vibes</option>
-                                                <option value="Pacifico, cursive">Pacifico</option>
-                                                <option value="Sacramento, cursive">Sacramento</option>
-                                            </select>
-                                        </div>
-
+                                    <div>
+                                        <label className="block mb-2 text-gray-700 text-sm font-medium">
+                                            {translations.pdfEditor.signatureModal.typeLabel}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={textSignature}
+                                            onChange={(e) => setTextSignature(e.target.value)}
+                                            placeholder={translations.pdfEditor.signatureModal.typePlaceholder}
+                                            className="w-full px-3 py-2 border rounded mb-4"
+                                        />
+                                        <label className="block mb-2 text-gray-700 text-sm font-medium">
+                                            {translations.pdfEditor.signatureModal.fontLabel}
+                                        </label>
+                                        <select
+                                            value={signatureFont}
+                                            onChange={(e) => setSignatureFont(e.target.value)}
+                                            className="w-full px-3 py-2 border rounded mb-4"
+                                        >
+                                            <option value="Brush Script MT, cursive">Brush Script</option>
+                                            <option value="Dancing Script, cursive">Dancing Script</option>
+                                            <option value="Great Vibes, cursive">Great Vibes</option>
+                                            <option value="Pacifico, cursive">Pacifico</option>
+                                            <option value="Sacramento, cursive">Sacramento</option>
+                                        </select>
                                         {/* İmza Önizlemesi */}
                                         {textSignature && (
                                             <div className="p-6 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-                                                <p className="text-sm text-gray-600 mb-2">Önizleme:</p>
+                                                <p className="text-sm text-gray-600 mb-2">{translations.pdfEditor.signatureModal.preview}</p>
                                                 <div
                                                     style={{ fontFamily: signatureFont }}
                                                     className="text-3xl text-gray-900 text-center"
@@ -1049,14 +1039,13 @@ const SimplePdfEditor: React.FC = () => {
                                         )}
                                     </div>
                                 )}
-
                                 {/* Modal İşlemleri */}
                                 <div className="flex justify-end space-x-3 mt-8 pt-6 border-t border-gray-200">
                                     <button
                                         onClick={() => setShowSignatureModal(false)}
                                         className="px-6 py-3 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                                     >
-                                        İptal
+                                        {translations.pdfEditor.signatureModal.cancel}
                                     </button>
                                     <button
                                         onClick={saveSignature}
@@ -1066,7 +1055,7 @@ const SimplePdfEditor: React.FC = () => {
                                         }
                                         className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                                     >
-                                        İmza Ekle
+                                        {translations.pdfEditor.signatureModal.addSignature}
                                     </button>
                                 </div>
                             </div>

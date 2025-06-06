@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Upload, FileSpreadsheet, Download, CheckCircle, AlertCircle } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const PdfToExcel: React.FC = () => {
+    const { translations } = useLanguage();
     const [file, setFile] = useState<File | null>(null);
     const [isConverting, setIsConverting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -17,11 +19,10 @@ const PdfToExcel: React.FC = () => {
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         setDragActive(false);
-        const droppedFile = e.dataTransfer.files[0];
-        if (droppedFile && droppedFile.type === 'application/pdf') {
+        const droppedFile = e.dataTransfer.files[0];        if (droppedFile && droppedFile.type === 'application/pdf') {
             handleFileChange(droppedFile);
         } else {
-            setError('Please upload a valid PDF file');
+            setError(translations.toolPages.pdfToExcel.uploadArea.supportedFormats);
         }
     };
 
@@ -62,15 +63,14 @@ const PdfToExcel: React.FC = () => {
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
-                setIsSuccess(true);
-            } else {
+                setIsSuccess(true);            } else {
                 const errorText = await response.text();
                 console.error('Server response error:', errorText);
-                setError('Conversion failed. Please try again.');
+                setError(translations.toolPages.pdfToExcel.errors.conversionFailed);
             }
         } catch (error) {
             console.error('Network error:', error);
-            setError('An error occurred during conversion.');
+            setError(translations.toolPages.pdfToExcel.errors.networkError);
         } finally {
             setIsConverting(false);
         }
@@ -78,18 +78,16 @@ const PdfToExcel: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
-            <div className="container mx-auto px-4 py-16">
-                {/* Header Section */}
+            <div className="container mx-auto px-4 py-16">                {/* Header Section */}
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-6">
                         <FileSpreadsheet className="w-8 h-8 text-green-600" />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                        PDF to Excel Converter
+                        {translations.toolPages.pdfToExcel.title}
                     </h1>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Convert your PDF documents to Excel format quickly and easily. 
-                        Extract data and tables from PDFs into editable spreadsheets.
+                        {translations.toolPages.pdfToExcel.subtitle}
                     </p>
                 </div>
 
@@ -114,25 +112,24 @@ const PdfToExcel: React.FC = () => {
                                     onChange={(e) => e.target.files?.[0] && handleFileChange(e.target.files[0])}
                                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                 />
-                                
-                                {!file ? (
+                                  {!file ? (
                                     <>
                                         <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                                         <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                            Drop your PDF file here
+                                            {translations.toolPages.pdfToExcel.uploadArea.title}
                                         </h3>
                                         <p className="text-gray-500 mb-4">
-                                            or click to browse files
+                                            {translations.toolPages.pdfToExcel.uploadArea.description}
                                         </p>
                                         <p className="text-sm text-gray-400">
-                                            Supports PDF files only
+                                            {translations.toolPages.pdfToExcel.uploadArea.supportedFormats}
                                         </p>
                                     </>
                                 ) : (
                                     <>
                                         <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
                                         <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                            File Selected
+                                            {translations.toolPages.pdfToExcel.uploadArea.fileSelected}
                                         </h3>
                                         <p className="text-gray-600 font-medium">
                                             {file.name}
@@ -150,13 +147,11 @@ const PdfToExcel: React.FC = () => {
                                     <AlertCircle className="w-5 h-5 text-red-500" />
                                     <span className="text-red-700">{error}</span>
                                 </div>
-                            )}
-
-                            {/* Success Message */}
+                            )}                            {/* Success Message */}
                             {isSuccess && (
                                 <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-lg">
                                     <CheckCircle className="w-5 h-5 text-green-500" />
-                                    <span className="text-green-700">File converted successfully!</span>
+                                    <span className="text-green-700">{translations.toolPages.pdfToExcel.success.message}</span>
                                 </div>
                             )}
 
@@ -171,46 +166,43 @@ const PdfToExcel: React.FC = () => {
                                         : 'bg-gray-300 cursor-not-allowed'
                                     }
                                 `}
-                            >
-                                {isConverting ? (
+                            >                                {isConverting ? (
                                     <>
                                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                        Converting...
+                                        {translations.toolPages.pdfToExcel.button.converting}
                                     </>
                                 ) : (
                                     <>
                                         <Download className="w-5 h-5" />
-                                        Convert to Excel
+                                        {translations.toolPages.pdfToExcel.button.convert}
                                     </>
                                 )}
                             </button>
                         </form>
-                    </div>
-
-                    {/* Features Section */}
+                    </div>                    {/* Features Section */}
                     <div className="mt-12 grid md:grid-cols-3 gap-6">
                         <div className="text-center p-6">
                             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <CheckCircle className="w-6 h-6 text-green-600" />
                             </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">Data Extraction</h3>
-                            <p className="text-gray-600 text-sm">Extract tables and text data from PDFs</p>
+                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.pdfToExcel.features.dataExtraction.title}</h3>
+                            <p className="text-gray-600 text-sm">{translations.toolPages.pdfToExcel.features.dataExtraction.description}</p>
                         </div>
                         
                         <div className="text-center p-6">
                             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Upload className="w-6 h-6 text-blue-600" />
                             </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">Easy Upload</h3>
-                            <p className="text-gray-600 text-sm">Drag & drop or click to upload PDF files</p>
+                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.pdfToExcel.features.preserveFormatting.title}</h3>
+                            <p className="text-gray-600 text-sm">{translations.toolPages.pdfToExcel.features.preserveFormatting.description}</p>
                         </div>
                         
                         <div className="text-center p-6">
                             <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Download className="w-6 h-6 text-purple-600" />
                             </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">Instant Download</h3>
-                            <p className="text-gray-600 text-sm">Get your Excel file immediately</p>
+                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.pdfToExcel.features.fast.title}</h3>
+                            <p className="text-gray-600 text-sm">{translations.toolPages.pdfToExcel.features.fast.description}</p>
                         </div>
                     </div>
                 </div>

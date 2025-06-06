@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Upload, FileText, Download, CheckCircle, AlertCircle } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const WordToPdf: React.FC = () => {
+    const { translations } = useLanguage();
     const [file, setFile] = useState<File | null>(null);
     const [isConverting, setIsConverting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -21,7 +23,7 @@ const WordToPdf: React.FC = () => {
         if (droppedFile && (droppedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || droppedFile.type === 'application/msword')) {
             handleFileChange(droppedFile);
         } else {
-            setError('Please upload a valid Word document (.docx or .doc)');
+            setError(translations.toolPages.wordToPdf.uploadArea.supportedFormats);
         }
     };
 
@@ -67,11 +69,11 @@ const WordToPdf: React.FC = () => {
             } else {
                 const errorText = await response.text();
                 console.error('Server response error:', errorText);
-                setError('Conversion failed. Please try again.');
+                setError(translations.toolPages.wordToPdf.errors.conversionFailed);
             }
         } catch (error) {
             console.error('Network error:', error);
-            setError('An error occurred during conversion.');
+            setError(translations.toolPages.wordToPdf.errors.networkError);
         } finally {
             setIsConverting(false);
         }
@@ -86,11 +88,10 @@ const WordToPdf: React.FC = () => {
                         <FileText className="w-8 h-8 text-blue-600" />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                        Word to PDF Converter
+                        {translations.toolPages.wordToPdf.title}
                     </h1>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Convert your Word documents to PDF format quickly and easily. 
-                        Maintain formatting and quality with our professional converter.
+                        {translations.toolPages.wordToPdf.subtitle}
                     </p>
                 </div>
 
@@ -120,20 +121,20 @@ const WordToPdf: React.FC = () => {
                                     <>
                                         <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                                         <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                            Drop your Word file here
+                                            {translations.toolPages.wordToPdf.uploadArea.title}
                                         </h3>
                                         <p className="text-gray-500 mb-4">
-                                            or click to browse files
+                                            {translations.toolPages.wordToPdf.uploadArea.description}
                                         </p>
                                         <p className="text-sm text-gray-400">
-                                            Supports .doc and .docx files
+                                            {translations.toolPages.wordToPdf.uploadArea.supportedFormats}
                                         </p>
                                     </>
                                 ) : (
                                     <>
                                         <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
                                         <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                            File Selected
+                                            {translations.toolPages.wordToPdf.uploadArea.fileSelected}
                                         </h3>
                                         <p className="text-gray-600 font-medium">
                                             {file.name}
@@ -157,7 +158,7 @@ const WordToPdf: React.FC = () => {
                             {isSuccess && (
                                 <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-lg">
                                     <CheckCircle className="w-5 h-5 text-green-500" />
-                                    <span className="text-green-700">File converted successfully!</span>
+                                    <span className="text-green-700">{translations.toolPages.wordToPdf.success.message}</span>
                                 </div>
                             )}
 
@@ -176,12 +177,12 @@ const WordToPdf: React.FC = () => {
                                 {isConverting ? (
                                     <>
                                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                        Converting...
+                                        {translations.toolPages.wordToPdf.button.converting}
                                     </>
                                 ) : (
                                     <>
                                         <Download className="w-5 h-5" />
-                                        Convert to PDF
+                                        {translations.toolPages.wordToPdf.button.convert}
                                     </>
                                 )}
                             </button>
@@ -194,24 +195,24 @@ const WordToPdf: React.FC = () => {
                             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <CheckCircle className="w-6 h-6 text-blue-600" />
                             </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">High Quality</h3>
-                            <p className="text-gray-600 text-sm">Maintains original formatting and layout</p>
+                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.wordToPdf.features.highQuality.title}</h3>
+                            <p className="text-gray-600 text-sm">{translations.toolPages.wordToPdf.features.highQuality.description}</p>
                         </div>
                         
                         <div className="text-center p-6">
                             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Upload className="w-6 h-6 text-green-600" />
                             </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">Easy Upload</h3>
-                            <p className="text-gray-600 text-sm">Drag & drop or click to upload files</p>
+                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.wordToPdf.features.easyUpload.title}</h3>
+                            <p className="text-gray-600 text-sm">{translations.toolPages.wordToPdf.features.easyUpload.description}</p>
                         </div>
                         
                         <div className="text-center p-6">
                             <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Download className="w-6 h-6 text-purple-600" />
                             </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">Instant Download</h3>
-                            <p className="text-gray-600 text-sm">Get your PDF file immediately</p>
+                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.wordToPdf.features.fast.title}</h3>
+                            <p className="text-gray-600 text-sm">{translations.toolPages.wordToPdf.features.fast.description}</p>
                         </div>
                     </div>
                 </div>
