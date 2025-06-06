@@ -9,6 +9,9 @@ import SimplePdfEditor from './pages/SimplePdfEditor';
 import PdfToExcel from './pages/PdfToExcel';
 import PdfToWord from './pages/PdfToWord';
 import PdfToPowerPoint from './pages/PdfToPowerPoint';
+import ImageToPdf from './pages/ImageToPdf';
+import PdfToImage from './pages/PdfToImage';
+import ExcelToPdf from './pages/ExcelToPdf';
 
 const App: React.FC = () => {
   return (
@@ -24,6 +27,9 @@ const App: React.FC = () => {
               <Route path="/pdf-to-excel" element={<PdfToExcel />} />
               <Route path="/pdf-to-word" element={<PdfToWord />} />
               <Route path="/pdf-to-powerpoint" element={<PdfToPowerPoint />} />
+              <Route path="/image-to-pdf" element={<ImageToPdf />} />
+              <Route path="/pdf-to-image" element={<PdfToImage />} />
+              <Route path="/excel-to-pdf" element={<ExcelToPdf />} />
             </Routes>
           </main>
           <Footer />

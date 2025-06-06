@@ -196,6 +196,111 @@ export interface Translations {
       errors: {
         conversionFailed: string;
         networkError: string;
+      };      success: {
+        message: string;
+      };
+    };
+    imageToPdf: {
+      title: string;
+      subtitle: string;
+      uploadArea: {
+        title: string;
+        description: string;
+        supportedFormats: string;
+        fileSelected: string;
+      };
+      button: {
+        convert: string;
+        converting: string;
+      };
+      features: {
+        multipleImages: {
+          title: string;
+          description: string;
+        };
+        highQuality: {
+          title: string;
+          description: string;
+        };
+        fastConversion: {
+          title: string;
+          description: string;
+        };
+      };
+      errors: {
+        conversionFailed: string;
+        networkError: string;
+        invalidFileType: string;
+      };
+      success: {
+        message: string;
+      };
+    };
+    pdfToImage: {
+      title: string;
+      subtitle: string;
+      uploadArea: {
+        title: string;
+        description: string;
+        supportedFormats: string;
+        fileSelected: string;
+      };
+      button: {
+        convert: string;
+        converting: string;
+      };
+      features: {
+        pageExtraction: {
+          title: string;
+          description: string;
+        };
+        multipleFormats: {
+          title: string;
+          description: string;
+        };
+        highResolution: {
+          title: string;
+          description: string;
+        };
+      };
+      errors: {
+        conversionFailed: string;
+        networkError: string;
+      };
+      success: {
+        message: string;
+      };
+    };
+    excelToPdf: {
+      title: string;
+      subtitle: string;
+      uploadArea: {
+        title: string;
+        description: string;
+        supportedFormats: string;
+        fileSelected: string;
+      };
+      button: {
+        convert: string;
+        converting: string;
+      };
+      features: {
+        preserveFormatting: {
+          title: string;
+          description: string;
+        };
+        multipleSheets: {
+          title: string;
+          description: string;
+        };
+        professionalOutput: {
+          title: string;
+          description: string;
+        };
+      };
+      errors: {
+        conversionFailed: string;
+        networkError: string;
       };
       success: {
         message: string;
@@ -540,6 +645,216 @@ export const translations: Record<string, Translations> = {
         errors: {
           conversionFailed: "Dönüştürme başarısız. Lütfen tekrar deneyin.",
           networkError: "Dönüştürme sırasında bir hata oluştu."
+        },        success: {
+          message: "Dosya başarıyla dönüştürüldü!"
+        }
+      },
+      imageToPdf: {
+        title: "Resim'den PDF'e Dönüştürücü",
+        subtitle: "Resim dosyalarınızı hızlı ve kolay bir şekilde PDF'e dönüştürün. Birden fazla resmi tek PDF'de birleştirin.",
+        uploadArea: {
+          title: "Resim dosyalarınızı buraya bırakın",
+          description: "veya dosyaları taramak için tıklayın",
+          supportedFormats: "JPG, PNG, GIF, BMP dosyalarını destekler",
+          fileSelected: "Dosya Seçildi"
+        },
+        button: {
+          convert: "PDF'e Dönüştür",
+          converting: "Dönüştürülüyor..."
+        },
+        features: {
+          multipleImages: {
+            title: "Çoklu Resim",
+            description: "Birden fazla resmi tek PDF'de birleştirin"
+          },
+          highQuality: {
+            title: "Yüksek Kalite",
+            description: "Orijinal resim kalitesini korur"
+          },
+          fastConversion: {
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde dönüştürme işlemi"
+          }
+        },
+        errors: {
+          conversionFailed: "Dönüştürme başarısız. Lütfen tekrar deneyin.",
+          networkError: "Dönüştürme sırasında bir hata oluştu.",
+          invalidFileType: "Lütfen geçerli bir resim dosyası yükleyin"
+        },
+        success: {
+          message: "Dosya başarıyla dönüştürüldü!"
+        }
+      },
+      pdfToImage: {
+        title: "PDF'den Resim'e Dönüştürücü", 
+        subtitle: "PDF sayfalarınızı yüksek kaliteli resim dosyalarına dönüştürün. Her sayfa ayrı bir resim olarak kaydedilir.",
+        uploadArea: {
+          title: "PDF dosyanızı buraya bırakın",
+          description: "veya dosyaları taramak için tıklayın",
+          supportedFormats: "Yalnızca PDF dosyalarını destekler",
+          fileSelected: "Dosya Seçildi"
+        },
+        button: {
+          convert: "Resim'e Dönüştür",
+          converting: "Dönüştürülüyor..."
+        },
+        features: {
+          pageExtraction: {
+            title: "Sayfa Çıkarma",
+            description: "Her PDF sayfasını ayrı resim dosyası olarak kaydedin"
+          },
+          multipleFormats: {
+            title: "Çoklu Format",
+            description: "JPG, PNG formatlarında dışa aktarım"
+          },
+          highResolution: {
+            title: "Yüksek Çözünürlük",
+            description: "Keskin ve net resim kalitesi"
+          }
+        },
+        errors: {
+          conversionFailed: "Dönüştürme başarısız. Lütfen tekrar deneyin.",
+          networkError: "Dönüştürme sırasında bir hata oluştu."
+        },
+        success: {
+          message: "Dosya başarıyla dönüştürüldü!"
+        }
+      },
+      excelToPdf: {
+        title: "Excel'den PDF'e Dönüştürücü",
+        subtitle: "Excel dosyalarınızı profesyonel PDF belgelerine dönüştürün. Tüm biçimlendirme ve düzen korunur.",
+        uploadArea: {
+          title: "Excel dosyanızı buraya bırakın",
+          description: "veya dosyaları taramak için tıklayın", 
+          supportedFormats: "XLS, XLSX dosyalarını destekler",
+          fileSelected: "Dosya Seçildi"
+        },
+        button: {
+          convert: "PDF'e Dönüştür",
+          converting: "Dönüştürülüyor..."
+        },
+        features: {
+          preserveFormatting: {
+            title: "Biçimlendirme Korunur",
+            description: "Orijinal Excel biçimlendirmesi ve düzeni korunur"
+          },
+          multipleSheets: {
+            title: "Çoklu Sayfa",
+            description: "Tüm Excel sayfalarını tek PDF'e dönüştürün"
+          },
+          professionalOutput: {
+            title: "Profesyonel Çıktı",
+            description: "Yazdırma için optimize edilmiş PDF formatı"
+          }
+        },
+        errors: {
+          conversionFailed: "Dönüştürme başarısız. Lütfen tekrar deneyin.",
+          networkError: "Dönüştürme sırasında bir hata oluştu."
+        },        success: {
+          message: "Dosya başarıyla dönüştürüldü!"
+        }
+      },
+      imageToPdf: {
+        title: "Resim'den PDF'e Dönüştürücü",
+        subtitle: "Resim dosyalarınızı hızlı ve kolay bir şekilde PDF'e dönüştürün. Birden fazla resmi tek PDF'de birleştirin.",
+        uploadArea: {
+          title: "Resim dosyalarınızı buraya bırakın",
+          description: "veya dosyaları taramak için tıklayın",
+          supportedFormats: "JPG, PNG, GIF, BMP dosyalarını destekler",
+          fileSelected: "Dosya Seçildi"
+        },
+        button: {
+          convert: "PDF'e Dönüştür",
+          converting: "Dönüştürülüyor..."
+        },
+        features: {
+          multipleImages: {
+            title: "Çoklu Resim",
+            description: "Birden fazla resmi tek PDF'de birleştirin"
+          },
+          highQuality: {
+            title: "Yüksek Kalite",
+            description: "Orijinal resim kalitesini korur"
+          },
+          fastConversion: {
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde dönüştürme işlemi"
+          }
+        },
+        errors: {
+          conversionFailed: "Dönüştürme başarısız. Lütfen tekrar deneyin.",
+          networkError: "Dönüştürme sırasında bir hata oluştu.",
+          invalidFileType: "Lütfen geçerli bir resim dosyası yükleyin"
+        },
+        success: {
+          message: "Dosya başarıyla dönüştürüldü!"
+        }
+      },
+      pdfToImage: {
+        title: "PDF'den Resim'e Dönüştürücü", 
+        subtitle: "PDF sayfalarınızı yüksek kaliteli resim dosyalarına dönüştürün. Her sayfa ayrı bir resim olarak kaydedilir.",
+        uploadArea: {
+          title: "PDF dosyanızı buraya bırakın",
+          description: "veya dosyaları taramak için tıklayın",
+          supportedFormats: "Yalnızca PDF dosyalarını destekler",
+          fileSelected: "Dosya Seçildi"
+        },
+        button: {
+          convert: "Resim'e Dönüştür",
+          converting: "Dönüştürülüyor..."
+        },
+        features: {
+          pageExtraction: {
+            title: "Sayfa Çıkarma",
+            description: "Her PDF sayfasını ayrı resim dosyası olarak kaydedin"
+          },
+          multipleFormats: {
+            title: "Çoklu Format",
+            description: "JPG, PNG formatlarında dışa aktarım"
+          },
+          highResolution: {
+            title: "Yüksek Çözünürlük",
+            description: "Keskin ve net resim kalitesi"
+          }
+        },
+        errors: {
+          conversionFailed: "Dönüştürme başarısız. Lütfen tekrar deneyin.",
+          networkError: "Dönüştürme sırasında bir hata oluştu."
+        },
+        success: {
+          message: "Dosya başarıyla dönüştürüldü!"
+        }
+      },
+      excelToPdf: {
+        title: "Excel'den PDF'e Dönüştürücü",
+        subtitle: "Excel dosyalarınızı profesyonel PDF belgelerine dönüştürün. Tüm biçimlendirme ve düzen korunur.",
+        uploadArea: {
+          title: "Excel dosyanızı buraya bırakın",
+          description: "veya dosyaları taramak için tıklayın", 
+          supportedFormats: "XLS, XLSX dosyalarını destekler",
+          fileSelected: "Dosya Seçildi"
+        },
+        button: {
+          convert: "PDF'e Dönüştür",
+          converting: "Dönüştürülüyor..."
+        },
+        features: {
+          preserveFormatting: {
+            title: "Biçimlendirme Korunur",
+            description: "Orijinal Excel biçimlendirmesi ve düzeni korunur"
+          },
+          multipleSheets: {
+            title: "Çoklu Sayfa",
+            description: "Tüm Excel sayfalarını tek PDF'e dönüştürün"
+          },
+          professionalOutput: {
+            title: "Profesyonel Çıktı",
+            description: "Yazdırma için optimize edilmiş PDF formatı"
+          }
+        },
+        errors: {
+          conversionFailed: "Dönüştürme başarısız. Lütfen tekrar deneyin.",
+          networkError: "Dönüştürme sırasında bir hata oluştu."
         },
         success: {
           message: "Dosya başarıyla dönüştürüldü!"
@@ -804,6 +1119,111 @@ export const translations: Record<string, Translations> = {
           fast: {
             title: "Fast Processing",
             description: "Conversion in seconds"
+          }
+        },
+        errors: {
+          conversionFailed: "Conversion failed. Please try again.",
+          networkError: "An error occurred during conversion."
+        },        success: {
+          message: "File converted successfully!"
+        }
+      },
+      imageToPdf: {
+        title: "Image to PDF Converter",
+        subtitle: "Convert your image files to PDF quickly and easily. Combine multiple images into a single PDF document.",
+        uploadArea: {
+          title: "Drop your image files here",
+          description: "or click to browse files",
+          supportedFormats: "Supports JPG, PNG, GIF, BMP files",
+          fileSelected: "File Selected"
+        },
+        button: {
+          convert: "Convert to PDF",
+          converting: "Converting..."
+        },
+        features: {
+          multipleImages: {
+            title: "Multiple Images",
+            description: "Combine multiple images into one PDF"
+          },
+          highQuality: {
+            title: "High Quality",
+            description: "Preserves original image quality"
+          },
+          fastConversion: {
+            title: "Fast Conversion",
+            description: "Convert in seconds"
+          }
+        },
+        errors: {
+          conversionFailed: "Conversion failed. Please try again.",
+          networkError: "An error occurred during conversion.",
+          invalidFileType: "Please upload a valid image file"
+        },
+        success: {
+          message: "File converted successfully!"
+        }
+      },
+      pdfToImage: {
+        title: "PDF to Image Converter",
+        subtitle: "Convert PDF pages to high-quality image files. Each page will be saved as a separate image.",
+        uploadArea: {
+          title: "Drop your PDF file here",
+          description: "or click to browse files",
+          supportedFormats: "Supports PDF files only",
+          fileSelected: "File Selected"
+        },
+        button: {
+          convert: "Convert to Images",
+          converting: "Converting..."
+        },
+        features: {
+          pageExtraction: {
+            title: "Page Extraction",
+            description: "Save each PDF page as a separate image"
+          },
+          multipleFormats: {
+            title: "Multiple Formats",
+            description: "Export as JPG, PNG formats"
+          },
+          highResolution: {
+            title: "High Resolution",
+            description: "Sharp and clear image quality"
+          }
+        },
+        errors: {
+          conversionFailed: "Conversion failed. Please try again.",
+          networkError: "An error occurred during conversion."
+        },
+        success: {
+          message: "File converted successfully!"
+        }
+      },
+      excelToPdf: {
+        title: "Excel to PDF Converter",
+        subtitle: "Convert Excel files to professional PDF documents. All formatting and layout is preserved.",
+        uploadArea: {
+          title: "Drop your Excel file here",
+          description: "or click to browse files",
+          supportedFormats: "Supports XLS, XLSX files",
+          fileSelected: "File Selected"
+        },
+        button: {
+          convert: "Convert to PDF",
+          converting: "Converting..."
+        },
+        features: {
+          preserveFormatting: {
+            title: "Preserve Formatting",
+            description: "Original Excel formatting and layout preserved"
+          },
+          multipleSheets: {
+            title: "Multiple Sheets",
+            description: "Convert all Excel sheets to one PDF"
+          },
+          professionalOutput: {
+            title: "Professional Output",
+            description: "Print-optimized PDF format"
           }
         },
         errors: {
@@ -1108,6 +1528,111 @@ export const translations: Record<string, Translations> = {
           fast: {
             title: "Schnelle Verarbeitung",
             description: "Konvertierung in Sekunden"
+          }
+        },
+        errors: {
+          conversionFailed: "Konvertierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+          networkError: "Ein Fehler ist während der Konvertierung aufgetreten."
+        },        success: {
+          message: "Datei erfolgreich konvertiert!"
+        }
+      },
+      imageToPdf: {
+        title: "Bild zu PDF Konverter",
+        subtitle: "Konvertieren Sie Ihre Bilddateien schnell und einfach zu PDF. Kombinieren Sie mehrere Bilder in einem PDF-Dokument.",
+        uploadArea: {
+          title: "Legen Sie Ihre Bilddateien hier ab",
+          description: "oder klicken Sie zum Durchsuchen",
+          supportedFormats: "Unterstützt JPG, PNG, GIF, BMP Dateien",
+          fileSelected: "Datei Ausgewählt"
+        },
+        button: {
+          convert: "Zu PDF konvertieren",
+          converting: "Konvertierung..."
+        },
+        features: {
+          multipleImages: {
+            title: "Mehrere Bilder",
+            description: "Kombinieren Sie mehrere Bilder in einer PDF"
+          },
+          highQuality: {
+            title: "Hohe Qualität",
+            description: "Bewahrt die ursprüngliche Bildqualität"
+          },
+          fastConversion: {
+            title: "Schnelle Konvertierung",
+            description: "Konvertierung in Sekunden"
+          }
+        },
+        errors: {
+          conversionFailed: "Konvertierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+          networkError: "Ein Fehler ist während der Konvertierung aufgetreten.",
+          invalidFileType: "Bitte laden Sie eine gültige Bilddatei hoch"
+        },
+        success: {
+          message: "Datei erfolgreich konvertiert!"
+        }
+      },
+      pdfToImage: {
+        title: "PDF zu Bild Konverter",
+        subtitle: "Konvertieren Sie PDF-Seiten zu hochwertigen Bilddateien. Jede Seite wird als separates Bild gespeichert.",
+        uploadArea: {
+          title: "Legen Sie Ihre PDF-Datei hier ab",
+          description: "oder klicken Sie zum Durchsuchen",
+          supportedFormats: "Unterstützt nur PDF-Dateien",
+          fileSelected: "Datei Ausgewählt"
+        },
+        button: {
+          convert: "Zu Bildern konvertieren",
+          converting: "Konvertierung..."
+        },
+        features: {
+          pageExtraction: {
+            title: "Seitenextraktion",
+            description: "Speichern Sie jede PDF-Seite als separates Bild"
+          },
+          multipleFormats: {
+            title: "Mehrere Formate",
+            description: "Export als JPG, PNG Formate"
+          },
+          highResolution: {
+            title: "Hohe Auflösung",
+            description: "Scharfe und klare Bildqualität"
+          }
+        },
+        errors: {
+          conversionFailed: "Konvertierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+          networkError: "Ein Fehler ist während der Konvertierung aufgetreten."
+        },
+        success: {
+          message: "Datei erfolgreich konvertiert!"
+        }
+      },
+      excelToPdf: {
+        title: "Excel zu PDF Konverter",
+        subtitle: "Konvertieren Sie Excel-Dateien zu professionellen PDF-Dokumenten. Alle Formatierungen und Layouts bleiben erhalten.",
+        uploadArea: {
+          title: "Legen Sie Ihre Excel-Datei hier ab",
+          description: "oder klicken Sie zum Durchsuchen",
+          supportedFormats: "Unterstützt XLS, XLSX Dateien",
+          fileSelected: "Datei Ausgewählt"
+        },
+        button: {
+          convert: "Zu PDF konvertieren",
+          converting: "Konvertierung..."
+        },
+        features: {
+          preserveFormatting: {
+            title: "Formatierung Beibehalten",
+            description: "Ursprüngliche Excel-Formatierung und Layout beibehalten"
+          },
+          multipleSheets: {
+            title: "Mehrere Blätter",
+            description: "Konvertieren Sie alle Excel-Blätter zu einer PDF"
+          },
+          professionalOutput: {
+            title: "Professionelle Ausgabe",
+            description: "Druckoptimiertes PDF-Format"
           }
         },
         errors: {
