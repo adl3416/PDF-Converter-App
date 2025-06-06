@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getTranslation, Translations } from '../utils/translations';
+import { getTranslation, type Translations } from '../utils/translations';
 
 export interface Language {
   code: string;

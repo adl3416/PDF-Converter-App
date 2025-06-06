@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Converter - Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .header {
+            background: #3b82f6;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .content {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .success {
+            color: #059669;
+            font-weight: bold;
+        }
+        .test-button {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .language-selector {
+            margin: 20px 0;
+        }
+        select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔧 PDF Converter App - Test Page</h1>
+        <p>Uygulama Test Sayfası / Application Test Page</p>
+    </div>
+    
+    <div class="content">
+        <h2 class="success">✅ HTML Sayfası Çalışıyor / HTML Page Working</h2>
+        
+        <div class="language-selector">
+            <label for="language">Dil Seçimi / Language Selection:</label>
+            <select id="language" onchange="changeLanguage()">
+                <option value="tr">🇹🇷 Türkçe</option>
+                <option value="en">🇺🇸 English</option>
+                <option value="de">🇩🇪 Deutsch</option>
+            </select>
+        </div>
+        
+        <button class="test-button" onclick="testFunction()">Test React Bağlantısı / Test React Connection</button>
+        
+        <div id="status" style="margin-top: 20px;">
+            <p><strong>Durum / Status:</strong></p>
+            <p>✅ HTML: Çalışıyor / Working</p>
+            <p>❓ React: Test edilecek / To be tested</p>
+            <p>❓ Vite Server: <span id="server-status">Kontrol ediliyor / Checking...</span></p>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 15px; background: #fff3cd; border-radius: 5px;">
+            <h3>🛠️ Troubleshooting / Sorun Giderme</h3>
+            <ol style="text-align: left;">
+                <li>Bu sayfayı görüyorsanız HTML çalışıyor / If you see this page, HTML is working</li>
+                <li>React server'ı kontrol edin: http://localhost:5173/ / Check React server: http://localhost:5173/</li>
+                <li>Browser console'u kontrol edin / Check browser console</li>
+                <li>Network tab'ını kontrol edin / Check network tab</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function changeLanguage() {
+            const select = document.getElementById('language');
+            const value = select.value;
+            alert('Dil değiştirildi / Language changed: ' + value);
+        }
+        
+        function testFunction() {
+            alert('JavaScript çalışıyor! / JavaScript is working!');
+            
+            // Test React server connection
+            fetch('http://localhost:5173/')
+                .then(response => {
+                    document.getElementById('server-status').textContent = 'Çalışıyor / Working ✅';
+                    document.getElementById('server-status').style.color = 'green';
+                })
+                .catch(error => {
+                    document.getElementById('server-status').textContent = 'Bağlanamıyor / Cannot connect ❌';
+                    document.getElementById('server-status').style.color = 'red';
+                    console.error('Server connection error:', error);
+                });
+        }
+        
+        // Auto-test server connection on page load
+        window.onload = function() {
+            testFunction();
+        };
+    </script>
+</body>
+</html>
