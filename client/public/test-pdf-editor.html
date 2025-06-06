@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Editor Test</title>
+    <script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #007bff;
+            background: #f8f9fa;
+        }
+        .upload-area.dragover {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        .file-input {
+            margin: 10px 0;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .pdf-viewer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #pdfCanvas {
+            max-width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+        .controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PDF Editor Test</h1>
+        <p>Bu sayfa PDF yükleme ve görüntüleme işlevlerini test etmek için oluşturulmuştur.</p>
+        
+        <div class="upload-area" id="uploadArea">
+            <h3>PDF Dosyası Yükleyin</h3>
+            <p>PDF dosyasını buraya sürükleyip bırakın veya seçmek için tıklayın</p>
+            <input type="file" id="fileInput" accept=".pdf" class="file-input" style="display: none;">
+            <button class="btn" onclick="document.getElementById('fileInput').click()">Dosya Seç</button>
+            <button class="btn" onclick="createTestPDF()">Test PDF Oluştur</button>
+        </div>
+        
+        <div id="message"></div>
+        
+        <div class="controls" id="controls" style="display: none;">
+            <button class="btn" onclick="previousPage()">← Önceki</button>
+            <span id="pageInfo">Sayfa: 1 / 1</span>
+            <button class="btn" onclick="nextPage()">Sonraki →</button>
+            <button class="btn" onclick="zoomOut()">Uzaklaştır</button>
+            <span id="zoomInfo">100%</span>
+            <button class="btn" onclick="zoomIn()">Yakınlaştır</button>
+        </div>
+        
+        <div class="pdf-viewer">
+            <canvas id="pdfCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // PDF.js konfigürasyonu
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+        
+        let pdfDoc = null;
+        let pageNum = 1;
+        let pageRendering = false;
+        let pageNumPending = null;
+        let scale = 1.2;
+        
+        const canvas = document.getElementById('pdfCanvas');
+        const ctx = canvas.getContext('2d');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const message = document.getElementById('message');
+        const controls = document.getElementById('controls');
+        
+        // Drag & Drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+        
+        function showMessage(text, type = 'success') {
+            message.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => {
+                message.innerHTML = '';
+            }, 5000);
+        }
+        
+        function handleFile(file) {
+            if (file.type !== 'application/pdf') {
+                showMessage('Lütfen PDF dosyası seçin!', 'error');
+                return;
+            }
+            
+            showMessage('PDF yükleniyor...', 'success');
+            
+            const fileReader = new FileReader();
+            fileReader.onload = function() {
+                const typedarray = new Uint8Array(this.result);
+                loadPDF(typedarray);
+            };
+            fileReader.readAsArrayBuffer(file);
+        }
+        
+        async function loadPDF(data) {
+            try {
+                pdfDoc = await pdfjsLib.getDocument(data).promise;
+                showMessage(`PDF yüklendi! Toplam sayfa: ${pdfDoc.numPages}`, 'success');
+                controls.style.display = 'block';
+                renderPage(pageNum);
+                updatePageInfo();
+            } catch (error) {
+                console.error('PDF yükleme hatası:', error);
+                showMessage(`PDF yüklenemedi: ${error.message}`, 'error');
+            }
+        }
+        
+        async function renderPage(num) {
+            pageRendering = true;
+            
+            try {
+                const page = await pdfDoc.getPage(num);
+                const viewport = page.getViewport({ scale: scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                
+                await page.render(renderContext).promise;
+                pageRendering = false;
+                
+                if (pageNumPending !== null) {
+                    renderPage(pageNumPending);
+                    pageNumPending = null;
+                }
+            } catch (error) {
+                console.error('Sayfa render hatası:', error);
+                showMessage(`Sayfa ${num} yüklenemedi: ${error.message}`, 'error');
+                pageRendering = false;
+            }
+        }
+        
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+        
+        function previousPage() {
+            if (pageNum <= 1) return;
+            pageNum--;
+            queueRenderPage(pageNum);
+            updatePageInfo();
+        }
+        
+        function nextPage() {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            queueRenderPage(pageNum);
+            updatePageInfo();
+        }
+        
+        function zoomIn() {
+            scale += 0.2;
+            queueRenderPage(pageNum);
+            updateZoomInfo();
+        }
+        
+        function zoomOut() {
+            if (scale <= 0.4) return;
+            scale -= 0.2;
+            queueRenderPage(pageNum);
+            updateZoomInfo();
+        }
+        
+        function updatePageInfo() {
+            document.getElementById('pageInfo').textContent = 
+                `Sayfa: ${pageNum} / ${pdfDoc ? pdfDoc.numPages : 1}`;
+        }
+        
+        function updateZoomInfo() {
+            document.getElementById('zoomInfo').textContent = 
+                `${Math.round(scale * 100)}%`;
+        }
+        
+        async function createTestPDF() {
+            try {
+                // jsPDF kullanarak test PDF oluştur
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js';
+                script.onload = function() {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    
+                    // İçerik ekle
+                    doc.setFontSize(20);
+                    doc.text('Test PDF Belgesi', 20, 30);
+                    
+                    doc.setFontSize(14);
+                    doc.text('Bu PDF, editör test etmek için oluşturulmuştur.', 20, 50);
+                    
+                    doc.setFontSize(12);
+                    doc.text('PDF.js ile başarıyla yüklendiğini görebilirsiniz.', 20, 70);
+                    doc.text('Sayfa gezinme kontrollerini test edebilirsiniz.', 20, 90);
+                    
+                    // Dikdörtgen ekle
+                    doc.rect(20, 100, 50, 30);
+                    doc.text('Test Kutusu', 25, 120);
+                    
+                    // İkinci sayfa ekle
+                    doc.addPage();
+                    doc.setFontSize(16);
+                    doc.text('İkinci Sayfa', 20, 30);
+                    doc.text('Bu ikinci sayfadır. Sayfa gezinme özelliğini test edebilirsiniz.', 20, 50);
+                      // PDF'i blob olarak al ve yükle
+                    const pdfBlob = doc.output('blob');
+                    
+                    pdfBlob.arrayBuffer().then(arrayBuffer => {
+                        const typedArray = new Uint8Array(arrayBuffer);
+                        showMessage('Test PDF oluşturuldu ve yükleniyor...', 'success');
+                        loadPDF(typedArray);
+                    }).catch(error => {
+                        console.error('PDF dönüştürme hatası:', error);
+                        showMessage('Test PDF oluşturulamadı!', 'error');
+                    });
+                };
+                document.head.appendChild(script);
+            } catch (error) {
+                console.error('Test PDF oluşturma hatası:', error);
+                showMessage('Test PDF oluşturulamadı!', 'error');
+            }
+        }
+        
+        // Başlangıçta zoom bilgisini güncelle
+        updateZoomInfo();
+    </script>
+</body>
+</html>

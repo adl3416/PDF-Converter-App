@@ -22,11 +22,14 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-  },
-  optimizeDeps: {
+  },  optimizeDeps: {
     include: ['pdfjs-dist'],
   },
   define: {
     global: 'globalThis',
+  },
+  assetsInclude: ['**/*.pdf'],
+  worker: {
+    format: 'es'
   },
 });
