@@ -500,11 +500,11 @@ export const translations: Record<string, Translations> = {
       imageToPdf: {
         name: "Resim'den PDF'e",
         description: "Resimleri PDF belgelerine dönüştürün",
-      },
-      pdfToImage: {
+      },      pdfToImage: {
         name: "PDF'den Resim'e",
         description: "PDF dosyalarından resimleri çıkarın",
-      },      excelToPdf: {
+      },
+      excelToPdf: {
         name: "Excel'den PDF'e",
         description: "Excel dosyalarını PDF formatına dönüştürün",
       },
@@ -931,10 +931,9 @@ export const translations: Record<string, Translations> = {
       delete: "Sil",
       edit: "Düzenle",
       download: "İndir",
-      upload: "Yükle",
-    },
+      upload: "Yükle",    },
   },
-    en: {
+  en: {
     header: {
       appName: "PDF Converter",
       home: "Home",
@@ -982,10 +981,10 @@ export const translations: Record<string, Translations> = {
           description: "Upload multiple files at once and convert them all to a single PDF or separate files. Batch processing made easy."
         }
       },
-      cta: {
-        title: "Ready to Get Started?",
+      cta: {        title: "Ready to Get Started?",
         subtitle: "Join thousands of users who trust our platform for their document conversion needs",
-        startNow: "Start Converting Now",        trustedText: "Trusted by 10,000+ users worldwide"
+        startNow: "Start Converting Now",
+        trustedText: "Trusted by 10,000+ users worldwide"
       }
     },
     toolPages: {
