@@ -57,6 +57,24 @@ interface Annotation {
     signatureData?: string;
 }
 
+
+
+interface SignaturePadProps {
+    onSave: (signature: string) => void;
+    onCancel: () => void;
+    color: string;
+    strokeWidth: number;
+}
+
+interface SignatureAnnotationProps {
+    annotation: Annotation;
+    onUpdate: (id: string, updates: Partial<Annotation>) => void;
+    onDelete: (id: string) => void;
+    isSelected: boolean;
+    onSelect: (id: string) => void;
+}
+
+// Generic draggable annotation component
 interface DraggableAnnotationProps {
     annotation: Annotation;
     onUpdate: (id: string, updates: Partial<Annotation>) => void;
@@ -64,15 +82,11 @@ interface DraggableAnnotationProps {
     isSelected: boolean;
     onSelect: (id: string) => void;
     children: React.ReactNode;
+    className?: string;
 }
 
 const DraggableAnnotation: React.FC<DraggableAnnotationProps> = ({ 
-    annotation, 
-    onUpdate, 
-    onDelete, 
-    isSelected, 
-    onSelect, 
-    children 
+    annotation, onUpdate, onDelete, isSelected, onSelect, children, className = "" 
 }) => {
     const [isDragging, setIsDragging] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
@@ -136,8 +150,11 @@ const DraggableAnnotation: React.FC<DraggableAnnotationProps> = ({
                 const deltaX = e.clientX - resizeStart.x;
                 const deltaY = e.clientY - resizeStart.y;
                 
-                const newWidth = Math.max(50, resizeStart.width + deltaX);
-                const newHeight = Math.max(30, resizeStart.height + deltaY);
+                const minWidth = annotation.type === 'freehand' ? 20 : 50;
+                const minHeight = annotation.type === 'freehand' ? 20 : 30;
+                
+                const newWidth = Math.max(minWidth, resizeStart.width + deltaX);
+                const newHeight = Math.max(minHeight, resizeStart.height + deltaY);
                 
                 onUpdate(annotation.id, { width: newWidth, height: newHeight });
             };
@@ -154,149 +171,11 @@ const DraggableAnnotation: React.FC<DraggableAnnotationProps> = ({
                 document.removeEventListener('mouseup', handleGlobalResizeEnd);
             };
         }
-    }, [isResizing, resizeStart, annotation.id, onUpdate]);
+    }, [isResizing, resizeStart, annotation.id, onUpdate, annotation.type]);
 
     return (
         <div 
-            className={`group relative cursor-move ${isSelected ? 'ring-2 ring-blue-500 ring-offset-1' : ''}`}
-            style={{
-                width: annotation.width,
-                height: annotation.height
-            }}
-            onMouseDown={handleMouseDown}
-            onClick={handleClick}
-        >
-            {children}
-            
-            {/* Delete Button */}
-            <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete(annotation.id);
-                    }}
-                    className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
-                    title="Sil"
-                >
-                    <X size={12} />
-                </button>
-            </div>
-
-            {/* Resize Handle */}
-            {isSelected && annotation.type !== 'freehand' && (
-                <div
-                    onMouseDown={handleResizeStart}
-                    className="absolute -bottom-1 -right-1 w-3 h-3 bg-blue-500 border border-white rounded-full cursor-se-resize hover:bg-blue-600 transition-colors"
-                    title="Yeniden boyutlandır"
-                />
-            )}
-        </div>
-    );
-};
-
-interface SignaturePadProps {
-    onSave: (signature: string) => void;
-    onCancel: () => void;
-    color: string;
-    strokeWidth: number;
-}
-
-interface SignatureAnnotationProps {
-    annotation: Annotation;
-    onUpdate: (id: string, updates: Partial<Annotation>) => void;
-    onDelete: (id: string) => void;
-    isSelected: boolean;
-    onSelect: (id: string) => void;
-}
-
-const SignatureAnnotation: React.FC<SignatureAnnotationProps> = ({ annotation, onUpdate, onDelete, isSelected, onSelect }) => {
-    const [isDragging, setIsDragging] = useState(false);
-    const [isResizing, setIsResizing] = useState(false);
-    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-    const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0 });
-
-    const handleClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        onSelect(annotation.id);
-    };
-
-    const handleMouseDown = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        onSelect(annotation.id);
-        
-        setIsDragging(true);
-        setDragStart({
-            x: e.clientX - annotation.x,
-            y: e.clientY - annotation.y
-        });
-    };
-
-    const handleResizeStart = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setIsResizing(true);
-        setResizeStart({
-            x: e.clientX,
-            y: e.clientY,
-            width: annotation.width || 200,
-            height: annotation.height || 100
-        });
-    };
-
-    // Global mouse events for dragging
-    useEffect(() => {
-        if (isDragging) {
-            const handleGlobalMouseMove = (e: MouseEvent) => {
-                const newX = e.clientX - dragStart.x;
-                const newY = e.clientY - dragStart.y;
-                onUpdate(annotation.id, { x: newX, y: newY });
-            };
-
-            const handleGlobalMouseUp = () => {
-                setIsDragging(false);
-            };
-
-            document.addEventListener('mousemove', handleGlobalMouseMove);
-            document.addEventListener('mouseup', handleGlobalMouseUp);
-
-            return () => {
-                document.removeEventListener('mousemove', handleGlobalMouseMove);
-                document.removeEventListener('mouseup', handleGlobalMouseUp);
-            };
-        }
-    }, [isDragging, dragStart, annotation.id, onUpdate]);
-
-    // Global mouse events for resizing
-    useEffect(() => {
-        if (isResizing) {
-            const handleGlobalResizeMove = (e: MouseEvent) => {
-                const deltaX = e.clientX - resizeStart.x;
-                const deltaY = e.clientY - resizeStart.y;
-                
-                const newWidth = Math.max(100, resizeStart.width + deltaX);
-                const newHeight = Math.max(50, resizeStart.height + deltaY);
-                
-                onUpdate(annotation.id, { width: newWidth, height: newHeight });
-            };
-
-            const handleGlobalResizeEnd = () => {
-                setIsResizing(false);
-            };
-
-            document.addEventListener('mousemove', handleGlobalResizeMove);
-            document.addEventListener('mouseup', handleGlobalResizeEnd);
-
-            return () => {
-                document.removeEventListener('mousemove', handleGlobalResizeMove);
-                document.removeEventListener('mouseup', handleGlobalResizeEnd);
-            };
-        }
-    }, [isResizing, resizeStart, annotation.id, onUpdate]);
-
-    return (
-        <div 
-            className={`border-2 border-dashed border-blue-500 bg-blue-50 rounded-lg flex items-center justify-center group relative overflow-hidden cursor-move ${
-                isSelected ? 'ring-2 ring-blue-500' : ''
-            }`}
+            className={`group relative cursor-move ${isSelected ? 'ring-2 ring-blue-500' : ''} ${className}`}
             style={{ 
                 width: annotation.width, 
                 height: annotation.height,
@@ -305,19 +184,7 @@ const SignatureAnnotation: React.FC<SignatureAnnotationProps> = ({ annotation, o
             onMouseDown={handleMouseDown}
             onClick={handleClick}
         >
-            {annotation.signatureData ? (
-                <img 
-                    src={annotation.signatureData} 
-                    alt="İmza"
-                    className="w-full h-full object-contain"
-                    style={{ opacity: annotation.opacity }}
-                />
-            ) : (
-                <div className="text-blue-700 font-medium flex items-center">
-                    <PenTool size={20} className="mr-2" />
-                    İmza Alanı
-                </div>
-            )}
+            {children}
             
             {/* Delete Button */}
             <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -342,6 +209,32 @@ const SignatureAnnotation: React.FC<SignatureAnnotationProps> = ({ annotation, o
                 />
             )}
         </div>
+    );
+};
+
+const SignatureAnnotation: React.FC<SignatureAnnotationProps> = ({ annotation, onUpdate, onDelete, isSelected, onSelect }) => {
+    return (
+        <DraggableAnnotation
+            annotation={annotation}
+            onUpdate={onUpdate}
+            onDelete={onDelete}
+            isSelected={isSelected}
+            onSelect={onSelect}
+            className="border-2 border-dashed border-blue-500 bg-blue-50 rounded-lg flex items-center justify-center overflow-hidden"
+        >
+            {annotation.signatureData ? (
+                <img 
+                    src={annotation.signatureData} 
+                    alt="İmza"
+                    className="w-full h-full object-contain"
+                />
+            ) : (
+                <div className="text-blue-700 font-medium flex items-center">
+                    <PenTool size={20} className="mr-2" />
+                    İmza Alanı
+                </div>
+            )}
+        </DraggableAnnotation>
     );
 };
 
@@ -933,7 +826,42 @@ const SmallPdfEditor: React.FC = () => {
     const deleteAnnotation = (id: string) => {
         addToUndoStack();
         setAnnotations(prev => prev.filter(ann => ann.id !== id));
-    };    const handleCanvasClick = (e: React.MouseEvent) => {
+        if (selectedAnnotation === id) {
+            setSelectedAnnotation(null);
+        }
+    };
+
+    // Move selected annotation
+    const moveAnnotation = (direction: 'up' | 'down' | 'left' | 'right', step: number = 5) => {
+        if (!selectedAnnotation) return;
+        
+        const annotation = annotations.find(ann => ann.id === selectedAnnotation);
+        if (!annotation) return;
+
+        let updates: Partial<Annotation> = {};
+        
+        switch (direction) {
+            case 'up':
+                updates.y = Math.max(0, annotation.y - step);
+                break;
+            case 'down':
+                updates.y = annotation.y + step;
+                break;
+            case 'left':
+                updates.x = Math.max(0, annotation.x - step);
+                break;
+            case 'right':
+                updates.x = annotation.x + step;
+                break;
+        }
+        
+        updateAnnotation(selectedAnnotation, updates);
+    };
+
+    // Move annotation by line (bigger steps)
+    const moveAnnotationByLine = (direction: 'up' | 'down') => {
+        moveAnnotation(direction, 20); // Larger step for line movement
+    };const handleCanvasClick = (e: React.MouseEvent) => {
         // Clear selection when clicking on empty canvas
         if (selectedTool === 'select') {
             setSelectedAnnotation(null);
@@ -1068,11 +996,44 @@ const SmallPdfEditor: React.FC = () => {
         URL.revokeObjectURL(url);
     };
 
-    const currentPageAnnotations = annotations.filter(ann => ann.pageNumber === currentPage);
-
-    // Keyboard shortcuts
+    const currentPageAnnotations = annotations.filter(ann => ann.pageNumber === currentPage);    // Keyboard shortcuts
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
+            // Annotation movement with arrow keys
+            if (selectedAnnotation && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                switch (e.key) {
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        if (e.shiftKey) {
+                            moveAnnotationByLine('up'); // Shift + Arrow = line movement
+                        } else {
+                            moveAnnotation('up', 1); // Single pixel movement
+                        }
+                        break;
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        if (e.shiftKey) {
+                            moveAnnotationByLine('down');
+                        } else {
+                            moveAnnotation('down', 1);
+                        }
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        moveAnnotation('left', e.shiftKey ? 10 : 1);
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        moveAnnotation('right', e.shiftKey ? 10 : 1);
+                        break;
+                    case 'Delete':
+                    case 'Backspace':
+                        e.preventDefault();
+                        deleteAnnotation(selectedAnnotation);
+                        break;
+                }
+            }
+
             if (e.ctrlKey || e.metaKey) {
                 switch (e.key) {
                     case 'z':
@@ -1103,12 +1064,13 @@ const SmallPdfEditor: React.FC = () => {
                 }
             }
             
-            // Tool shortcuts
-            if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+            // Tool shortcuts (only when no annotation is selected)
+            if (!selectedAnnotation && !e.ctrlKey && !e.metaKey && !e.altKey) {
                 switch (e.key) {
                     case 'Escape':
                         setSelectedTool('select');
                         setShowSignaturePad(false);
+                        setSelectedAnnotation(null);
                         break;
                     case 't':
                         setSelectedTool('text');
@@ -1137,7 +1099,7 @@ const SmallPdfEditor: React.FC = () => {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [undoStack, redoStack, scale]);
+    }, [undoStack, redoStack, scale, selectedAnnotation]);
 
     return (
         <div className="h-screen bg-gray-50 flex flex-col">
@@ -1257,37 +1219,124 @@ const SmallPdfEditor: React.FC = () => {
                             </button>
                         ))}
                     </div>
-                )}
-
-                {/* Properties Panel */}
-                {file && selectedTool !== 'select' && (
+                )}                {/* Properties Panel */}
+                {file && (selectedTool !== 'select' || selectedAnnotation) && (
                     <div className="w-64 bg-white border-r border-gray-200 p-4">
-                        <h3 className="font-semibold text-gray-900 mb-4">Özellikler</h3>
+                        <h3 className="font-semibold text-gray-900 mb-4">
+                            {selectedAnnotation ? 'Seçili Öğe' : 'Özellikler'}
+                        </h3>
+                        
+                        {/* Movement Controls for Selected Annotation */}
+                        {selectedAnnotation && (
+                            <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+                                <h4 className="font-medium text-blue-900 mb-3">Hareket Kontrolleri</h4>
+                                
+                                {/* Directional Controls */}
+                                <div className="grid grid-cols-3 gap-1 mb-3">
+                                    <div></div>
+                                    <button
+                                        onClick={() => moveAnnotationByLine('up')}
+                                        className="p-2 bg-blue-100 hover:bg-blue-200 rounded transition-colors"
+                                        title="Yukarı (Shift+↑)"
+                                    >
+                                        ↑
+                                    </button>
+                                    <div></div>
+                                    
+                                    <button
+                                        onClick={() => moveAnnotation('left', 10)}
+                                        className="p-2 bg-blue-100 hover:bg-blue-200 rounded transition-colors"
+                                        title="Sola (Shift+←)"
+                                    >
+                                        ←
+                                    </button>
+                                    <button
+                                        onClick={() => setSelectedAnnotation(null)}
+                                        className="p-2 bg-gray-100 hover:bg-gray-200 rounded transition-colors text-xs"
+                                        title="Seçimi Kaldır"
+                                    >
+                                        ●
+                                    </button>
+                                    <button
+                                        onClick={() => moveAnnotation('right', 10)}
+                                        className="p-2 bg-blue-100 hover:bg-blue-200 rounded transition-colors"
+                                        title="Sağa (Shift+→)"
+                                    >
+                                        →
+                                    </button>
+                                    
+                                    <div></div>
+                                    <button
+                                        onClick={() => moveAnnotationByLine('down')}
+                                        className="p-2 bg-blue-100 hover:bg-blue-200 rounded transition-colors"
+                                        title="Aşağı (Shift+↓)"
+                                    >
+                                        ↓
+                                    </button>
+                                    <div></div>
+                                </div>
+                                
+                                {/* Fine Movement */}
+                                <div className="grid grid-cols-2 gap-2 mb-3">
+                                    <button
+                                        onClick={() => moveAnnotation('up', 1)}
+                                        className="px-3 py-1 bg-blue-200 hover:bg-blue-300 rounded text-xs transition-colors"
+                                        title="1px Yukarı (↑)"
+                                    >
+                                        ↑ 1px
+                                    </button>
+                                    <button
+                                        onClick={() => moveAnnotation('down', 1)}
+                                        className="px-3 py-1 bg-blue-200 hover:bg-blue-300 rounded text-xs transition-colors"
+                                        title="1px Aşağı (↓)"
+                                    >
+                                        ↓ 1px
+                                    </button>
+                                </div>
+                                
+                                {/* Delete Button */}
+                                <button
+                                    onClick={() => deleteAnnotation(selectedAnnotation)}
+                                    className="w-full px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded transition-colors flex items-center justify-center space-x-2"
+                                    title="Sil (Delete)"
+                                >
+                                    <Trash2 size={14} />
+                                    <span>Sil</span>
+                                </button>
+                                
+                                <div className="mt-3 text-xs text-blue-700">
+                                    <p>💡 İpucu:</p>
+                                    <p>• Ok tuşları: 1px hareket</p>
+                                    <p>• Shift+Ok: Hızlı hareket</p>
+                                    <p>• Delete: Sil</p>
+                                </div>
+                            </div>
+                        )}
                         
                         {/* Color Picker */}
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Renk</label>
-                            <div className="grid grid-cols-6 gap-2 mb-2">
-                                {colors.map((color) => (
-                                    <button
-                                        key={color}
-                                        onClick={() => setSelectedColor(color)}
-                                        className={`w-8 h-8 rounded-lg border-2 transition-all ${
-                                            selectedColor === color ? 'border-gray-800 scale-110' : 'border-gray-300'
-                                        }`}
-                                        style={{ backgroundColor: color }}
-                                    />
-                                ))}
+                        {selectedTool !== 'select' && (
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Renk</label>
+                                <div className="grid grid-cols-6 gap-2 mb-2">
+                                    {colors.map((color) => (
+                                        <button
+                                            key={color}
+                                            onClick={() => setSelectedColor(color)}
+                                            className={`w-8 h-8 rounded-lg border-2 transition-all ${
+                                                selectedColor === color ? 'border-gray-800 scale-110' : 'border-gray-300'
+                                            }`}
+                                            style={{ backgroundColor: color }}
+                                        />
+                                    ))}
+                                </div>
+                                <input
+                                    type="color"
+                                    value={selectedColor}
+                                    onChange={(e) => setSelectedColor(e.target.value)}
+                                    className="w-full h-8 rounded border border-gray-300"
+                                />
                             </div>
-                            <input
-                                type="color"
-                                value={selectedColor}
-                                onChange={(e) => setSelectedColor(e.target.value)}
-                                className="w-full h-8 rounded border border-gray-300"
-                            />
-                        </div>
-
-                        {/* Font Size for Text */}
+                        )}                        {/* Font Size for Text */}
                         {(selectedTool === 'text' || selectedTool === 'sticky-note') && (
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1322,20 +1371,22 @@ const SmallPdfEditor: React.FC = () => {
                         )}
 
                         {/* Opacity */}
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Şeffaflık: {Math.round(opacity * 100)}%
-                            </label>
-                            <input
-                                type="range"
-                                min="0.1"
-                                max="1"
-                                step="0.1"
-                                value={opacity}
-                                onChange={(e) => setOpacity(parseFloat(e.target.value))}
-                                className="w-full"
-                            />
-                        </div>
+                        {selectedTool !== 'select' && (
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Şeffaflık: {Math.round(opacity * 100)}%
+                                </label>
+                                <input
+                                    type="range"
+                                    min="0.1"
+                                    max="1"
+                                    step="0.1"
+                                    value={opacity}
+                                    onChange={(e) => setOpacity(parseFloat(e.target.value))}
+                                    className="w-full"
+                                />
+                            </div>
+                        )}
 
                         {/* Annotations List */}
                         {currentPageAnnotations.length > 0 && (
@@ -1345,7 +1396,15 @@ const SmallPdfEditor: React.FC = () => {
                                 </h4>
                                 <div className="space-y-2 max-h-40 overflow-y-auto">
                                     {currentPageAnnotations.map((annotation) => (
-                                        <div key={annotation.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                        <div 
+                                            key={annotation.id} 
+                                            className={`flex items-center justify-between p-2 rounded cursor-pointer transition-colors ${
+                                                selectedAnnotation === annotation.id 
+                                                    ? 'bg-blue-100 border border-blue-300' 
+                                                    : 'bg-gray-50 hover:bg-gray-100'
+                                            }`}
+                                            onClick={() => setSelectedAnnotation(annotation.id)}
+                                        >
                                             <div className="flex items-center space-x-2">
                                                 <div
                                                     className="w-3 h-3 rounded-full border"
@@ -1362,7 +1421,10 @@ const SmallPdfEditor: React.FC = () => {
                                                 </span>
                                             </div>
                                             <button
-                                                onClick={() => deleteAnnotation(annotation.id)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    deleteAnnotation(annotation.id);
+                                                }}
                                                 className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
                                                 title="Sil"
                                             >
