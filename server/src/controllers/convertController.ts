@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { convertWordToPdf, convertPdfToExcel, convertPdfToWord, convertPdfToPowerPoint, convertImageToPdf, convertPdfToImage } from '../utils/conversionUtils';
+import { convertWordToPdf, convertPdfToExcel, convertPdfToWord, convertPdfToPowerPoint, convertImageToPdf, convertPdfToImage, convertExcelToPdf } from '../utils/conversionUtils';
 import * as fs from 'fs';
 import * as path from 'path';
 

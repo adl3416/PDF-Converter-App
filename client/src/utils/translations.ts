@@ -40,6 +40,18 @@ export interface Translations {
         title: string;
         description: string;
       };
+      worksEverywhere: {
+        title: string;
+        description: string;
+      };
+      completelyFree: {
+        title: string;
+        description: string;
+      };
+      multipleFiles: {
+        title: string;
+        description: string;
+      };
     };
     cta: {
       title: string;
@@ -47,6 +59,45 @@ export interface Translations {
       startNow: string;
       trustedText: string;
     };
+  };
+  
+  tools: {
+    wordToPdf: {
+      name: string;
+      description: string;
+    };
+    pdfEditor: {
+      name: string;
+      description: string;
+    };
+    pdfToExcel: {
+      name: string;
+      description: string;
+    };
+    pdfToPowerPoint: {
+      name: string;
+      description: string;
+    };
+    pdfToWord: {
+      name: string;
+      description: string;
+    };
+    imageToPdf: {
+      name: string;
+      description: string;
+    };
+    pdfToImage: {
+      name: string;
+      description: string;
+    };
+    excelToPdf: {
+      name: string;
+      description: string;
+    };
+  };
+  
+  common: {
+    error: string;
   };
   
   toolPages: {
@@ -111,6 +162,14 @@ export interface Translations {
           title: string;
           description: string;
         };
+        textExtraction: {
+          title: string;
+          description: string;
+        };
+        preserveFormatting: {
+          title: string;
+          description: string;
+        };
       };
       errors: {
         conversionFailed: string;
@@ -143,6 +202,14 @@ export interface Translations {
           description: string;
         };
         fast: {
+          title: string;
+          description: string;
+        };
+        dataExtraction: {
+          title: string;
+          description: string;
+        };
+        preserveFormatting: {
           title: string;
           description: string;
         };
@@ -181,6 +248,14 @@ export interface Translations {
           title: string;
           description: string;
         };
+        slideExtraction: {
+          title: string;
+          description: string;
+        };
+        preserveLayout: {
+          title: string;
+          description: string;
+        };
       };
       errors: {
         conversionFailed: string;
@@ -216,10 +291,19 @@ export interface Translations {
           title: string;
           description: string;
         };
+        multipleImages: {
+          title: string;
+          description: string;
+        };
+        fastConversion: {
+          title: string;
+          description: string;
+        };
       };
       errors: {
         conversionFailed: string;
         networkError: string;
+        invalidFileType: string;
       };
       success: {
         message: string;
@@ -248,6 +332,18 @@ export interface Translations {
           description: string;
         };
         fast: {
+          title: string;
+          description: string;
+        };
+        pageExtraction: {
+          title: string;
+          description: string;
+        };
+        multipleFormats: {
+          title: string;
+          description: string;
+        };
+        highResolution: {
           title: string;
           description: string;
         };
@@ -283,6 +379,18 @@ export interface Translations {
           description: string;
         };
         fast: {
+          title: string;
+          description: string;
+        };
+        preserveFormatting: {
+          title: string;
+          description: string;
+        };
+        multipleSheets: {
+          title: string;
+          description: string;
+        };
+        professionalOutput: {
           title: string;
           description: string;
         };
@@ -337,6 +445,66 @@ export interface Translations {
       upload: string;
     };
   };
+  
+  pdfEditor: {
+    title: string;
+    subtitle: string;
+    upload: {
+      title: string;
+      description: string;
+      selectFile: string;
+    };
+    sidebar: {
+      tools: string;
+      fileInfo: string;
+      size: string;
+      selectMove: string;
+      addText: string;
+      addRectangle: string;
+      addCircle: string;
+      createSignature: string;
+      savedSignatures: string;
+      annotations: string;
+    };
+    signatureTypes: {
+      drawn: string;
+      text: string;
+      signature: string;
+    };
+    buttons: {
+      placeToPdf: string;
+      select: string;
+      exportEditedPdf: string;
+      downloadOriginalPdf: string;
+      uploadNewFile: string;
+    };
+    viewer: {
+      successMessage: string;
+      toolInstructions: {
+        addText: string;
+        addRectangle: string;
+        addCircle: string;
+        placeSignature: string;
+        clickToAdd: string;
+        textToolActive: string;
+        rectangleToolActive: string;
+        circleToolActive: string;
+      };
+    };
+    signatureModal: {
+      title: string;
+      drawTab: string;
+      typeTab: string;
+      drawInstruction: string;
+      clear: string;
+      typeLabel: string;
+      typePlaceholder: string;
+      fontLabel: string;
+      preview: string;
+      cancel: string;
+      addSignature: string;
+    };
+  };
 }
 
 export const translations: Record<string, Translations> = {
@@ -345,57 +513,110 @@ export const translations: Record<string, Translations> = {
       appName: "PDF Dönüştürücü",
       home: "Ana Sayfa",
       allTools: "Tüm Araçlar",
-      language: "Dil",
+      language: "Dil"
     },
+    
     home: {
-      title: "İş Akışınızı Geliştirin",
-      subtitle: "Dosyalarınızı hızla PDF formatına dönüştürün",
-      exploreTools: "Araçları Keşfedin",
-      freeText: "Ücretsiz",
+      title: "PDF Dönüştürücü - Ücretsiz Online Araçlar",
+      subtitle: "PDF'leri kolayca dönüştürün, düzenleyin ve yönetin. Word, Excel, PowerPoint ve daha fazlası için hızlı ve güvenli çözümler.",
+      exploreTools: "Araçları Keşfet",
+      freeText: "Tamamen Ücretsiz",
       stats: {
         filesConverted: "Dönüştürülen Dosya",
         uptime: "Çalışma Süresi",
-        available: "7/24 Kullanılabilir",
+        available: "Kullanılabilir"
       },
-      sectionTitle: "Güçlü PDF Araçları",
-      sectionSubtitle: "İhtiyacınız olan her şey tek yerde",
-      tryNow: "Şimdi Deneyin",
+      sectionTitle: "PDF Araçları",
+      sectionSubtitle: "İhtiyacınız olan tüm PDF araçları bir arada",
+      tryNow: "Şimdi Dene",
       whyChooseTitle: "Neden Platformumuzu Seçmelisiniz?",
-      whyChooseSubtitle: "Hızlı, güvenli ve kullanımı kolay PDF dönüştürme araçları",
+      whyChooseSubtitle: "PDF işlemleriniz için en iyi deneyimi sunuyoruz",
       features: {
         superFast: {
           title: "Süper Hızlı",
-          description: "Dosyalarınızı saniyeler içinde dönüştürün"
+          description: "Gelişmiş algoritmalara dayalı ultra hızlı dönüştürme"
         },
         highQuality: {
           title: "Yüksek Kalite",
-          description: "Orijinal formatınızı koruyun"
+          description: "Orijinal format ve kaliteyi koruyarak dönüştürme"
         },
         easyToUse: {
           title: "Kullanımı Kolay",
-          description: "Sürükle-bırak ile kolay kullanım"
+          description: "Sezgisel arayüz ile anında dönüştürme"
         },
         secure: {
           title: "Güvenli",
-          description: "Dosyalarınız güvende ve özel"
+          description: "Dosyalarınız güvenli bir şekilde işlenir ve saklanmaz"
+        },
+        worksEverywhere: {
+          title: "Her Yerde Çalışır",
+          description: "Herhangi bir cihaz ve tarayıcıda kullanılabilir"
+        },
+        completelyFree: {
+          title: "Tamamen Ücretsiz",
+          description: "Tüm araçlar ücretsiz, gizli ücret yok"
+        },
+        multipleFiles: {
+          title: "Çoklu Dosya",
+          description: "Aynı anda birden fazla dosyayı dönüştürme"
         }
       },
       cta: {
-        title: "PDF Dönüştürme İşlemine Başlayın",
-        subtitle: "Ücretsiz, hızlı ve güvenli dosya dönüştürme",
-        startNow: "Şimdi Başlayın",
-        trustedText: "Milyonlarca kullanıcı tarafından güvenilir"
+        title: "PDF Dönüştürme İşlemlerinize Başlayın",
+        subtitle: "Profesyonel kalitede sonuçlar için araçlarımızı kullanın",
+        startNow: "Hemen Başla",
+        trustedText: "Milyonlarca kullanıcı tarafından güveniliyor"
       }
     },
+    
+    tools: {
+      wordToPdf: {
+        name: "Word'den PDF'e",
+        description: "Word belgelerini PDF'e dönüştürün"
+      },
+      pdfEditor: {
+        name: "PDF Düzenleyici",
+        description: "PDF dosyalarını düzenleyin ve imzalayın"
+      },
+      pdfToExcel: {
+        name: "PDF'den Excel'e",
+        description: "PDF dosyalarını Excel'e dönüştürün"
+      },
+      pdfToPowerPoint: {
+        name: "PDF'den PowerPoint'e",
+        description: "PDF dosyalarını PowerPoint'e dönüştürün"
+      },
+      pdfToWord: {
+        name: "PDF'den Word'e",
+        description: "PDF dosyalarını Word'e dönüştürün"
+      },
+      imageToPdf: {
+        name: "Resim'den PDF'e",
+        description: "Resimleri PDF'e dönüştürün"
+      },
+      pdfToImage: {
+        name: "PDF'den Resim'e",
+        description: "PDF dosyalarını resimlere dönüştürün"
+      },
+      excelToPdf: {
+        name: "Excel'den PDF'e",
+        description: "Excel dosyalarını PDF'e dönüştürün"
+      }
+    },
+    
+    common: {
+      error: "Bir hata oluştu"
+    },
+    
     toolPages: {
       wordToPdf: {
         title: "Word'den PDF'e Dönüştürücü",
-        subtitle: "Word belgelerinizi yüksek kaliteli PDF dosyalarına dönüştürün",
+        subtitle: "Word belgelerinizi yüksek kaliteli PDF'lere dönüştürün",
         uploadArea: {
-          title: "Word dosyanızı buraya sürükleyin",
-          description: "veya bilgisayarınızdan seçin",
+          title: "Word Dosyası Seçin",
+          description: "Dosyanızı buraya sürükleyip bırakın veya seçmek için tıklayın",
           supportedFormats: "Desteklenen formatlar: DOC, DOCX",
-          fileSelected: "Dosya seçildi:"
+          fileSelected: "Dosya seçildi"
         },
         button: {
           convert: "PDF'e Dönüştür",
@@ -404,33 +625,33 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "Yüksek Kalite",
-            description: "Orijinal formatınızı ve düzeninizi korur"
+            description: "Orijinal formatı ve düzeni korur"
           },
           easyUpload: {
             title: "Kolay Yükleme",
             description: "Sürükle-bırak ile hızlı dosya yükleme"
           },
           fast: {
-            title: "Hızlı İşlem",
-            description: "Saniyeler içinde dönüştürme"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
           }
         },
         errors: {
-          conversionFailed: "Dönüştürme işlemi başarısız oldu",
+          conversionFailed: "Dönüştürme başarısız oldu",
           networkError: "Ağ hatası oluştu"
         },
         success: {
-          message: "Dosya başarıyla dönüştürüldü!"
+          message: "Dosya başarıyla dönüştürüldü"
         }
       },
       pdfToWord: {
         title: "PDF'den Word'e Dönüştürücü",
         subtitle: "PDF dosyalarınızı düzenlenebilir Word belgelerine dönüştürün",
         uploadArea: {
-          title: "PDF dosyanızı buraya sürükleyin",
-          description: "veya bilgisayarınızdan seçin",
+          title: "PDF Dosyası Seçin",
+          description: "Dosyanızı buraya sürükleyip bırakın veya seçmek için tıklayın",
           supportedFormats: "Desteklenen format: PDF",
-          fileSelected: "Dosya seçildi:"
+          fileSelected: "Dosya seçildi"
         },
         button: {
           convert: "Word'e Dönüştür",
@@ -439,33 +660,41 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "Yüksek Kalite",
-            description: "Metin ve formatı tam olarak korur"
+            description: "Orijinal formatı ve düzeni korur"
           },
           easyUpload: {
             title: "Kolay Yükleme",
             description: "Sürükle-bırak ile hızlı dosya yükleme"
           },
           fast: {
-            title: "Hızlı İşlem",
-            description: "Saniyeler içinde dönüştürme"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          textExtraction: {
+            title: "Metin Çıkarma",
+            description: "Metinleri tam olarak çıkarır"
+          },
+          preserveFormatting: {
+            title: "Format Koruma",
+            description: "Orijinal formatı ve düzeni korur"
           }
         },
         errors: {
-          conversionFailed: "Dönüştürme işlemi başarısız oldu",
+          conversionFailed: "Dönüştürme başarısız oldu",
           networkError: "Ağ hatası oluştu"
         },
         success: {
-          message: "Dosya başarıyla dönüştürüldü!"
+          message: "Dosya başarıyla dönüştürüldü"
         }
       },
       pdfToExcel: {
         title: "PDF'den Excel'e Dönüştürücü",
-        subtitle: "PDF tablolarınızı düzenlenebilir Excel dosyalarına dönüştürün",
+        subtitle: "PDF tablolarını Excel elektronik tablolarına dönüştürün",
         uploadArea: {
-          title: "PDF dosyanızı buraya sürükleyin",
-          description: "veya bilgisayarınızdan seçin",
+          title: "PDF Dosyası Seçin",
+          description: "Dosyanızı buraya sürükleyip bırakın veya seçmek için tıklayın",
           supportedFormats: "Desteklenen format: PDF",
-          fileSelected: "Dosya seçildi:"
+          fileSelected: "Dosya seçildi"
         },
         button: {
           convert: "Excel'e Dönüştür",
@@ -474,33 +703,41 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "Yüksek Kalite",
-            description: "Tablo yapısını ve verileri korur"
+            description: "Orijinal formatı ve düzeni korur"
           },
           easyUpload: {
             title: "Kolay Yükleme",
             description: "Sürükle-bırak ile hızlı dosya yükleme"
           },
           fast: {
-            title: "Hızlı İşlem",
-            description: "Saniyeler içinde dönüştürme"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          dataExtraction: {
+            title: "Veri Çıkarma",
+            description: "Tabloları tam olarak çıkarır"
+          },
+          preserveFormatting: {
+            title: "Format Koruma",
+            description: "Hücre formatını ve düzenini korur"
           }
         },
         errors: {
-          conversionFailed: "Dönüştürme işlemi başarısız oldu",
+          conversionFailed: "Dönüştürme başarısız oldu",
           networkError: "Ağ hatası oluştu"
         },
         success: {
-          message: "Dosya başarıyla dönüştürüldü!"
+          message: "Dosya başarıyla dönüştürüldü"
         }
       },
       pdfToPowerPoint: {
         title: "PDF'den PowerPoint'e Dönüştürücü",
-        subtitle: "PDF dosyalarınızı düzenlenebilir PowerPoint sunumlarına dönüştürün",
+        subtitle: "PDF'leri düzenlenebilir PowerPoint sunumlarına dönüştürün",
         uploadArea: {
-          title: "PDF dosyanızı buraya sürükleyin",
-          description: "veya bilgisayarınızdan seçin",
+          title: "PDF Dosyası Seçin",
+          description: "Dosyanızı buraya sürükleyip bırakın veya seçmek için tıklayın",
           supportedFormats: "Desteklenen format: PDF",
-          fileSelected: "Dosya seçildi:"
+          fileSelected: "Dosya seçildi"
         },
         button: {
           convert: "PowerPoint'e Dönüştür",
@@ -509,33 +746,41 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "Yüksek Kalite",
-            description: "Sayfa düzenini ve içeriği korur"
+            description: "Orijinal formatı ve düzeni korur"
           },
           easyUpload: {
             title: "Kolay Yükleme",
             description: "Sürükle-bırak ile hızlı dosya yükleme"
           },
           fast: {
-            title: "Hızlı İşlem",
-            description: "Saniyeler içinde dönüştürme"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          slideExtraction: {
+            title: "Slayt Çıkarma",
+            description: "Her sayfayı ayrı slayta dönüştürür"
+          },
+          preserveLayout: {
+            title: "Düzen Koruma",
+            description: "Orijinal sayfa düzenini korur"
           }
         },
         errors: {
-          conversionFailed: "Dönüştürme işlemi başarısız oldu",
+          conversionFailed: "Dönüştürme başarısız oldu",
           networkError: "Ağ hatası oluştu"
         },
         success: {
-          message: "Dosya başarıyla dönüştürüldü!"
+          message: "Dosya başarıyla dönüştürüldü"
         }
       },
       imageToPdf: {
         title: "Resim'den PDF'e Dönüştürücü",
-        subtitle: "Resimlerinizi tek bir PDF dosyasında birleştirin",
+        subtitle: "Birden fazla resmi tek bir PDF dosyasına dönüştürün",
         uploadArea: {
-          title: "Resim dosyalarınızı buraya sürükleyin",
-          description: "veya bilgisayarınızdan seçin (Çoklu seçim desteklenir)",
-          supportedFormats: "Desteklenen formatlar: JPG, PNG, GIF, BMP",
-          fileSelected: "Dosya seçildi:"
+          title: "Resim Dosyalarını Seçin",
+          description: "Dosyalarınızı buraya sürükleyip bırakın veya seçmek için tıklayın",
+          supportedFormats: "Desteklenen formatlar: JPG, PNG, JPEG, BMP, GIF",
+          fileSelected: "dosya seçildi"
         },
         button: {
           convert: "PDF'e Dönüştür",
@@ -544,68 +789,89 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "Yüksek Kalite",
-            description: "Resim kalitesini korur"
+            description: "Orijinal resim kalitesini korur"
           },
           easyUpload: {
-            title: "Çoklu Yükleme",
-            description: "Birden fazla resmi aynı anda yükleyin"
+            title: "Kolay Yükleme",
+            description: "Çoklu dosya seçimi ve sürükle-bırak"
           },
           fast: {
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          multipleImages: {
+            title: "Çoklu Resim",
+            description: "Birden fazla resmi tek PDF'de birleştir"
+          },
+          fastConversion: {
             title: "Hızlı İşlem",
-            description: "Saniyeler içinde dönüştürme"
+            description: "Toplu resim işleme desteği"
           }
         },
         errors: {
-          conversionFailed: "Dönüştürme işlemi başarısız oldu",
-          networkError: "Ağ hatası oluştu"
+          conversionFailed: "Dönüştürme başarısız oldu",
+          networkError: "Ağ hatası oluştu",
+          invalidFileType: "Geçersiz dosya türü"
         },
         success: {
-          message: "Dosya başarıyla dönüştürüldü!"
+          message: "Resimler başarıyla PDF'e dönüştürüldü"
         }
       },
       pdfToImage: {
         title: "PDF'den Resim'e Dönüştürücü",
-        subtitle: "PDF sayfalarınızı yüksek kaliteli resimlere dönüştürün",
+        subtitle: "PDF sayfalarını yüksek kaliteli resimlere dönüştürün",
         uploadArea: {
-          title: "PDF dosyanızı buraya sürükleyin",
-          description: "veya bilgisayarınızdan seçin",
+          title: "PDF Dosyası Seçin",
+          description: "Dosyanızı buraya sürükleyip bırakın veya seçmek için tıklayın",
           supportedFormats: "Desteklenen format: PDF",
-          fileSelected: "Dosya seçildi:"
+          fileSelected: "Dosya seçildi"
         },
         button: {
-          convert: "Resim'e Dönüştür",
+          convert: "Resimlere Dönüştür",
           converting: "Dönüştürülüyor..."
         },
         features: {
           highQuality: {
             title: "Yüksek Kalite",
-            description: "Sayfa kalitesini korur"
+            description: "Maksimum çözünürlükte çıktı"
           },
           easyUpload: {
             title: "Kolay Yükleme",
             description: "Sürükle-bırak ile hızlı dosya yükleme"
           },
           fast: {
-            title: "Hızlı İşlem",
-            description: "Saniyeler içinde dönüştürme"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          pageExtraction: {
+            title: "Sayfa Çıkarma",
+            description: "Her sayfayı ayrı resim olarak çıkarır"
+          },
+          multipleFormats: {
+            title: "Çoklu Format",
+            description: "JPG, PNG ve diğer formatlarda çıktı"
+          },
+          highResolution: {
+            title: "Yüksek Çözünürlük",
+            description: "Net ve keskin resim kalitesi"
           }
         },
         errors: {
-          conversionFailed: "Dönüştürme işlemi başarısız oldu",
+          conversionFailed: "Dönüştürme başarısız oldu",
           networkError: "Ağ hatası oluştu"
         },
         success: {
-          message: "Dosya başarıyla dönüştürüldü!"
+          message: "PDF başarıyla resimlere dönüştürüldü"
         }
       },
       excelToPdf: {
         title: "Excel'den PDF'e Dönüştürücü",
-        subtitle: "Excel dosyalarınızı profesyonel PDF belgelerine dönüştürün",
+        subtitle: "Excel elektronik tablolarını PDF belgelerine dönüştürün",
         uploadArea: {
-          title: "Excel dosyanızı buraya sürükleyin",
-          description: "veya bilgisayarınızdan seçin",
+          title: "Excel Dosyası Seçin",
+          description: "Dosyanızı buraya sürükleyip bırakın veya seçmek için tıklayın",
           supportedFormats: "Desteklenen formatlar: XLS, XLSX",
-          fileSelected: "Dosya seçildi:"
+          fileSelected: "Dosya seçildi"
         },
         button: {
           convert: "PDF'e Dönüştür",
@@ -614,39 +880,52 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "Yüksek Kalite",
-            description: "Tablo yapısını ve formatı korur"
+            description: "Orijinal formatı ve düzeni korur"
           },
           easyUpload: {
             title: "Kolay Yükleme",
             description: "Sürükle-bırak ile hızlı dosya yükleme"
           },
           fast: {
-            title: "Hızlı İşlem",
-            description: "Saniyeler içinde dönüştürme"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          preserveFormatting: {
+            title: "Format Koruma",
+            description: "Hücre formatını ve düzenini korur"
+          },
+          multipleSheets: {
+            title: "Çoklu Sayfa",
+            description: "Tüm çalışma sayfalarını dahil eder"
+          },
+          professionalOutput: {
+            title: "Profesyonel Çıktı",
+            description: "İş kalitesinde PDF belgeleri"
           }
         },
         errors: {
-          conversionFailed: "Dönüştürme işlemi başarısız oldu",
+          conversionFailed: "Dönüştürme başarısız oldu",
           networkError: "Ağ hatası oluştu"
         },
         success: {
-          message: "Dosya başarıyla dönüştürüldü!"
+          message: "Excel dosyası başarıyla PDF'e dönüştürüldü"
         }
       }
     },
+    
     simplePdfEditor: {
-      title: "Basit PDF Editörü",
-      subtitle: "PDF dosyalarınızı düzenleyin, birleştirin ve yönetin",
+      title: "Basit PDF Düzenleyici",
+      subtitle: "PDF dosyalarınızı kolayca düzenleyin",
       uploadArea: {
-        title: "PDF dosyanızı buraya sürükleyin",
-        description: "veya bilgisayarınızdan seçin",
+        title: "PDF Dosyası Seçin",
+        description: "Dosyanızı buraya sürükleyip bırakın",
         supportedFormats: "Desteklenen format: PDF",
-        fileSelected: "Dosya seçildi:"
+        fileSelected: "Dosya seçildi"
       },
       features: {
         merge: {
           title: "Birleştir",
-          description: "Birden fazla PDF'i birleştirin"
+          description: "Birden fazla PDF'i birleştir"
         },
         split: {
           title: "Böl",
@@ -658,7 +937,7 @@ export const translations: Record<string, Translations> = {
         },
         delete: {
           title: "Sil",
-          description: "İstenmeyen sayfaları silin"
+          description: "Sayfaları sil"
         }
       },
       buttons: {
@@ -673,6 +952,66 @@ export const translations: Record<string, Translations> = {
         edit: "Düzenle",
         upload: "Yükle"
       }
+    },
+    
+    pdfEditor: {
+      title: "PDF Düzenleyici",
+      subtitle: "PDF'leri düzenleyin, metin ekleyin ve imzalayın",
+      upload: {
+        title: "PDF Yükle",
+        description: "Düzenlemek için bir PDF dosyası seçin",
+        selectFile: "Dosya Seç"
+      },
+      sidebar: {
+        tools: "Araçlar",
+        fileInfo: "Dosya Bilgisi",
+        size: "Boyut",
+        selectMove: "Seç & Taşı",
+        addText: "Metin Ekle",
+        addRectangle: "Dikdörtgen Ekle",
+        addCircle: "Daire Ekle",
+        createSignature: "İmza Oluştur",
+        savedSignatures: "Kayıtlı İmzalar",
+        annotations: "Açıklamalar"
+      },
+      signatureTypes: {
+        drawn: "Çizilen",
+        text: "Metin",
+        signature: "İmza"
+      },
+      buttons: {
+        placeToPdf: "PDF'e Yerleştir",
+        select: "Seç",
+        exportEditedPdf: "Düzenlenmiş PDF'i Dışa Aktar",
+        downloadOriginalPdf: "Orijinal PDF'i İndir",
+        uploadNewFile: "Yeni Dosya Yükle"
+      },
+      viewer: {
+        successMessage: "PDF başarıyla yüklendi! Düzenlemeye başlayabilirsiniz.",
+        toolInstructions: {
+          addText: "Metin eklemek için PDF üzerine tıklayın",
+          addRectangle: "Dikdörtgen eklemek için PDF üzerine tıklayın",
+          addCircle: "Daire eklemek için PDF üzerine tıklayın",
+          placeSignature: "İmzayı yerleştirmek için PDF üzerine tıklayın",
+          clickToAdd: "Eklemek için tıklayın",
+          textToolActive: "Metin aracı aktif - tıklayarak metin ekleyin",
+          rectangleToolActive: "Dikdörtgen aracı aktif - tıklayarak şekil ekleyin",
+          circleToolActive: "Daire aracı aktif - tıklayarak şekil ekleyin"
+        }
+      },
+      signatureModal: {
+        title: "İmza Oluştur",
+        drawTab: "Çiz",
+        typeTab: "Yaz",
+        drawInstruction: "Aşağıdaki alana imzanızı çizin",
+        clear: "Temizle",
+        typeLabel: "İmza Metni:",
+        typePlaceholder: "İmzanızı yazın",
+        fontLabel: "Font:",
+        preview: "Önizleme:",
+        cancel: "İptal",
+        addSignature: "İmza Ekle"
+      }
     }
   },
   
@@ -681,57 +1020,110 @@ export const translations: Record<string, Translations> = {
       appName: "PDF Converter",
       home: "Home",
       allTools: "All Tools",
-      language: "Language",
+      language: "Language"
     },
+    
     home: {
-      title: "Enhance Your Workflow",
-      subtitle: "Convert your files to PDF format quickly",
+      title: "PDF Converter - Free Online Tools",
+      subtitle: "Easily convert, edit, and manage your PDFs. Fast and secure solutions for Word, Excel, PowerPoint, and more.",
       exploreTools: "Explore Tools",
-      freeText: "Free",
+      freeText: "Completely Free",
       stats: {
         filesConverted: "Files Converted",
         uptime: "Uptime",
-        available: "Available 24/7",
+        available: "Available"
       },
-      sectionTitle: "Powerful PDF Tools",
-      sectionSubtitle: "Everything you need in one place",
+      sectionTitle: "PDF Tools",
+      sectionSubtitle: "All the PDF tools you need in one place",
       tryNow: "Try Now",
       whyChooseTitle: "Why Choose Our Platform?",
-      whyChooseSubtitle: "Fast, secure, and easy-to-use PDF conversion tools",
+      whyChooseSubtitle: "We provide the best experience for your PDF operations",
       features: {
         superFast: {
           title: "Super Fast",
-          description: "Convert your files in seconds"
+          description: "Ultra-fast conversion based on advanced algorithms"
         },
         highQuality: {
           title: "High Quality",
-          description: "Preserve your original formatting"
+          description: "Convert while preserving original format and quality"
         },
         easyToUse: {
           title: "Easy to Use",
-          description: "Simple drag-and-drop interface"
+          description: "Instant conversion with intuitive interface"
         },
         secure: {
           title: "Secure",
-          description: "Your files are safe and private"
+          description: "Your files are processed securely and not stored"
+        },
+        worksEverywhere: {
+          title: "Works Everywhere",
+          description: "Available on any device and browser"
+        },
+        completelyFree: {
+          title: "Completely Free",
+          description: "All tools are free, no hidden charges"
+        },
+        multipleFiles: {
+          title: "Multiple Files",
+          description: "Convert multiple files at once"
         }
       },
       cta: {
-        title: "Start Converting PDFs",
-        subtitle: "Free, fast, and secure file conversion",
+        title: "Start Your PDF Conversion Tasks",
+        subtitle: "Use our tools for professional quality results",
         startNow: "Start Now",
         trustedText: "Trusted by millions of users"
       }
     },
+    
+    tools: {
+      wordToPdf: {
+        name: "Word to PDF",
+        description: "Convert Word documents to PDF"
+      },
+      pdfEditor: {
+        name: "PDF Editor",
+        description: "Edit and sign PDF files"
+      },
+      pdfToExcel: {
+        name: "PDF to Excel",
+        description: "Convert PDF files to Excel"
+      },
+      pdfToPowerPoint: {
+        name: "PDF to PowerPoint",
+        description: "Convert PDF files to PowerPoint"
+      },
+      pdfToWord: {
+        name: "PDF to Word",
+        description: "Convert PDF files to Word"
+      },
+      imageToPdf: {
+        name: "Image to PDF",
+        description: "Convert images to PDF"
+      },
+      pdfToImage: {
+        name: "PDF to Image",
+        description: "Convert PDF files to images"
+      },
+      excelToPdf: {
+        name: "Excel to PDF",
+        description: "Convert Excel files to PDF"
+      }
+    },
+    
+    common: {
+      error: "An error occurred"
+    },
+    
     toolPages: {
       wordToPdf: {
         title: "Word to PDF Converter",
-        subtitle: "Convert your Word documents to high-quality PDF files",
+        subtitle: "Convert your Word documents to high-quality PDFs",
         uploadArea: {
-          title: "Drag your Word file here",
-          description: "or choose from your computer",
+          title: "Select Word File",
+          description: "Drag and drop your file here or click to select",
           supportedFormats: "Supported formats: DOC, DOCX",
-          fileSelected: "File selected:"
+          fileSelected: "File selected"
         },
         button: {
           convert: "Convert to PDF",
@@ -740,15 +1132,15 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "High Quality",
-            description: "Preserves your original formatting and layout"
+            description: "Preserves original formatting and layout"
           },
           easyUpload: {
             title: "Easy Upload",
-            description: "Quick file upload with drag-and-drop"
+            description: "Quick file upload with drag and drop"
           },
           fast: {
-            title: "Fast Processing",
-            description: "Convert in seconds"
+            title: "Fast Conversion",
+            description: "Ready results in seconds"
           }
         },
         errors: {
@@ -756,17 +1148,17 @@ export const translations: Record<string, Translations> = {
           networkError: "Network error occurred"
         },
         success: {
-          message: "File successfully converted!"
+          message: "File converted successfully"
         }
       },
       pdfToWord: {
         title: "PDF to Word Converter",
         subtitle: "Convert your PDF files to editable Word documents",
         uploadArea: {
-          title: "Drag your PDF file here",
-          description: "or choose from your computer",
+          title: "Select PDF File",
+          description: "Drag and drop your file here or click to select",
           supportedFormats: "Supported format: PDF",
-          fileSelected: "File selected:"
+          fileSelected: "File selected"
         },
         button: {
           convert: "Convert to Word",
@@ -775,15 +1167,23 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "High Quality",
-            description: "Preserves text and formatting perfectly"
+            description: "Preserves original formatting and layout"
           },
           easyUpload: {
             title: "Easy Upload",
-            description: "Quick file upload with drag-and-drop"
+            description: "Quick file upload with drag and drop"
           },
           fast: {
-            title: "Fast Processing",
-            description: "Convert in seconds"
+            title: "Fast Conversion",
+            description: "Ready results in seconds"
+          },
+          textExtraction: {
+            title: "Text Extraction",
+            description: "Accurately extracts text content"
+          },
+          preserveFormatting: {
+            title: "Preserve Formatting",
+            description: "Maintains original format and layout"
           }
         },
         errors: {
@@ -791,17 +1191,17 @@ export const translations: Record<string, Translations> = {
           networkError: "Network error occurred"
         },
         success: {
-          message: "File successfully converted!"
+          message: "File converted successfully"
         }
       },
       pdfToExcel: {
         title: "PDF to Excel Converter",
-        subtitle: "Convert your PDF tables to editable Excel files",
+        subtitle: "Convert PDF tables to Excel spreadsheets",
         uploadArea: {
-          title: "Drag your PDF file here",
-          description: "or choose from your computer",
+          title: "Select PDF File",
+          description: "Drag and drop your file here or click to select",
           supportedFormats: "Supported format: PDF",
-          fileSelected: "File selected:"
+          fileSelected: "File selected"
         },
         button: {
           convert: "Convert to Excel",
@@ -810,15 +1210,23 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "High Quality",
-            description: "Preserves table structure and data"
+            description: "Preserves original formatting and layout"
           },
           easyUpload: {
             title: "Easy Upload",
-            description: "Quick file upload with drag-and-drop"
+            description: "Quick file upload with drag and drop"
           },
           fast: {
-            title: "Fast Processing",
-            description: "Convert in seconds"
+            title: "Fast Conversion",
+            description: "Ready results in seconds"
+          },
+          dataExtraction: {
+            title: "Data Extraction",
+            description: "Accurately extracts table data"
+          },
+          preserveFormatting: {
+            title: "Preserve Formatting",
+            description: "Maintains cell formatting and layout"
           }
         },
         errors: {
@@ -826,17 +1234,17 @@ export const translations: Record<string, Translations> = {
           networkError: "Network error occurred"
         },
         success: {
-          message: "File successfully converted!"
+          message: "File converted successfully"
         }
       },
       pdfToPowerPoint: {
         title: "PDF to PowerPoint Converter",
-        subtitle: "Convert your PDF files to editable PowerPoint presentations",
+        subtitle: "Convert PDFs to editable PowerPoint presentations",
         uploadArea: {
-          title: "Drag your PDF file here",
-          description: "or choose from your computer",
+          title: "Select PDF File",
+          description: "Drag and drop your file here or click to select",
           supportedFormats: "Supported format: PDF",
-          fileSelected: "File selected:"
+          fileSelected: "File selected"
         },
         button: {
           convert: "Convert to PowerPoint",
@@ -845,15 +1253,23 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "High Quality",
-            description: "Preserves page layout and content"
+            description: "Preserves original formatting and layout"
           },
           easyUpload: {
             title: "Easy Upload",
-            description: "Quick file upload with drag-and-drop"
+            description: "Quick file upload with drag and drop"
           },
           fast: {
-            title: "Fast Processing",
-            description: "Convert in seconds"
+            title: "Fast Conversion",
+            description: "Ready results in seconds"
+          },
+          slideExtraction: {
+            title: "Slide Extraction",
+            description: "Converts each page to a separate slide"
+          },
+          preserveLayout: {
+            title: "Preserve Layout",
+            description: "Maintains original page layout"
           }
         },
         errors: {
@@ -861,17 +1277,17 @@ export const translations: Record<string, Translations> = {
           networkError: "Network error occurred"
         },
         success: {
-          message: "File successfully converted!"
+          message: "File converted successfully"
         }
       },
       imageToPdf: {
         title: "Image to PDF Converter",
-        subtitle: "Combine your images into a single PDF document",
+        subtitle: "Convert multiple images into a single PDF file",
         uploadArea: {
-          title: "Drag your image files here",
-          description: "or choose from your computer (Multiple selection supported)",
-          supportedFormats: "Supported formats: JPG, PNG, GIF, BMP",
-          fileSelected: "File selected:"
+          title: "Select Image Files",
+          description: "Drag and drop your files here or click to select",
+          supportedFormats: "Supported formats: JPG, PNG, JPEG, BMP, GIF",
+          fileSelected: "files selected"
         },
         button: {
           convert: "Convert to PDF",
@@ -880,33 +1296,42 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "High Quality",
-            description: "Preserves image quality"
+            description: "Preserves original image quality"
           },
           easyUpload: {
-            title: "Multiple Upload",
-            description: "Upload multiple images at once"
+            title: "Easy Upload",
+            description: "Multiple file selection and drag-drop"
           },
           fast: {
+            title: "Fast Conversion",
+            description: "Ready results in seconds"
+          },
+          multipleImages: {
+            title: "Multiple Images",
+            description: "Combine multiple images into one PDF"
+          },
+          fastConversion: {
             title: "Fast Processing",
-            description: "Convert in seconds"
+            description: "Batch image processing support"
           }
         },
         errors: {
           conversionFailed: "Conversion failed",
-          networkError: "Network error occurred"
+          networkError: "Network error occurred",
+          invalidFileType: "Invalid file type"
         },
         success: {
-          message: "File successfully converted!"
+          message: "Images converted to PDF successfully"
         }
       },
       pdfToImage: {
         title: "PDF to Image Converter",
-        subtitle: "Convert your PDF pages to high-quality images",
+        subtitle: "Convert PDF pages to high-quality images",
         uploadArea: {
-          title: "Drag your PDF file here",
-          description: "or choose from your computer",
+          title: "Select PDF File",
+          description: "Drag and drop your file here or click to select",
           supportedFormats: "Supported format: PDF",
-          fileSelected: "File selected:"
+          fileSelected: "File selected"
         },
         button: {
           convert: "Convert to Images",
@@ -915,15 +1340,27 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "High Quality",
-            description: "Preserves page quality"
+            description: "Maximum resolution output"
           },
           easyUpload: {
             title: "Easy Upload",
-            description: "Quick file upload with drag-and-drop"
+            description: "Quick file upload with drag and drop"
           },
           fast: {
-            title: "Fast Processing",
-            description: "Convert in seconds"
+            title: "Fast Conversion",
+            description: "Ready results in seconds"
+          },
+          pageExtraction: {
+            title: "Page Extraction",
+            description: "Extracts each page as a separate image"
+          },
+          multipleFormats: {
+            title: "Multiple Formats",
+            description: "Output in JPG, PNG and other formats"
+          },
+          highResolution: {
+            title: "High Resolution",
+            description: "Sharp and clear image quality"
           }
         },
         errors: {
@@ -931,17 +1368,17 @@ export const translations: Record<string, Translations> = {
           networkError: "Network error occurred"
         },
         success: {
-          message: "File successfully converted!"
+          message: "PDF converted to images successfully"
         }
       },
       excelToPdf: {
         title: "Excel to PDF Converter",
-        subtitle: "Convert your Excel files to professional PDF documents",
+        subtitle: "Convert Excel spreadsheets to PDF documents",
         uploadArea: {
-          title: "Drag your Excel file here",
-          description: "or choose from your computer",
+          title: "Select Excel File",
+          description: "Drag and drop your file here or click to select",
           supportedFormats: "Supported formats: XLS, XLSX",
-          fileSelected: "File selected:"
+          fileSelected: "File selected"
         },
         button: {
           convert: "Convert to PDF",
@@ -950,15 +1387,27 @@ export const translations: Record<string, Translations> = {
         features: {
           highQuality: {
             title: "High Quality",
-            description: "Preserves table structure and formatting"
+            description: "Preserves original formatting and layout"
           },
           easyUpload: {
             title: "Easy Upload",
-            description: "Quick file upload with drag-and-drop"
+            description: "Quick file upload with drag and drop"
           },
           fast: {
-            title: "Fast Processing",
-            description: "Convert in seconds"
+            title: "Fast Conversion",
+            description: "Ready results in seconds"
+          },
+          preserveFormatting: {
+            title: "Preserve Formatting",
+            description: "Maintains cell formatting and layout"
+          },
+          multipleSheets: {
+            title: "Multiple Sheets",
+            description: "Includes all worksheets"
+          },
+          professionalOutput: {
+            title: "Professional Output",
+            description: "Business-quality PDF documents"
           }
         },
         errors: {
@@ -966,18 +1415,19 @@ export const translations: Record<string, Translations> = {
           networkError: "Network error occurred"
         },
         success: {
-          message: "File successfully converted!"
+          message: "Excel file converted to PDF successfully"
         }
       }
     },
+    
     simplePdfEditor: {
       title: "Simple PDF Editor",
-      subtitle: "Edit, merge, and manage your PDF files",
+      subtitle: "Edit your PDF files easily",
       uploadArea: {
-        title: "Drag your PDF file here",
-        description: "or choose from your computer",
+        title: "Select PDF File",
+        description: "Drag and drop your file here",
         supportedFormats: "Supported format: PDF",
-        fileSelected: "File selected:"
+        fileSelected: "File selected"
       },
       features: {
         merge: {
@@ -994,7 +1444,7 @@ export const translations: Record<string, Translations> = {
         },
         delete: {
           title: "Delete",
-          description: "Remove unwanted pages"
+          description: "Delete pages"
         }
       },
       buttons: {
@@ -1009,82 +1459,195 @@ export const translations: Record<string, Translations> = {
         edit: "Edit",
         upload: "Upload"
       }
+    },
+    
+    pdfEditor: {
+      title: "PDF Editor",
+      subtitle: "Edit PDFs, add text and signatures",
+      upload: {
+        title: "Upload PDF",
+        description: "Select a PDF file to edit",
+        selectFile: "Select File"
+      },
+      sidebar: {
+        tools: "Tools",
+        fileInfo: "File Info",
+        size: "Size",
+        selectMove: "Select & Move",
+        addText: "Add Text",
+        addRectangle: "Add Rectangle",
+        addCircle: "Add Circle",
+        createSignature: "Create Signature",
+        savedSignatures: "Saved Signatures",
+        annotations: "Annotations"
+      },
+      signatureTypes: {
+        drawn: "Drawn",
+        text: "Text",
+        signature: "Signature"
+      },
+      buttons: {
+        placeToPdf: "Place to PDF",
+        select: "Select",
+        exportEditedPdf: "Export Edited PDF",
+        downloadOriginalPdf: "Download Original PDF",
+        uploadNewFile: "Upload New File"
+      },
+      viewer: {
+        successMessage: "PDF loaded successfully! You can start editing.",
+        toolInstructions: {
+          addText: "Click on the PDF to add text",
+          addRectangle: "Click on the PDF to add rectangle",
+          addCircle: "Click on the PDF to add circle",
+          placeSignature: "Click on the PDF to place signature",
+          clickToAdd: "Click to add",
+          textToolActive: "Text tool active - click to add text",
+          rectangleToolActive: "Rectangle tool active - click to add shape",
+          circleToolActive: "Circle tool active - click to add shape"
+        }
+      },
+      signatureModal: {
+        title: "Create Signature",
+        drawTab: "Draw",
+        typeTab: "Type",
+        drawInstruction: "Draw your signature in the area below",
+        clear: "Clear",
+        typeLabel: "Signature Text:",
+        typePlaceholder: "Type your signature",
+        fontLabel: "Font:",
+        preview: "Preview:",
+        cancel: "Cancel",
+        addSignature: "Add Signature"
+      }
     }
   },
   
   de: {
     header: {
-      appName: "PDF Konverter",
+      appName: "PDF-Konverter",
       home: "Startseite",
       allTools: "Alle Tools",
-      language: "Sprache",
+      language: "Sprache"
     },
+    
     home: {
-      title: "Verbessern Sie Ihren Workflow",
-      subtitle: "Konvertieren Sie Ihre Dateien schnell in das PDF-Format",
+      title: "PDF-Konverter - Kostenlose Online-Tools",
+      subtitle: "Konvertieren, bearbeiten und verwalten Sie Ihre PDFs ganz einfach. Schnelle und sichere Lösungen für Word, Excel, PowerPoint und mehr.",
       exploreTools: "Tools erkunden",
-      freeText: "Kostenlos",
+      freeText: "Völlig kostenlos",
       stats: {
         filesConverted: "Dateien konvertiert",
         uptime: "Betriebszeit",
-        available: "24/7 verfügbar",
+        available: "Verfügbar"
       },
-      sectionTitle: "Leistungsstarke PDF-Tools",
-      sectionSubtitle: "Alles was Sie brauchen an einem Ort",
-      tryNow: "Jetzt versuchen",
+      sectionTitle: "PDF-Tools",
+      sectionSubtitle: "Alle PDF-Tools, die Sie brauchen, an einem Ort",
+      tryNow: "Jetzt testen",
       whyChooseTitle: "Warum unsere Plattform wählen?",
-      whyChooseSubtitle: "Schnelle, sichere und einfach zu bedienende PDF-Konvertierungstools",
+      whyChooseSubtitle: "Wir bieten die beste Erfahrung für Ihre PDF-Operationen",
       features: {
         superFast: {
           title: "Super schnell",
-          description: "Konvertieren Sie Ihre Dateien in Sekunden"
+          description: "Ultraschnelle Konvertierung basierend auf fortschrittlichen Algoritmen"
         },
         highQuality: {
           title: "Hohe Qualität",
-          description: "Bewahren Sie Ihre ursprüngliche Formatierung"
+          description: "Konvertierung unter Beibehaltung des ursprünglichen Formats und der Qualität"
         },
         easyToUse: {
           title: "Einfach zu verwenden",
-          description: "Einfache Drag-and-Drop-Oberfläche"
+          description: "Sofortige Konvertierung mit intuitiver Benutzeroberfläche"
         },
         secure: {
           title: "Sicher",
-          description: "Ihre Dateien sind sicher und privat"
+          description: "Ihre Dateien werden sicher verarbeitet und nicht gespeichert"
+        },
+        worksEverywhere: {
+          title: "Funktioniert überall",
+          description: "Verfügbar auf jedem Gerät und Browser"
+        },
+        completelyFree: {
+          title: "Völlig kostenlos",
+          description: "Alle Tools sind kostenlos, keine versteckten Gebühren"
+        },
+        multipleFiles: {
+          title: "Mehrere Dateien",
+          description: "Mehrere Dateien gleichzeitig konvertieren"
         }
       },
       cta: {
-        title: "Starten Sie die PDF-Konvertierung",
-        subtitle: "Kostenlose, schnelle und sichere Dateikonvertierung",
+        title: "Starten Sie Ihre PDF-Konvertierungsaufgaben",
+        subtitle: "Verwenden Sie unsere Tools für professionelle Qualitätsergebnisse",
         startNow: "Jetzt starten",
-        trustedText: "Vertraut von Millionen von Nutzern"
+        trustedText: "Vertraut von Millionen von Benutzern"
       }
     },
+    
+    tools: {
+      wordToPdf: {
+        name: "Word zu PDF",
+        description: "Word-Dokumente in PDF konvertieren"
+      },
+      pdfEditor: {
+        name: "PDF-Editor",
+        description: "PDF-Dateien bearbeiten und signieren"
+      },
+      pdfToExcel: {
+        name: "PDF zu Excel",
+        description: "PDF-Dateien in Excel konvertieren"
+      },
+      pdfToPowerPoint: {
+        name: "PDF zu PowerPoint",
+        description: "PDF-Dateien in PowerPoint konvertieren"
+      },
+      pdfToWord: {
+        name: "PDF zu Word",
+        description: "PDF-Dateien in Word konvertieren"
+      },
+      imageToPdf: {
+        name: "Bild zu PDF",
+        description: "Bilder in PDF konvertieren"
+      },
+      pdfToImage: {
+        name: "PDF zu Bild",
+        description: "PDF-Dateien in Bilder konvertieren"
+      },
+      excelToPdf: {
+        name: "Excel zu PDF",
+        description: "Excel-Dateien in PDF konvertieren"
+      }
+    },
+    
+    common: {
+      error: "Ein Fehler ist aufgetreten"
+    },
+    
     toolPages: {
       wordToPdf: {
         title: "Word zu PDF Konverter",
-        subtitle: "Konvertieren Sie Ihre Word-Dokumente in hochwertige PDF-Dateien",
+        subtitle: "Konvertieren Sie Ihre Word-Dokumente zu hochwertigen PDFs",
         uploadArea: {
-          title: "Ziehen Sie Ihre Word-Datei hierher",
-          description: "oder wählen Sie von Ihrem Computer",
+          title: "Word-Datei auswählen",
+          description: "Ziehen Sie Ihre Datei hierher oder klicken Sie zum Auswählen",
           supportedFormats: "Unterstützte Formate: DOC, DOCX",
-          fileSelected: "Datei ausgewählt:"
+          fileSelected: "Datei ausgewählt"
         },
         button: {
-          convert: "Zu PDF konvertieren",
-          converting: "Konvertiere..."
+          convert: "In PDF konvertieren",
+          converting: "Konvertierung..."
         },
         features: {
           highQuality: {
             title: "Hohe Qualität",
-            description: "Bewahrt Ihre ursprüngliche Formatierung und Layout"
+            description: "Behält ursprüngliche Formatierung und Layout bei"
           },
           easyUpload: {
             title: "Einfacher Upload",
-            description: "Schneller Datei-Upload mit Drag-and-Drop"
+            description: "Schneller Datei-Upload mit Drag & Drop"
           },
           fast: {
-            title: "Schnelle Verarbeitung",
-            description: "Konvertierung in Sekunden"
+            title: "Schnelle Konvertierung",
+            description: "Fertige Ergebnisse in Sekunden"
           }
         },
         errors: {
@@ -1092,233 +1655,291 @@ export const translations: Record<string, Translations> = {
           networkError: "Netzwerkfehler aufgetreten"
         },
         success: {
-          message: "Datei erfolgreich konvertiert!"
+          message: "Datei erfolgreich konvertiert"
         }
       },
       pdfToWord: {
         title: "PDF zu Word Konverter",
-        subtitle: "Konvertieren Sie Ihre PDF-Dateien in bearbeitbare Word-Dokumente",
+        subtitle: "Konvertieren Sie Ihre PDF-Dateien zu bearbeitbaren Word-Dokumenten",
         uploadArea: {
-          title: "Ziehen Sie Ihre PDF-Datei hierher",
-          description: "oder wählen Sie von Ihrem Computer",
+          title: "PDF-Datei auswählen",
+          description: "Ziehen Sie Ihre Datei burada bırakın veya seçmek için tıklayın",
           supportedFormats: "Unterstütztes Format: PDF",
-          fileSelected: "Datei ausgewählt:"
+          fileSelected: "Dosya seçildi"
         },
         button: {
-          convert: "Zu Word konvertieren",
-          converting: "Konvertiere..."
+          convert: "In Word konvertieren",
+          converting: "Konvertierung..."
         },
         features: {
           highQuality: {
             title: "Hohe Qualität",
-            description: "Bewahrt Text und Formatierung perfekt"
+            description: "Behält ursprüngliche Formatı ve düzeni korur"
           },
           easyUpload: {
-            title: "Einfacher Upload",
-            description: "Schneller Datei-Upload mit Drag-and-Drop"
+            title: "Kolay Yükleme",
+            description: "Sürükle-bırak ile hızlı dosya yükleme"
           },
           fast: {
-            title: "Schnelle Verarbeitung",
-            description: "Konvertierung in Sekunden"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          textExtraction: {
+            title: "Metin Çıkarma",
+            description: "Metinleri tam olarak çıkarır"
+          },
+          preserveFormatting: {
+            title: "Format Koruma",
+            description: "Orijinal formatı ve düzeni korur"
           }
         },
         errors: {
-          conversionFailed: "Konvertierung fehlgeschlagen",
-          networkError: "Netzwerkfehler aufgetreten"
+          conversionFailed: "Dönüştürme başarısız oldu",
+          networkError: "Ağ hatası oluştu"
         },
         success: {
-          message: "Datei erfolgreich konvertiert!"
+          message: "Dosya başarıyla dönüştürüldü"
         }
       },
       pdfToExcel: {
-        title: "PDF zu Excel Konverter",
-        subtitle: "Konvertieren Sie Ihre PDF-Tabellen in bearbeitbare Excel-Dateien",
+        title: "PDF'den Excel'e Dönüştürücü",
+        subtitle: "PDF tablolarını Excel elektronik tablolarına dönüştürün",
         uploadArea: {
-          title: "Ziehen Sie Ihre PDF-Datei hierher",
-          description: "oder wählen Sie von Ihrem Computer",
-          supportedFormats: "Unterstütztes Format: PDF",
-          fileSelected: "Datei ausgewählt:"
+          title: "PDF Dosyası Seçin",
+          description: "Dosyanızı buraya sürükleyip bırakın veya seçmek için tıklayın",
+          supportedFormats: "Desteklenen format: PDF",
+          fileSelected: "Dosya seçildi"
         },
         button: {
-          convert: "Zu Excel konvertieren",
-          converting: "Konvertiere..."
+          convert: "Excel'e Dönüştür",
+          converting: "Dönüştürülüyor..."
         },
         features: {
           highQuality: {
-            title: "Hohe Qualität",
-            description: "Bewahrt Tabellenstruktur und Daten"
+            title: "Yüksek Kalite",
+            description: "Orijinal formatı ve düzeni korur"
           },
           easyUpload: {
-            title: "Einfacher Upload",
-            description: "Schneller Datei-Upload mit Drag-and-Drop"
+            title: "Kolay Yükleme",
+            description: "Sürükle-bırak ile hızlı dosya yükleme"
           },
           fast: {
-            title: "Schnelle Verarbeitung",
-            description: "Konvertierung in Sekunden"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          dataExtraction: {
+            title: "Veri Çıkarma",
+            description: "Tabloları tam olarak çıkarır"
+          },
+          preserveFormatting: {
+            title: "Format Koruma",
+            description: "Hücre formatını ve düzenini korur"
           }
         },
         errors: {
-          conversionFailed: "Konvertierung fehlgeschlagen",
-          networkError: "Netzwerkfehler aufgetreten"
+          conversionFailed: "Dönüştürme başarısız oldu",
+          networkError: "Ağ hatası oluştu"
         },
         success: {
-          message: "Datei erfolgreich konvertiert!"
+          message: "Dosya başarıyla dönüştürüldü"
         }
       },
       pdfToPowerPoint: {
-        title: "PDF zu PowerPoint Konverter",
-        subtitle: "Konvertieren Sie Ihre PDF-Dateien in bearbeitbare PowerPoint-Präsentationen",
+        title: "PDF'den PowerPoint'e Dönüştürücü",
+        subtitle: "PDF'leri düzenlenebilir PowerPoint sunumlarına dönüştürün",
         uploadArea: {
-          title: "Ziehen Sie Ihre PDF-Datei hierher",
-          description: "oder wählen Sie von Ihrem Computer",
-          supportedFormats: "Unterstütztes Format: PDF",
-          fileSelected: "Datei ausgewählt:"
+          title: "PDF Dosyası Seçin",
+          description: "Dosyanızı buraya sürükleyip bırakın veya seçmek için tıklayın",
+          supportedFormats: "Desteklenen format: PDF",
+          fileSelected: "Dosya seçildi"
         },
         button: {
-          convert: "Zu PowerPoint konvertieren",
-          converting: "Konvertiere..."
+          convert: "PowerPoint'e Dönüştür",
+          converting: "Dönüştürülüyor..."
         },
         features: {
           highQuality: {
-            title: "Hohe Qualität",
-            description: "Bewahrt Seitenlayout und Inhalt"
+            title: "Yüksek Kalite",
+            description: "Orijinal formatı ve düzeni korur"
           },
           easyUpload: {
-            title: "Einfacher Upload",
-            description: "Schneller Datei-Upload mit Drag-and-Drop"
+            title: "Kolay Yükleme",
+            description: "Sürükle-bırak ile hızlı dosya yükleme"
           },
           fast: {
-            title: "Schnelle Verarbeitung",
-            description: "Konvertierung in Sekunden"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          slideExtraction: {
+            title: "Slayt Çıkarma",
+            description: "Her sayfayı ayrı slayta dönüştürür"
+          },
+          preserveLayout: {
+            title: "Düzen Koruma",
+            description: "Orijinal sayfa düzenini korur"
           }
         },
         errors: {
-          conversionFailed: "Konvertierung fehlgeschlagen",
-          networkError: "Netzwerkfehler aufgetreten"
+          conversionFailed: "Dönüştürme başarısız oldu",
+          networkError: "Ağ hatası oluştu"
         },
         success: {
-          message: "Datei erfolgreich konvertiert!"
+          message: "Dosya başarıyla dönüştürüldü"
         }
       },
       imageToPdf: {
-        title: "Bild zu PDF Konverter",
-        subtitle: "Kombinieren Sie Ihre Bilder in ein einziges PDF-Dokument",
+        title: "Resim'den PDF'e Dönüştürücü",
+        subtitle: "Birden fazla resmi tek bir PDF dosyasına dönüştürün",
         uploadArea: {
-          title: "Ziehen Sie Ihre Bilddateien hierher",
-          description: "oder wählen Sie von Ihrem Computer (Mehrfachauswahl unterstützt)",
-          supportedFormats: "Unterstützte Formate: JPG, PNG, GIF, BMP",
-          fileSelected: "Datei ausgewählt:"
+          title: "Resim Dosyalarını Seçin",
+          description: "Dosyalarınızı buraya sürükleyip bırakın veya seçmek için tıklayın",
+          supportedFormats: "Desteklenen formatlar: JPG, PNG, JPEG, BMP, GIF",
+          fileSelected: "dosya seçildi"
         },
         button: {
-          convert: "Zu PDF konvertieren",
-          converting: "Konvertiere..."
+          convert: "PDF'e Dönüştür",
+          converting: "Dönüştürülüyor..."
         },
         features: {
           highQuality: {
-            title: "Hohe Qualität",
-            description: "Bewahrt Bildqualität"
+            title: "Yüksek Kalite",
+            description: "Orijinal resim kalitesini korur"
           },
           easyUpload: {
-            title: "Mehrfach-Upload",
-            description: "Laden Sie mehrere Bilder gleichzeitig hoch"
+            title: "Kolay Yükleme",
+            description: "Çoklu dosya seçimi ve sürükle-bırak"
           },
           fast: {
-            title: "Schnelle Verarbeitung",
-            description: "Konvertierung in Sekunden"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          multipleImages: {
+            title: "Çoklu Resim",
+            description: "Birden fazla resmi tek PDF'de birleştir"
+          },
+          fastConversion: {
+            title: "Hızlı İşlem",
+            description: "Toplu resim işleme desteği"
           }
         },
         errors: {
-          conversionFailed: "Konvertierung fehlgeschlagen",
-          networkError: "Netzwerkfehler aufgetreten"
+          conversionFailed: "Dönüştürme başarısız oldu",
+          networkError: "Ağ hatası oluştu",
+          invalidFileType: "Geçersiz dosya türü"
         },
         success: {
-          message: "Datei erfolgreich konvertiert!"
+          message: "Resimler başarıyla PDF'e dönüştürüldü"
         }
       },
       pdfToImage: {
-        title: "PDF zu Bild Konverter",
-        subtitle: "Konvertieren Sie Ihre PDF-Seiten in hochwertige Bilder",
+        title: "PDF'den Resim'e Dönüştürücü",
+        subtitle: "PDF sayfalarını yüksek kaliteli resimlere dönüştürün",
         uploadArea: {
-          title: "Ziehen Sie Ihre PDF-Datei hierher",
-          description: "oder wählen Sie von Ihrem Computer",
-          supportedFormats: "Unterstütztes Format: PDF",
-          fileSelected: "Datei ausgewählt:"
+          title: "PDF Dosyası Seçin",
+          description: "Dosyanızı buraya sürükleyip bırakın veya seçmek için tıklayın",
+          supportedFormats: "Desteklenen format: PDF",
+          fileSelected: "Dosya seçildi"
         },
         button: {
-          convert: "Zu Bildern konvertieren",
-          converting: "Konvertiere..."
+          convert: "Resimlere Dönüştür",
+          converting: "Dönüştürülüyor..."
         },
         features: {
           highQuality: {
-            title: "Hohe Qualität",
-            description: "Bewahrt Seitenqualität"
+            title: "Yüksek Kalite",
+            description: "Maksimum çözünürlükte çıktı"
           },
           easyUpload: {
-            title: "Einfacher Upload",
-            description: "Schneller Datei-Upload mit Drag-and-Drop"
+            title: "Kolay Yükleme",
+            description: "Sürükle-bırak ile hızlı dosya yükleme"
           },
           fast: {
-            title: "Schnelle Verarbeitung",
-            description: "Konvertierung in Sekunden"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          pageExtraction: {
+            title: "Sayfa Çıkarma",
+            description: "Her sayfayı ayrı resim olarak çıkarır"
+          },
+          multipleFormats: {
+            title: "Çoklu Format",
+            description: "JPG, PNG ve diğer formatlarda çıktı"
+          },
+          highResolution: {
+            title: "Yüksek Çözünürlük",
+            description: "Net ve keskin resim kalitesi"
           }
         },
         errors: {
-          conversionFailed: "Konvertierung fehlgeschlagen",
-          networkError: "Netzwerkfehler aufgetreten"
+          conversionFailed: "Dönüştürme başarısız oldu",
+          networkError: "Ağ hatası oluştu"
         },
         success: {
-          message: "Datei erfolgreich konvertiert!"
+          message: "PDF başarıyla resimlere dönüştürüldü"
         }
       },
       excelToPdf: {
-        title: "Excel zu PDF Konverter",
-        subtitle: "Konvertieren Sie Ihre Excel-Dateien in professionelle PDF-Dokumente",
+        title: "Excel'den PDF'e Dönüştürücü",
+        subtitle: "Excel elektronik tablolarını PDF belgelerine dönüştürün",
         uploadArea: {
-          title: "Ziehen Sie Ihre Excel-Datei hierher",
-          description: "oder wählen Sie von Ihrem Computer",
-          supportedFormats: "Unterstützte Formate: XLS, XLSX",
-          fileSelected: "Datei ausgewählt:"
+          title: "Excel Dosyası Seçin",
+          description: "Dosyanızı buraya sürükleyip bırakın veya seçmek için tıklayın",
+          supportedFormats: "Desteklenen formatlar: XLS, XLSX",
+          fileSelected: "Dosya seçildi"
         },
         button: {
-          convert: "Zu PDF konvertieren",
-          converting: "Konvertiere..."
+          convert: "PDF'e Dönüştür",
+          converting: "Dönüştürülüyor..."
         },
         features: {
           highQuality: {
-            title: "Hohe Qualität",
-            description: "Bewahrt Tabellenstruktur und Formatierung"
+            title: "Yüksek Kalite",
+            description: "Orijinal formatı ve düzeni korur"
           },
           easyUpload: {
-            title: "Einfacher Upload",
-            description: "Schneller Datei-Upload mit Drag-and-Drop"
+            title: "Kolay Yükleme",
+            description: "Sürükle-bırak ile hızlı dosya yükleme"
           },
           fast: {
-            title: "Schnelle Verarbeitung",
-            description: "Konvertierung in Sekunden"
+            title: "Hızlı Dönüştürme",
+            description: "Saniyeler içinde hazır sonuçlar"
+          },
+          preserveFormatting: {
+            title: "Format Koruma",
+            description: "Hücre formatını ve düzenini korur"
+          },
+          multipleSheets: {
+            title: "Çoklu Sayfa",
+            description: "Tüm çalışma sayfalarını dahil eder"
+          },
+          professionalOutput: {
+            title: "Profesyonel Çıktı",
+            description: "İş kalitesinde PDF belgeleri"
           }
         },
         errors: {
-          conversionFailed: "Konvertierung fehlgeschlagen",
-          networkError: "Netzwerkfehler aufgetreten"
+          conversionFailed: "Dönüştürme başarısız oldu",
+          networkError: "Ağ hatası oluştu"
         },
         success: {
-          message: "Datei erfolgreich konvertiert!"
+          message: "Excel dosyası başarıyla PDF'e dönüştürüldü"
         }
       }
     },
+    
     simplePdfEditor: {
       title: "Einfacher PDF-Editor",
-      subtitle: "Bearbeiten, zusammenführen und verwalten Sie Ihre PDF-Dateien",
+      subtitle: "Bearbeiten Sie Ihre PDF-Dateien einfach",
       uploadArea: {
-        title: "Ziehen Sie Ihre PDF-Datei hierher",
-        description: "oder wählen Sie von Ihrem Computer",
+        title: "PDF-Datei auswählen",
+        description: "Ziehen Sie Ihre Datei burada bırakın",
         supportedFormats: "Unterstütztes Format: PDF",
-        fileSelected: "Datei ausgewählt:"
+        fileSelected: "Datei seçildi"
       },
       features: {
         merge: {
           title: "Zusammenführen",
-          description: "Mehrere PDFs kombinieren"
+          description: "Mehrere PDFs zusammenführen"
         },
         split: {
           title: "Teilen",
@@ -1330,7 +1951,7 @@ export const translations: Record<string, Translations> = {
         },
         delete: {
           title: "Löschen",
-          description: "Unerwünschte Seiten entfernen"
+          description: "Seiten löschen"
         }
       },
       buttons: {
@@ -1345,14 +1966,80 @@ export const translations: Record<string, Translations> = {
         edit: "Bearbeiten",
         upload: "Hochladen"
       }
+    },
+    
+    pdfEditor: {
+      title: "PDF-Editor",
+      subtitle: "PDFs bearbeiten, Text hinzufügen und signieren",
+      upload: {
+        title: "PDF hochladen",
+        description: "Wählen Sie eine PDF-Datei zum Bearbeiten aus",
+        selectFile: "Datei auswählen"
+      },
+      sidebar: {
+        tools: "Werkzeuge",
+        fileInfo: "Dateiinformationen",
+        size: "Größe",
+        selectMove: "Auswählen und Bewegen",
+        addText: "Text hinzufügen",
+        addRectangle: "Rechteck hinzufügen",
+        addCircle: "Kreis hinzufügen",
+        createSignature: "Signatur erstellen",
+        savedSignatures: "Gespeicherte Signaturen",
+        annotations: "Anmerkungen"
+      },
+      signatureTypes: {
+        drawn: "Gezeichnet",
+        text: "Text",
+        signature: "Signatur"
+      },
+      buttons: {
+        placeToPdf: "In PDF platzieren",
+        select: "Auswählen",
+        exportEditedPdf: "Bearbeitetes PDF exportieren",
+        downloadOriginalPdf: "Original-PDF herunterladen",
+        uploadNewFile: "Neue Datei hochladen"
+      },
+      viewer: {
+        successMessage: "PDF erfolgreich geladen! Sie können mit der Bearbeitung beginnen.",
+        toolInstructions: {
+          addText: "Klicken Sie auf das PDF, um Text hinzuzufügen",
+          addRectangle: "Klicken Sie auf das PDF, um ein Rechteck hinzuzufügen",
+          addCircle: "Klicken Sie auf das PDF, um einen Kreis hinzuzufügen",
+          placeSignature: "Klicken Sie auf das PDF, um die Signatur zu platzieren",
+          clickToAdd: "Klicken Sie zum Hinzufügen",
+          textToolActive: "Textwerkzeug aktiv - klicken Sie, um Text hinzuzufügen",
+          rectangleToolActive: "Rechteckwerkzeug aktiv - klicken Sie, um Form hinzuzufügen",
+          circleToolActive: "Kreiswerkzeug aktiv - klicken Sie, um Form hinzuzufügen"
+        }
+      },
+      signatureModal: {
+        title: "Signatur erstellen",
+        drawTab: "Zeichnen",
+        typeTab: "Tippen",
+        drawInstruction: "Zeichnen Sie Ihre Signatur in den Bereich unten",
+        clear: "Löschen",
+        typeLabel: "Signaturtext:",
+        typePlaceholder: "Geben Sie Ihre Signatur ein",
+        fontLabel: "Schriftart:",
+        preview: "Vorschau:",
+        cancel: "Abbrechen",
+        addSignature: "Signatur hinzufügen"
+      }
     }
   }
 };
 
-// Export function to get translation for a specific language
-export const getTranslation = (language: string): Translations => {
-  return translations[language as keyof typeof translations] || translations.en;
+// Export function to get translations by language code
+export const getTranslation = (languageCode: string): Translations => {
+  switch (languageCode) {
+    case 'tr':
+      return translations.tr;
+    case 'en':
+      return translations.en;
+    case 'de':
+      return translations.de;
+    default:
+      return translations.tr; // Default to Turkish
+  }
 };
-
-// Export default
-export default translations;
