@@ -198,6 +198,23 @@ const Home: React.FC = () => {
                             </div>
                         </Link>
                     </div>
+
+                    {/* Add Split PDF Tool Card */}
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <Link 
+                            to="/split-pdf"
+                            className="group bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 rounded-3xl p-8 hover:shadow-2xl hover:border-pink-400 hover:scale-105 transition-all duration-300"
+                        >
+                            <div className="w-16 h-16 bg-gradient-to-r from-pink-600 to-pink-700 rounded-2xl flex items-center justify-center mb-6 group-hover:from-pink-700 group-hover:to-pink-800 transition-all duration-300 shadow-lg">
+                                <File className="w-8 h-8 text-white" />
+                            </div>
+                            <h3 className="text-xl font-bold text-pink-900 mb-3 group-hover:text-pink-800">Split PDF</h3>
+                            <p className="text-pink-700 text-sm font-medium mb-4 leading-relaxed">PDF dosyanızdan istediğiniz sayfaları kolayca ayırın. Kalite kaybı olmadan!</p>
+                            <div className="flex items-center text-pink-600 text-sm font-bold">
+                                {translations.home.tryNow} <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                        </Link>
+                    </div>
                 </div>
             </section>
 

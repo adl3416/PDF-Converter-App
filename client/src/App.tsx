@@ -12,6 +12,7 @@ import PdfToPowerPoint from './pages/PdfToPowerPoint';
 import ImageToPdf from './pages/ImageToPdf';
 import PdfToImage from './pages/PdfToImage';
 import ExcelToPdf from './pages/ExcelToPdf';
+import SplitPdf from './pages/SplitPdf';
 
 const App: React.FC = () => {
   return (
@@ -30,6 +31,7 @@ const App: React.FC = () => {
               <Route path="/image-to-pdf" element={<ImageToPdf />} />
               <Route path="/pdf-to-image" element={<PdfToImage />} />
               <Route path="/excel-to-pdf" element={<ExcelToPdf />} />
+              <Route path="/split-pdf" element={<SplitPdf />} />
             </Routes>
           </main>
           <Footer />
