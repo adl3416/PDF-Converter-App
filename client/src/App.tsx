@@ -4,6 +4,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
+import MergePdf from './pages/MergePdf';
 import WordToPdf from './pages/WordToPdf';
 import SimplePdfEditor from './pages/SimplePdfEditor';
 import PdfToExcel from './pages/PdfToExcel';
@@ -32,6 +33,7 @@ const App: React.FC = () => {
               <Route path="/pdf-to-image" element={<PdfToImage />} />
               <Route path="/excel-to-pdf" element={<ExcelToPdf />} />
               <Route path="/split-pdf" element={<SplitPdf />} />
+              <Route path="/merge-pdf" element={<MergePdf />} />
             </Routes>
           </main>
           <Footer />

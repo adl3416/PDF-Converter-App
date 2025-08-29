@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { convertWordToPdf, convertPdfToExcel, convertPdfToWord, convertPdfToPowerPoint, convertImageToPdf, convertPdfToImage, convertExcelToPdf } from '../utils/conversionUtils';
 import * as fs from 'fs';
 import * as path from 'path';
+import { mergePdf } from '../utils/mergeUtils';
+import { splitPdf } from '../utils/conversionUtils';
 
 export const convertFile = async (req: Request, res: Response) => {
   let inputPath = '';
@@ -81,6 +83,38 @@ export const convertFile = async (req: Request, res: Response) => {
   }
 };
 
+export async function convertMergePdfFile(req: Request, res: Response) {
+  try {
+    const files = req.files as Express.Multer.File[];
+    if (!files || files.length < 2) {
+      return res.status(400).json({ error: 'En az iki PDF dosyası yükleyin.' });
+    }
+    const filePaths = files.map((f: Express.Multer.File) => f.path);
+    const mergedPath = await mergePdf(filePaths);
+    res.download(mergedPath, 'merged.pdf', (err) => {
+      filePaths.forEach((p: string) => fs.unlinkSync(p));
+      fs.unlinkSync(mergedPath);
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Birleştirme işlemi başarısız.' });
+  }
+}
+export const convertSplitPdfFile = async (req: Request, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    const inputPath = req.file.path;
+    const pages = req.body.pages;
+    const outputZipPath = await splitPdf(inputPath, pages);
+    res.download(outputZipPath, 'split-pages.zip', (err) => {
+      if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
+      if (fs.existsSync(outputZipPath)) fs.unlinkSync(outputZipPath);
+    });
+  } catch (error) {
+    res.status(500).json({ error: error instanceof Error ? error.message : 'PDF split failed' });
+  }
+};
 export const convertPdfToExcelFile = async (req: Request, res: Response) => {
   let inputPath = '';
   let outputPath = '';

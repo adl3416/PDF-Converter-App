@@ -9,6 +9,7 @@ import sharp from 'sharp';
 import pdfParse from 'pdf-parse';
 // @ts-ignore
 import PptxGenJS from 'pptxgenjs';
+import JSZip from 'jszip';
 
 export const convertWordToPdf = async (inputPath: string): Promise<string> => {
   try {
@@ -113,10 +114,10 @@ export const convertWordToPdf = async (inputPath: string): Promise<string> => {
     }
 
     const pdfBytes = await pdfDoc.save();
-    fs.writeFileSync(outputPath, pdfBytes);
+  fs.writeFileSync(outputPath, pdfBytes);
     
-    console.log(Successfully converted to PDF: );
-    return outputPath;
+  console.log('Successfully converted to PDF:', outputPath);
+  return outputPath;
   } catch (error) {
     console.error('Word to PDF conversion error:', error);
     throw new Error('Failed to convert Word to PDF: ' + (error as Error).message);
@@ -145,4 +146,48 @@ export const convertImageToPdf = async (inputPaths: string[]): Promise<string> =
 
 export const convertPdfToImage = async (inputPath: string): Promise<string> => {
   return inputPath.replace('.pdf', '.png');
+};
+
+export const splitPdf = async (inputPath: string, pages: string): Promise<string> => {
+  // pages expected like: "1,2,4-6" or empty to split every page
+  const pdfBytes = fs.readFileSync(inputPath);
+  const pdfDoc = await PDFDocument.load(pdfBytes);
+  const totalPages = pdfDoc.getPageCount();
+
+  // parse pages
+  let ranges: Array<{ start: number; end: number }> = [];
+  if (!pages || !pages.toString().trim()) {
+    for (let i = 1; i <= totalPages; i++) ranges.push({ start: i, end: i });
+  } else {
+    const parts = pages.toString().split(',').map(p => p.trim()).filter(Boolean);
+    for (const part of parts) {
+      if (part.includes('-')) {
+        const [s, e] = part.split('-').map(n => parseInt(n, 10));
+        if (!isNaN(s) && !isNaN(e)) ranges.push({ start: Math.max(1, s), end: Math.min(totalPages, e) });
+      } else {
+        const n = parseInt(part, 10);
+        if (!isNaN(n)) ranges.push({ start: Math.max(1, n), end: Math.min(totalPages, n) });
+      }
+    }
+  }
+
+  const zip = new JSZip();
+  let fileIndex = 0;
+  for (const r of ranges) {
+    const newPdf = await PDFDocument.create();
+    for (let i = r.start - 1; i <= r.end - 1; i++) {
+      if (i < 0 || i >= totalPages) continue;
+      const [copied] = await newPdf.copyPages(pdfDoc, [i]);
+      newPdf.addPage(copied);
+    }
+    const newBytes = await newPdf.save();
+    const name = r.start === r.end ? `page-${r.start}.pdf` : `pages-${r.start}-${r.end}.pdf`;
+    zip.file(name, newBytes);
+    fileIndex++;
+  }
+
+  const zipBuffer = await zip.generateAsync({ type: 'nodebuffer' });
+  const zipPath = inputPath.replace(/\.pdf$/i, '_split.zip');
+  fs.writeFileSync(zipPath, zipBuffer);
+  return zipPath;
 };

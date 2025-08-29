@@ -91,55 +91,57 @@ const PdfToExcel: React.FC = () => {
                     </p>
                 </div>
 
-                {/* Upload Section */}
-                <div className="max-w-2xl mx-auto">
-                    <div className="bg-white rounded-2xl shadow-xl p-8">
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* File Drop Zone */}
-                            <div
-                                className={`
-                                    relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300
-                                    ${dragActive ? 'border-green-400 bg-green-50' : 'border-gray-300 hover:border-green-400 hover:bg-gray-50'}
-                                    ${file ? 'border-green-400 bg-green-50' : ''}
-                                `}
-                                onDrop={handleDrop}
-                                onDragOver={handleDragOver}
-                                onDragLeave={handleDragLeave}
-                            >
-                                <input
-                                    type="file"
-                                    accept=".pdf,application/pdf"
-                                    onChange={(e) => e.target.files?.[0] && handleFileChange(e.target.files[0])}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                />
-                                  {!file ? (
-                                    <>
-                                        <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                                        <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                            {translations.toolPages.pdfToExcel.uploadArea.title}
-                                        </h3>
-                                        <p className="text-gray-500 mb-4">
-                                            {translations.toolPages.pdfToExcel.uploadArea.description}
-                                        </p>
-                                        <p className="text-sm text-gray-400">
-                                            {translations.toolPages.pdfToExcel.uploadArea.supportedFormats}
-                                        </p>
-                                    </>
-                                ) : (
-                                    <>
-                                        <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                                        <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                            {translations.toolPages.pdfToExcel.uploadArea.fileSelected}
-                                        </h3>
-                                        <p className="text-gray-600 font-medium">
-                                            {file.name}
-                                        </p>
-                                        <p className="text-sm text-gray-400 mt-1">
-                                            {(file.size / 1024 / 1024).toFixed(2)} MB
-                                        </p>
-                                    </>
-                                )}
-                            </div>
+                                {/* Upload & Info Section */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                                    {/* Upload Area */}
+                                    <div className="md:col-span-2">
+                                        <div className="bg-white rounded-2xl shadow-xl p-8">
+                                            <form onSubmit={handleSubmit} className="space-y-6">
+                                                {/* File Drop Zone */}
+                                                <div
+                                                    className={`
+                                                        relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300
+                                                        ${dragActive ? 'border-green-400 bg-green-50' : 'border-gray-300 hover:border-green-400 hover:bg-gray-50'}
+                                                        ${file ? 'border-green-400 bg-green-50' : ''}
+                                                    `}
+                                                    onDrop={handleDrop}
+                                                    onDragOver={handleDragOver}
+                                                    onDragLeave={handleDragLeave}
+                                                >
+                                                    <input
+                                                        type="file"
+                                                        accept=".pdf,application/pdf"
+                                                        onChange={(e) => e.target.files?.[0] && handleFileChange(e.target.files[0])}
+                                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                    />
+                                                    {!file ? (
+                                                        <>
+                                                            <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                                                            <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                                                                {translations.toolPages.pdfToExcel.uploadArea.title}
+                                                            </h3>
+                                                            <p className="text-gray-500 mb-4">
+                                                                {translations.toolPages.pdfToExcel.uploadArea.description}
+                                                            </p>
+                                                            <p className="text-sm text-gray-400">
+                                                                {translations.toolPages.pdfToExcel.uploadArea.supportedFormats}
+                                                            </p>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
+                                                            <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                                                                {translations.toolPages.pdfToExcel.uploadArea.fileSelected}
+                                                            </h3>
+                                                            <p className="text-gray-600 font-medium">
+                                                                {file.name}
+                                                            </p>
+                                                            <p className="text-sm text-gray-400 mt-1">
+                                                                {(file.size / 1024 / 1024).toFixed(2)} MB
+                                                            </p>
+                                                        </>
+                                                    )}
+                                                </div>
 
                             {/* Error Message */}
                             {error && (
@@ -178,37 +180,32 @@ const PdfToExcel: React.FC = () => {
                                     </>
                                 )}
                             </button>
-                        </form>
-                    </div>                    {/* Features Section */}
-                    <div className="mt-12 grid md:grid-cols-3 gap-6">
-                        <div className="text-center p-6">
-                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <CheckCircle className="w-6 h-6 text-green-600" />
-                            </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.pdfToExcel.features.dataExtraction.title}</h3>
-                            <p className="text-gray-600 text-sm">{translations.toolPages.pdfToExcel.features.dataExtraction.description}</p>
+                                                </form>
+                                        </div>
+                                    </div>
+                                    {/* Info/Steps Area */}
+                                    <div className="flex flex-col gap-6">
+                                        <div className="bg-white rounded-2xl shadow p-6 mb-2">
+                                            <h2 className="text-xl font-bold text-green-700 mb-2">How It Works</h2>
+                                            <ul className="list-disc pl-4 text-gray-700 text-base">
+                                                <li>Extract tables and data from PDF files</li>
+                                                <li>Preserve Excel formatting</li>
+                                                <li>Download as .xlsx file</li>
+                                            </ul>
+                                        </div>
+                                        <div className="bg-white rounded-2xl shadow p-6">
+                                            <h2 className="text-xl font-bold text-green-700 mb-2">Quick Steps</h2>
+                                            <ol className="list-decimal pl-4 text-gray-700 text-base">
+                                                <li>Upload PDF</li>
+                                                <li>Start Conversion</li>
+                                                <li>Download Excel</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
-                        
-                        <div className="text-center p-6">
-                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Upload className="w-6 h-6 text-blue-600" />
-                            </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.pdfToExcel.features.preserveFormatting.title}</h3>
-                            <p className="text-gray-600 text-sm">{translations.toolPages.pdfToExcel.features.preserveFormatting.description}</p>
-                        </div>
-                        
-                        <div className="text-center p-6">
-                            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Download className="w-6 h-6 text-purple-600" />
-                            </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.pdfToExcel.features.fast.title}</h3>
-                            <p className="text-gray-600 text-sm">{translations.toolPages.pdfToExcel.features.fast.description}</p>
-                        </div>
-                    </div>
                 </div>
-            </div>
-        </div>
-    );
+        );
 };
 
 export default PdfToExcel;
