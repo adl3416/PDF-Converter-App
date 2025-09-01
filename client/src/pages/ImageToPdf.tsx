@@ -3,12 +3,19 @@ import { Upload, Image, Download, CheckCircle, AlertCircle } from 'lucide-react'
 import { useLanguage } from '../contexts/LanguageContext';
 
 const ImageToPdf: React.FC = () => {
+    // Önizleme URL'leri
+    const [previews, setPreviews] = useState<string[]>([]);
     const { translations } = useLanguage();
     const [files, setFiles] = useState<File[]>([]);
     const [isConverting, setIsConverting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [dragActive, setDragActive] = useState(false);
+    // PDF settings
+    const [pageSize, setPageSize] = useState('A4');
+    const [orientation, setOrientation] = useState('auto');
+    const [imageQuality, setImageQuality] = useState(80);
+    const [pageMargin, setPageMargin] = useState(20);
 
     const handleFileChange = (uploadedFiles: FileList) => {
         const imageFiles = Array.from(uploadedFiles).filter(file => 
@@ -20,6 +27,9 @@ const ImageToPdf: React.FC = () => {
         } else {
             setFiles(imageFiles);
             setError(null);
+            // Önizleme URL'lerini oluştur
+            const urls = imageFiles.map(file => URL.createObjectURL(file));
+            setPreviews(urls);
         }
         setIsSuccess(false);
     };
@@ -43,7 +53,10 @@ const ImageToPdf: React.FC = () => {
     };
 
     const removeFile = (index: number) => {
-        setFiles(files.filter((_, i) => i !== index));
+    const newFiles = files.filter((_, i) => i !== index);
+    setFiles(newFiles);
+    // Önizleme URL'lerini güncelle
+    setPreviews(previews.filter((_, i) => i !== index));
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -57,6 +70,10 @@ const ImageToPdf: React.FC = () => {
         files.forEach(file => {
             formData.append('files', file);
         });
+        formData.append('pageSize', pageSize);
+        formData.append('orientation', orientation);
+        formData.append('imageQuality', imageQuality.toString());
+        formData.append('pageMargin', pageMargin.toString());
 
         try {
             console.log('Sending image files to server:', files.map(f => f.name));
@@ -98,25 +115,21 @@ const ImageToPdf: React.FC = () => {
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-full mb-6">
                         <Image className="w-8 h-8 text-pink-600" />
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                        {translations.toolPages.imageToPdf.title}
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 font-extrabold drop-shadow-sm">Image to PDF Converter</span>
                     </h1>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        {translations.toolPages.imageToPdf.subtitle}
+                        Transform multiple images into professional PDF documents. Support for JPG, PNG, WEBP, and other formats with customizable page settings and high-quality output.
                     </p>
                 </div>
-
-                {/* Upload Section */}
-                <div className="max-w-2xl mx-auto">
-                    <div className="bg-white rounded-2xl shadow-xl p-8">
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* File Drop Zone */}
+                {/* Main Section: Upload + PDF Settings */}
+                <div className="flex flex-col md:flex-row gap-8 max-w-4xl mx-auto">
+                    {/* Upload Area */}
+                    <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-8">
+                        {/* Upload Area */}
+                        <div className="flex-1 bg-white rounded-2xl shadow-xl p-8 space-y-6">
                             <div
-                                className={`
-                                    relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300
-                                    ${dragActive ? 'border-pink-400 bg-pink-50' : 'border-gray-300 hover:border-pink-400 hover:bg-gray-50'}
-                                    ${files.length > 0 ? 'border-pink-400 bg-pink-50' : ''}
-                                `}
+                                className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${dragActive ? 'border-purple-400 bg-purple-50' : 'border-gray-300 hover:border-purple-400 hover:bg-gray-50'} ${files.length > 0 ? 'border-purple-400 bg-purple-50' : ''}`}
                                 onDrop={handleDrop}
                                 onDragOver={handleDragOver}
                                 onDragLeave={handleDragLeave}
@@ -128,115 +141,99 @@ const ImageToPdf: React.FC = () => {
                                     onChange={(e) => e.target.files && handleFileChange(e.target.files)}
                                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                 />
-                                
                                 {files.length === 0 ? (
                                     <>
                                         <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                                        <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                            {translations.toolPages.imageToPdf.uploadArea.title}
-                                        </h3>
-                                        <p className="text-gray-500 mb-4">
-                                            {translations.toolPages.imageToPdf.uploadArea.description}
-                                        </p>
-                                        <p className="text-sm text-gray-400">
-                                            {translations.toolPages.imageToPdf.uploadArea.supportedFormats}
-                                        </p>
+                                        <h3 className="text-lg font-semibold text-gray-700 mb-2">Upload Images</h3>
+                                        <p className="text-gray-500 mb-4">Drag & drop images here or click to select files</p>
+                                        <p className="text-sm text-gray-400">Supported formats: JPG, PNG, WEBP, etc.</p>
                                     </>
                                 ) : (
                                     <>
-                                        <CheckCircle className="w-12 h-12 text-pink-500 mx-auto mb-4" />
-                                        <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                            {files.length} {translations.toolPages.imageToPdf.uploadArea.fileSelected}
-                                        </h3>
+                                        <CheckCircle className="w-12 h-12 text-purple-500 mx-auto mb-4" />
+                                        <h3 className="text-lg font-semibold text-gray-700 mb-2">Selected Images ({files.length})</h3>
                                         <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
                                             {files.map((file, index) => (
-                                                <div key={index} className="relative bg-gray-100 rounded-lg p-2">
+                                                <div key={index} className="relative bg-gray-100 rounded-lg p-2 flex flex-col items-center">
+                                                    {/* Önizleme */}
+                                                    <img src={previews[index]} alt={file.name} className="w-20 h-20 object-cover rounded mb-2 border" />
                                                     <p className="text-sm text-gray-600 truncate">{file.name}</p>
-                                                    <p className="text-xs text-gray-400">
-                                                        {(file.size / 1024 / 1024).toFixed(2)} MB
-                                                    </p>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => removeFile(index)}
-                                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
-                                                    >
-                                                        ×
-                                                    </button>
+                                                    <p className="text-xs text-gray-400">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                                    <button type="button" onClick={() => removeFile(index)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600">×</button>
                                                 </div>
                                             ))}
                                         </div>
                                     </>
                                 )}
                             </div>
-
-                            {/* Error Message */}
                             {error && (
                                 <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg">
                                     <AlertCircle className="w-5 h-5 text-red-500" />
                                     <span className="text-red-700">{error}</span>
                                 </div>
                             )}
-
-                            {/* Success Message */}
                             {isSuccess && (
-                                <div className="flex items-center gap-2 p-4 bg-pink-50 border border-pink-200 rounded-lg">
-                                    <CheckCircle className="w-5 h-5 text-pink-500" />
-                                    <span className="text-pink-700">{translations.toolPages.imageToPdf.success.message}</span>
+                                <div className="flex items-center gap-2 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                                    <CheckCircle className="w-5 h-5 text-purple-500" />
+                                    <span className="text-purple-700">PDF created successfully!</span>
                                 </div>
                             )}
-
-                            {/* Convert Button */}
-                            <button
-                                type="submit"
-                                disabled={files.length === 0 || isConverting}
-                                className={`
-                                    w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-300 flex items-center justify-center gap-2
-                                    ${files.length > 0 && !isConverting 
-                                        ? 'bg-pink-600 hover:bg-pink-700 hover:shadow-lg transform hover:-translate-y-0.5' 
-                                        : 'bg-gray-300 cursor-not-allowed'
-                                    }
-                                `}
-                            >
-                                {isConverting ? (
-                                    <>
-                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                        {translations.toolPages.imageToPdf.button.converting}
-                                    </>
-                                ) : (
-                                    <>
-                                        <Download className="w-5 h-5" />
-                                        {translations.toolPages.imageToPdf.button.convert}
-                                    </>
-                                )}
-                            </button>
-                        </form>
+                        </div>
+                        {/* PDF Settings Panel */}
+                        <div className="w-full md:w-80 bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6 h-fit">
+                            <div className="font-bold text-lg text-purple-700 mb-2">PDF Settings</div>
+                            <div className="flex flex-col gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Page Size</label>
+                                    <select value={pageSize} onChange={e => setPageSize(e.target.value)} className="w-full border rounded px-2 py-1">
+                                        <option value="A4">A4</option>
+                                        <option value="Letter">Letter</option>
+                                        <option value="Legal">Legal</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Orientation</label>
+                                    <select value={orientation} onChange={e => setOrientation(e.target.value)} className="w-full border rounded px-2 py-1">
+                                        <option value="auto">Auto (Best Fit)</option>
+                                        <option value="portrait">Portrait</option>
+                                        <option value="landscape">Landscape</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Image Quality: {imageQuality}%</label>
+                                    <input type="range" min={10} max={100} value={imageQuality} onChange={e => setImageQuality(Number(e.target.value))} className="w-full" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Page Margin: {pageMargin}mm</label>
+                                    <input type="range" min={0} max={50} value={pageMargin} onChange={e => setPageMargin(Number(e.target.value))} className="w-full" />
+                                </div>
+                            </div>
+                            <button type="submit" disabled={files.length === 0 || isConverting} className={`w-full py-3 bg-purple-600 text-white font-bold rounded-xl shadow-lg hover:bg-purple-700 transition-all text-lg ${files.length === 0 || isConverting ? 'opacity-50 cursor-not-allowed' : ''}`}>Create PDF ({files.length} images)</button>
+                        </div>
+                    </form>
+                </div>
+                {/* Features Section */}
+                <div className="mt-12 grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                    <div className="text-center p-6">
+                        <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Image className="w-6 h-6 text-purple-600" />
+                        </div>
+                        <h3 className="font-semibold text-gray-800 mb-2">Fast Conversion</h3>
+                        <p className="text-gray-600 text-sm">Convert images to PDF instantly with high performance.</p>
                     </div>
-
-                    {/* Features Section */}
-                    <div className="mt-12 grid md:grid-cols-3 gap-6">
-                        <div className="text-center p-6">
-                            <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Image className="w-6 h-6 text-pink-600" />
-                            </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.imageToPdf.features.multipleImages.title}</h3>
-                            <p className="text-gray-600 text-sm">{translations.toolPages.imageToPdf.features.multipleImages.description}</p>
+                    <div className="text-center p-6">
+                        <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <CheckCircle className="w-6 h-6 text-purple-600" />
                         </div>
-                        
-                        <div className="text-center p-6">
-                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <CheckCircle className="w-6 h-6 text-blue-600" />
-                            </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.imageToPdf.features.highQuality.title}</h3>
-                            <p className="text-gray-600 text-sm">{translations.toolPages.imageToPdf.features.highQuality.description}</p>
+                        <h3 className="font-semibold text-gray-800 mb-2">Secure Process</h3>
+                        <p className="text-gray-600 text-sm">Your files are processed securely and never shared.</p>
+                    </div>
+                    <div className="text-center p-6">
+                        <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Download className="w-6 h-6 text-purple-600" />
                         </div>
-                        
-                        <div className="text-center p-6">
-                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Download className="w-6 h-6 text-green-600" />
-                            </div>
-                            <h3 className="font-semibold text-gray-800 mb-2">{translations.toolPages.imageToPdf.features.fastConversion.title}</h3>
-                            <p className="text-gray-600 text-sm">{translations.toolPages.imageToPdf.features.fastConversion.description}</p>
-                        </div>
+                        <h3 className="font-semibold text-gray-800 mb-2">Responsive Design</h3>
+                        <p className="text-gray-600 text-sm">Works perfectly on all devices and screen sizes.</p>
                     </div>
                 </div>
             </div>

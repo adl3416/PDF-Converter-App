@@ -1,11 +1,11 @@
-﻿import * as fs from 'fs';
+﻿import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import sharp from 'sharp';
+import * as fs from 'fs';
 import * as path from 'path';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import * as mammoth from 'mammoth';
 import * as XLSX from 'xlsx';
 import * as pdf2pic from 'pdf2pic';
-import sharp from 'sharp';
 import pdfParse from 'pdf-parse';
 // @ts-ignore
 import PptxGenJS from 'pptxgenjs';
@@ -140,8 +140,86 @@ export const convertPdfToPowerPoint = async (inputPath: string): Promise<string>
   return inputPath.replace('.pdf', '.pptx');
 };
 
-export const convertImageToPdf = async (inputPaths: string[]): Promise<string> => {
-  return inputPaths[0].replace(/\.(jpg|jpeg|png|gif|bmp|webp)$/i, '.pdf');
+export const convertImageToPdf = async (
+  inputPaths: string[], options?: { pageSize?: string; orientation?: string; imageQuality?: number; pageMargin?: number }
+): Promise<string> => {
+  // PDF oluştur
+  const pdfDoc = await PDFDocument.create();
+  const pageSize = options?.pageSize || 'A4';
+  const orientation = options?.orientation || 'auto';
+  const imageQuality = typeof options?.imageQuality === 'number' ? options.imageQuality : 80;
+  const pageMargin = typeof options?.pageMargin === 'number' ? options.pageMargin : 20;
+
+  // A4 boyutları (595x842 pt)
+  const sizes: Record<string, [number, number]> = {
+    'A4': [595.28, 841.89],
+    'Letter': [612, 792],
+    'Legal': [612, 1008],
+  };
+  let [defaultWidth, defaultHeight] = sizes[pageSize] || sizes['A4'];
+
+  for (const imgPath of inputPaths) {
+    // Resmi buffer olarak oku
+    let imgBuffer = fs.readFileSync(imgPath);
+    // Kaliteyi uygula (JPEG için)
+    if (imgPath.endsWith('.jpg') || imgPath.endsWith('.jpeg')) {
+      imgBuffer = Buffer.from(await sharp(imgBuffer).jpeg({ quality: imageQuality }).toBuffer());
+    } else if (imgPath.endsWith('.png')) {
+      imgBuffer = Buffer.from(await sharp(imgBuffer).png({ quality: imageQuality }).toBuffer());
+    } else {
+      imgBuffer = Buffer.from(await sharp(imgBuffer).png({ quality: imageQuality }).toBuffer());
+    }
+
+    // Resmi PDF'e ekle
+    let img;
+    let dims;
+    if (imgPath.endsWith('.jpg') || imgPath.endsWith('.jpeg')) {
+      img = await pdfDoc.embedJpg(imgBuffer);
+      dims = img.scale(1);
+    } else {
+      img = await pdfDoc.embedPng(imgBuffer);
+      dims = img.scale(1);
+    }
+
+    // Sayfa boyutunu ve yönünü ayarla
+    let pageWidth = defaultWidth;
+    let pageHeight = defaultHeight;
+    if (orientation === 'landscape' || (orientation === 'auto' && dims.width > dims.height)) {
+      if (pageWidth < pageHeight) {
+        [pageWidth, pageHeight] = [pageHeight, pageWidth];
+      }
+    }
+
+    // Resmi margin ile ortala
+    const maxImgWidth = pageWidth - 2 * pageMargin;
+    const maxImgHeight = pageHeight - 2 * pageMargin;
+    let drawWidth = dims.width;
+    let drawHeight = dims.height;
+    // Resmi sayfaya sığdır
+    const widthRatio = maxImgWidth / dims.width;
+    const heightRatio = maxImgHeight / dims.height;
+    const scale = Math.min(widthRatio, heightRatio, 1);
+    drawWidth = dims.width * scale;
+    drawHeight = dims.height * scale;
+    const x = (pageWidth - drawWidth) / 2;
+    const y = (pageHeight - drawHeight) / 2;
+
+    const page = pdfDoc.addPage([pageWidth, pageHeight]);
+    page.drawImage(img, {
+      x,
+      y,
+      width: drawWidth,
+      height: drawHeight,
+    });
+  }
+
+  // PDF'i kaydet
+  const pdfBytes = await pdfDoc.save();
+  const outputDir = path.join(__dirname, '../../uploads');
+  if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
+  const outputPath = path.join(outputDir, `converted_images.pdf`);
+  fs.writeFileSync(outputPath, pdfBytes);
+  return outputPath;
 };
 
 export const convertPdfToImage = async (inputPath: string): Promise<string> => {

@@ -384,7 +384,13 @@ export const convertImageToPdfFile = async (req: Request, res: Response) => {
     
     console.log(`Converting ${inputPaths.length} image files`);
     
-    outputPath = await convertImageToPdf(inputPaths);
+  // PDF ayarlarını al
+  const pageSize = req.body.pageSize || 'A4';
+  const orientation = req.body.orientation || 'auto';
+  const imageQuality = parseInt(req.body.imageQuality) || 80;
+  const pageMargin = parseInt(req.body.pageMargin) || 20;
+
+  outputPath = await convertImageToPdf(inputPaths, { pageSize, orientation, imageQuality, pageMargin });
     
     // PDF dosyasını indir ve ardından temizle
     const pdfFileName = 'converted_images.pdf';
