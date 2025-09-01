@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ArrowUp, FilePlus } from "lucide-react";
-import { File } from "lucide-react";
+import { ArrowUp, FilePlus, File, Shield, Zap, Download, CheckCircle, Image, Edit3, Divide } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const MergePdf: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -71,23 +71,25 @@ const MergePdf: React.FC = () => {
   };
 
   return (
-  <div className="min-h-screen bg-[#f6f3fd] py-10 px-2 flex flex-col items-center">
-  <h1 className="text-4xl font-bold text-purple-700 mb-2 text-center max-w-3xl w-full">Merge PDF Documents</h1>
-  <p className="text-gray-600 mb-6 text-center max-w-2xl w-full">
-        Easily merge multiple PDF files into one document. Drag and drop your PDF files below, or click to browse. Arrange, preview, and combine with a single click.
-      </p>
-  <div className="w-full max-w-3xl flex flex-col items-center">
-        <div
-          className="w-full min-h-[220px] border-4 border-dashed border-purple-400 rounded-2xl flex flex-col items-center justify-center bg-white shadow-lg mb-6 relative hover:border-purple-600 transition-all duration-200"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-        >
-          <div className="absolute top-4 left-1/2 -translate-x-1/2">
-            <span className="bg-purple-500 text-white rounded-full px-6 py-3 text-3xl shadow-lg flex items-center gap-2">
-              <ArrowUp className="w-8 h-8" />
-            </span>
-          </div>
-          <input
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50">
+      <div className="container mx-auto px-2 md:px-8 py-16 max-w-[1400px]">
+        <div className="max-w-[1200px] mx-auto">
+          <h1 className="text-4xl font-bold text-purple-700 mb-2 text-center">Merge PDF Documents</h1>
+          <p className="text-gray-600 mb-6 text-center max-w-2xl mx-auto">
+            Easily merge multiple PDF files into one document. Drag and drop your PDF files below, or click to browse. Arrange, preview, and combine with a single click.
+          </p>
+          <div className="w-full flex flex-col items-center">
+            <div
+              className="w-full min-h-[220px] border-4 border-dashed border-purple-400 rounded-2xl flex flex-col items-center justify-center bg-white shadow-lg mb-6 relative hover:border-purple-600 transition-all duration-200"
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+            >
+              <div className="absolute top-4 left-1/2 -translate-x-1/2">
+                <span className="bg-purple-500 text-white rounded-full px-6 py-3 text-3xl shadow-lg flex items-center gap-2">
+                  <ArrowUp className="w-8 h-8" />
+                </span>
+              </div>
+              <input
             type="file"
             accept="application/pdf"
             multiple
@@ -161,6 +163,78 @@ const MergePdf: React.FC = () => {
           <li>What is the maximum file size? <br />Up to 100MB total is recommended for best results.</li>
           <li>Can I rearrange the order? <br />(Coming soon) Drag to reorder before merging.</li>
         </ul>
+      </div>
+      
+      {/* Features Section */}
+      <div className="mt-20 max-w-[1200px] mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Professional PDF Merging Solution</h2>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            Combine multiple PDF documents into a single, organized file with our advanced merging technology. 
+            Perfect for reports, presentations, and document consolidation.
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <File className="w-8 h-8 text-purple-600" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-800 mb-3">Multiple File Support</h3>
+            <p className="text-gray-600">Upload and merge unlimited PDF files in any order. Combine documents efficiently with drag-and-drop functionality.</p>
+          </div>
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Shield className="w-8 h-8 text-purple-600" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-800 mb-3">Secure Processing</h3>
+            <p className="text-gray-600">Your PDF files are processed securely with encryption. No data is stored or shared with third parties.</p>
+          </div>
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Zap className="w-8 h-8 text-purple-600" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-800 mb-3">Fast & Reliable</h3>
+            <p className="text-gray-600">Lightning-fast processing with reliable results. Merge large documents quickly without quality loss.</p>
+          </div>
+        </div>
+
+        {/* Related Tools Section */}
+        <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-3xl p-12">
+          <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Related PDF Tools</h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Link to="/split-pdf" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Divide className="w-6 h-6 text-purple-600" />
+              </div>
+              <h4 className="font-semibold text-gray-800 mb-2">Split PDF</h4>
+              <p className="text-sm text-gray-600">Extract pages from PDF files</p>
+            </Link>
+            <Link to="/pdf-to-image" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+              <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Image className="w-6 h-6 text-indigo-600" />
+              </div>
+              <h4 className="font-semibold text-gray-800 mb-2">PDF to Image</h4>
+              <p className="text-sm text-gray-600">Convert PDF pages to images</p>
+            </Link>
+            <Link to="/image-to-pdf" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+              <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Image className="w-6 h-6 text-pink-600" />
+              </div>
+              <h4 className="font-semibold text-gray-800 mb-2">Image to PDF</h4>
+              <p className="text-sm text-gray-600">Convert images to PDF documents</p>
+            </Link>
+            <Link to="/pdf-editor" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Edit3 className="w-6 h-6 text-green-600" />
+              </div>
+              <h4 className="font-semibold text-gray-800 mb-2">PDF Editor</h4>
+              <p className="text-sm text-gray-600">Edit PDF documents online</p>
+            </Link>
+          </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

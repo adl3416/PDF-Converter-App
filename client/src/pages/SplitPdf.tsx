@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Shield, Zap, File, Divide } from 'lucide-react';
+import { Shield, Zap, File, Divide, Edit3, Image, Download, CheckCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { getPdfPageImages } from '../utils/pdfPreview';
 
 const faqs = [
@@ -134,19 +135,20 @@ const SplitPdf: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f6fd] py-10 px-2 flex flex-col items-center">
-      <div className="max-w-3xl w-full mx-auto">
-        <h1 className="text-4xl font-bold text-purple-700 text-center mb-2 max-w-3xl w-full">Split PDF Documents</h1>
-        <p className="text-center text-lg text-gray-600 mb-8 max-w-2xl w-full mx-auto">
-          Easily split your PDF files into separate documents. Extract specific pages, create custom ranges, or divide large PDFs into smaller, manageable files with our powerful online tool.
-        </p>
-        <div>
-          <div
-            className="w-full min-h-[220px] border-4 border-dashed border-purple-400 rounded-2xl flex flex-col items-center justify-center bg-white shadow-lg mb-6 relative hover:border-purple-600 transition-all duration-200"
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-          >
-            <div className="absolute top-4 left-1/2 -translate-x-1/2">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50">
+      <div className="container mx-auto px-2 md:px-8 py-16 max-w-[1400px]">
+        <div className="max-w-[1200px] mx-auto">
+          <h1 className="text-4xl font-bold text-purple-700 text-center mb-2">Split PDF Documents</h1>
+          <p className="text-center text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            Easily split your PDF files into separate documents. Extract specific pages, create custom ranges, or divide large PDFs into smaller, manageable files with our powerful online tool.
+          </p>
+          <div>
+            <div
+              className="w-full min-h-[220px] border-4 border-dashed border-purple-400 rounded-2xl flex flex-col items-center justify-center bg-white shadow-lg mb-6 relative hover:border-purple-600 transition-all duration-200"
+              onDrop={handleDrop}
+              onDragOver={(e) => e.preventDefault()}
+            >
+              <div className="absolute top-4 left-1/2 -translate-x-1/2">
               <span className="bg-purple-500 text-white rounded-full px-6 py-3 text-3xl shadow-lg flex items-center gap-2">
                 ↑
               </span>
@@ -211,6 +213,7 @@ const SplitPdf: React.FC = () => {
               )}
             </div>
           )}
+          </div>
           <button onClick={handleSplit} disabled={loading || (splitMethod === 'select' && selectedPages.length === 0)} className="bg-purple-600 text-white px-6 py-2 rounded font-semibold hover:bg-purple-700 transition-all w-full mt-2">
             {loading ? 'Splitting...' : 'Split PDF'}
           </button>
@@ -245,11 +248,80 @@ const SplitPdf: React.FC = () => {
               ))}
             </div>
           </div>
+          
+          {/* Features Section */}
+          <div className="mt-20 max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Our PDF Splitter?</h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Our advanced PDF splitting tool offers precise control and professional-grade results. 
+                Perfect for organizing documents, reducing file sizes, and managing large PDFs.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8 mb-16">
+              <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Divide className="w-8 h-8 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 mb-3">Multiple Split Options</h3>
+                <p className="text-gray-600">Split by page selection, page ranges, or divide into equal parts. Choose the method that works best for your needs.</p>
+              </div>
+              <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Shield className="w-8 h-8 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 mb-3">Secure Processing</h3>
+                <p className="text-gray-600">Your PDF files are processed securely with encryption. No data is stored or shared with third parties.</p>
+              </div>
+              <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Download className="w-8 h-8 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 mb-3">Batch Download</h3>
+                <p className="text-gray-600">Download individual split files or get all files in a convenient ZIP archive for easy organization.</p>
+              </div>
+            </div>
+
+            {/* Related Tools Section */}
+            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-3xl p-12">
+              <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Related PDF Tools</h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Link to="/merge-pdf" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <File className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-800 mb-2">Merge PDF</h4>
+                  <p className="text-sm text-gray-600">Combine multiple PDFs into one</p>
+                </Link>
+                <Link to="/pdf-to-image" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Image className="w-6 h-6 text-indigo-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-800 mb-2">PDF to Image</h4>
+                  <p className="text-sm text-gray-600">Convert PDF pages to images</p>
+                </Link>
+                <Link to="/image-to-pdf" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                  <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Image className="w-6 h-6 text-pink-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-800 mb-2">Image to PDF</h4>
+                  <p className="text-sm text-gray-600">Convert images to PDF documents</p>
+                </Link>
+                <Link to="/pdf-editor" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Edit3 className="w-6 h-6 text-green-600" />
+                  </div>
+                  <h4 className="font-semibold text-gray-800 mb-2">PDF Editor</h4>
+                  <p className="text-sm text-gray-600">Edit PDF documents online</p>
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-
   );
-}
+};
+
 export default SplitPdf;

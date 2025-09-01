@@ -471,29 +471,71 @@ export const convertPdfToImageFile = async (req: Request, res: Response) => {
     
     console.log(`Converting PDF file: ${req.file.originalname}`);
     
-    outputPath = await convertPdfToImage(inputPath);
+    // Conversion settings from request body
+    const outputFormat = req.body.outputFormat || 'png';
+    const qualityScale = parseFloat(req.body.qualityScale) || 1.5;
+    const pageSelection = req.body.pageSelection || '';
+    
+    console.log('Conversion settings:', { outputFormat, qualityScale, pageSelection });
+    
+    outputPath = await convertPdfToImage(inputPath, { outputFormat, qualityScale, pageSelection });
+    
+    console.log('Conversion completed, output path:', outputPath);
+    
+    // Check if output file exists
+    if (!fs.existsSync(outputPath)) {
+      console.error('Output file does not exist:', outputPath);
+      return res.status(500).json({ error: 'Conversion completed but output file not found' });
+    }
+    
+    // Get file stats to check size
+    const stats = fs.statSync(outputPath);
+    console.log('Output file size:', stats.size, 'bytes');
+    
+    if (stats.size === 0) {
+      console.error('Output file is empty');
+      return res.status(500).json({ error: 'Conversion produced an empty file' });
+    }
     
     // ZIP dosyasını indir ve ardından temizle
     const zipFileName = path.basename(req.file.originalname, fileExtension) + '_images.zip';
     
-    res.download(outputPath, zipFileName, (err) => {
-      // İndirme tamamlandıktan sonra dosyaları temizle
+    // Set proper headers for file download
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', `attachment; filename="${zipFileName}"`);
+    res.setHeader('Content-Length', stats.size);
+    
+    // Use streams for better memory management
+    const fileStream = fs.createReadStream(outputPath);
+    
+    fileStream.on('error', (streamError) => {
+      console.error('File stream error:', streamError);
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Error reading converted file' });
+      }
+    });
+    
+    fileStream.on('end', () => {
+      console.log('File stream ended successfully');
+      // Clean up files after a delay
       setTimeout(() => {
         try {
-          if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
-          if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
+          if (fs.existsSync(inputPath)) {
+            fs.unlinkSync(inputPath);
+            console.log('Cleaned up input file');
+          }
+          if (fs.existsSync(outputPath)) {
+            fs.unlinkSync(outputPath);
+            console.log('Cleaned up output file');
+          }
         } catch (cleanupError) {
           console.error('Error cleaning up files:', cleanupError);
         }
-      }, 1000);
-      
-      if (err) {
-        console.error('Error downloading file:', err);
-        if (!res.headersSent) {
-          res.status(500).json({ error: 'Error downloading converted file' });
-        }
-      }
+      }, 2000);
     });
+    
+    // Pipe the file to response
+    fileStream.pipe(res);
     
   } catch (error) {
     console.error('PDF to Image conversion error:', error);

@@ -31,7 +31,7 @@ const Home: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10"></div>
                 <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
                 <div className="absolute bottom-0 right-0 w-72 h-72 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
-                <div className="container mx-auto px-4 relative z-10">
+                <div className="container mx-auto px-4 md:px-8 relative z-10 max-w-[1400px]">
                     <div className="text-center max-w-4xl mx-auto">
                         <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 font-extrabold drop-shadow-sm">{translations.home.title}</span>
@@ -74,7 +74,7 @@ const Home: React.FC = () => {
 
             {/* Most Popular PDF Tools */}
             <section className="py-20">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto px-4 md:px-8 max-w-[1400px]">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl font-bold text-gray-900 mb-4">{translations.home.sectionTitle}</h2>
                         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -233,7 +233,7 @@ const Home: React.FC = () => {
 
             {/* Features Section */}
             <section className="bg-gray-50 py-20">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto px-4 md:px-8 max-w-[1400px]">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl font-bold text-gray-900 mb-4">{translations.home.whyChooseTitle}</h2>
                         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -307,7 +307,7 @@ const Home: React.FC = () => {
 
             {/* CTA Section */}
             <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-20">
-                <div className="container mx-auto px-4 text-center">
+                <div className="container mx-auto px-4 md:px-8 text-center max-w-[1400px]">
                     <h2 className="text-4xl font-bold text-white mb-6">{translations.home.cta.title}</h2>
                     <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
                         {translations.home.cta.subtitle}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Upload, Image, Download, CheckCircle, AlertCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Upload, Image, Download, CheckCircle, AlertCircle, File, Edit3 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const ImageToPdf: React.FC = () => {
@@ -109,7 +110,7 @@ const ImageToPdf: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50">
-            <div className="container mx-auto px-4 py-16">
+            <div className="container mx-auto px-2 md:px-8 py-16 max-w-[1400px]">
                 {/* Header Section */}
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-full mb-6">
@@ -123,13 +124,13 @@ const ImageToPdf: React.FC = () => {
                     </p>
                 </div>
                 {/* Main Section: Upload + PDF Settings */}
-                <div className="flex flex-col md:flex-row gap-8 max-w-4xl mx-auto">
+                <div className="flex flex-col md:flex-row gap-12 max-w-[1200px] mx-auto">
                     {/* Upload Area */}
-                    <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-8">
+                    <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-12 w-full">
                         {/* Upload Area */}
-                        <div className="flex-1 bg-white rounded-2xl shadow-xl p-8 space-y-6">
+                        <div className="flex-1 bg-white rounded-3xl shadow-2xl p-10 space-y-8 min-w-[340px] md:min-w-[420px] lg:min-w-[520px] xl:min-w-[600px]">
                             <div
-                                className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${dragActive ? 'border-purple-400 bg-purple-50' : 'border-gray-300 hover:border-purple-400 hover:bg-gray-50'} ${files.length > 0 ? 'border-purple-400 bg-purple-50' : ''}`}
+                                className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${dragActive ? 'border-purple-400 bg-purple-50' : 'border-gray-300 hover:border-purple-400 hover:bg-gray-50'} ${files.length > 0 ? 'border-purple-400 bg-purple-50' : ''}`}
                                 onDrop={handleDrop}
                                 onDragOver={handleDragOver}
                                 onDragLeave={handleDragLeave}
@@ -144,15 +145,15 @@ const ImageToPdf: React.FC = () => {
                                 {files.length === 0 ? (
                                     <>
                                         <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                                        <h3 className="text-lg font-semibold text-gray-700 mb-2">Upload Images</h3>
-                                        <p className="text-gray-500 mb-4">Drag & drop images here or click to select files</p>
-                                        <p className="text-sm text-gray-400">Supported formats: JPG, PNG, WEBP, etc.</p>
+                                        <h3 className="text-xl font-bold text-gray-700 mb-2">Upload Images</h3>
+                                        <p className="text-gray-500 mb-4 text-lg">Drag & drop images here or click to select files</p>
+                                        <p className="text-base text-gray-400">Supported formats: JPG, PNG, WEBP, etc.</p>
                                     </>
                                 ) : (
                                     <>
                                         <CheckCircle className="w-12 h-12 text-purple-500 mx-auto mb-4" />
-                                        <h3 className="text-lg font-semibold text-gray-700 mb-2">Selected Images ({files.length})</h3>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
+                                        <h3 className="text-xl font-bold text-gray-700 mb-2">Selected Images ({files.length})</h3>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                                             {files.map((file, index) => (
                                                 <div key={index} className="relative bg-gray-100 rounded-lg p-2 flex flex-col items-center">
                                                     {/* Önizleme */}
@@ -180,7 +181,7 @@ const ImageToPdf: React.FC = () => {
                             )}
                         </div>
                         {/* PDF Settings Panel */}
-                        <div className="w-full md:w-80 bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6 h-fit">
+                        <div className="w-full md:w-96 bg-white rounded-3xl shadow-2xl p-10 flex flex-col gap-8 h-fit min-w-[280px]">
                             <div className="font-bold text-lg text-purple-700 mb-2">PDF Settings</div>
                             <div className="flex flex-col gap-4">
                                 <div>
@@ -212,28 +213,74 @@ const ImageToPdf: React.FC = () => {
                         </div>
                     </form>
                 </div>
+                
                 {/* Features Section */}
-                <div className="mt-12 grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                    <div className="text-center p-6">
-                        <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Image className="w-6 h-6 text-purple-600" />
-                        </div>
-                        <h3 className="font-semibold text-gray-800 mb-2">Fast Conversion</h3>
-                        <p className="text-gray-600 text-sm">Convert images to PDF instantly with high performance.</p>
+                <div className="mt-20 max-w-7xl mx-auto">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Image to PDF Converter?</h2>
+                        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                            Transform your images into professional PDF documents with our advanced conversion tool. 
+                            Perfect for creating portfolios, presentations, and documentation.
+                        </p>
                     </div>
-                    <div className="text-center p-6">
-                        <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <CheckCircle className="w-6 h-6 text-purple-600" />
+                    
+                    <div className="grid md:grid-cols-3 gap-8 mb-16">
+                        <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <Image className="w-8 h-8 text-purple-600" />
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-800 mb-3">Multiple Format Support</h3>
+                            <p className="text-gray-600">Supports JPG, PNG, WEBP, GIF, BMP, and many other image formats for maximum compatibility.</p>
                         </div>
-                        <h3 className="font-semibold text-gray-800 mb-2">Secure Process</h3>
-                        <p className="text-gray-600 text-sm">Your files are processed securely and never shared.</p>
+                        <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <CheckCircle className="w-8 h-8 text-purple-600" />
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-800 mb-3">Advanced Settings</h3>
+                            <p className="text-gray-600">Customize page size, orientation, image quality, and margins to create the perfect PDF document.</p>
+                        </div>
+                        <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <Download className="w-8 h-8 text-purple-600" />
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-800 mb-3">Instant Download</h3>
+                            <p className="text-gray-600">Get your converted PDF immediately after processing. No waiting, no registration required.</p>
+                        </div>
                     </div>
-                    <div className="text-center p-6">
-                        <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Download className="w-6 h-6 text-purple-600" />
+
+                    {/* Related Tools Section */}
+                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-12">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Related PDF Tools</h3>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <Link to="/pdf-to-image" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                                <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Image className="w-6 h-6 text-indigo-600" />
+                                </div>
+                                <h4 className="font-semibold text-gray-800 mb-2">PDF to Image</h4>
+                                <p className="text-sm text-gray-600">Convert PDF pages to high-quality images</p>
+                            </Link>
+                            <Link to="/merge-pdf" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <File className="w-6 h-6 text-purple-600" />
+                                </div>
+                                <h4 className="font-semibold text-gray-800 mb-2">Merge PDF</h4>
+                                <p className="text-sm text-gray-600">Combine multiple PDFs into one document</p>
+                            </Link>
+                            <Link to="/split-pdf" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                                <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <File className="w-6 h-6 text-pink-600" />
+                                </div>
+                                <h4 className="font-semibold text-gray-800 mb-2">Split PDF</h4>
+                                <p className="text-sm text-gray-600">Extract specific pages from PDF files</p>
+                            </Link>
+                            <Link to="/pdf-editor" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Edit3 className="w-6 h-6 text-green-600" />
+                                </div>
+                                <h4 className="font-semibold text-gray-800 mb-2">PDF Editor</h4>
+                                <p className="text-sm text-gray-600">Edit and modify PDF documents online</p>
+                            </Link>
                         </div>
-                        <h3 className="font-semibold text-gray-800 mb-2">Responsive Design</h3>
-                        <p className="text-gray-600 text-sm">Works perfectly on all devices and screen sizes.</p>
                     </div>
                 </div>
             </div>

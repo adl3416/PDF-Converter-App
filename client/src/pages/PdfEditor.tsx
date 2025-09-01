@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
+import { Link } from 'react-router-dom';
 import { 
     Upload, 
     Download, 
@@ -18,7 +19,11 @@ import {
     FileText,
     Image as ImageIcon,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    Shield,
+    Zap,
+    File,
+    Divide
 } from 'lucide-react';
 
 // PDF.js worker ayarı - CDN kullan
@@ -143,11 +148,13 @@ const PdfEditor: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            {/* Header */}
-            <div className="bg-white border-b border-gray-200 px-6 py-4">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold text-gray-900">PDF Editor</h1>
+        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
+            <div className="container mx-auto px-2 md:px-8 py-16 max-w-[1400px]">
+                <div className="max-w-[1200px] mx-auto">
+                    {/* Header */}
+                    <div className="bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl">
+                        <div className="flex items-center justify-between">
+                            <h1 className="text-2xl font-bold text-gray-900">PDF Editor</h1>
                     
                     {file && (
                         <div className="flex items-center space-x-4">
@@ -428,6 +435,76 @@ const PdfEditor: React.FC = () => {
                             </div>
                         </div>
                     )}
+                    
+                    {/* Features Section */}
+                    <div className="mt-20 max-w-[1200px] mx-auto">
+                        <div className="text-center mb-12">
+                            <h2 className="text-3xl font-bold text-gray-900 mb-4">Advanced PDF Editing Features</h2>
+                            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                                Edit your PDF documents with professional-grade tools. Add text, shapes, annotations, and more. 
+                                Perfect for form filling, document review, and content enhancement.
+                            </p>
+                        </div>
+                        
+                        <div className="grid md:grid-cols-3 gap-8 mb-16">
+                            <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <Type className="w-8 h-8 text-green-600" />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-800 mb-3">Text Editing</h3>
+                                <p className="text-gray-600">Add custom text anywhere on your PDF. Choose fonts, sizes, and colors to match your document style.</p>
+                            </div>
+                            <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <Square className="w-8 h-8 text-green-600" />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-800 mb-3">Shape Tools</h3>
+                                <p className="text-gray-600">Draw rectangles, circles, and other shapes. Perfect for highlighting areas or creating visual elements.</p>
+                            </div>
+                            <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <RotateCw className="w-8 h-8 text-green-600" />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-800 mb-3">Page Controls</h3>
+                                <p className="text-gray-600">Rotate pages, zoom in/out for precise editing, and navigate through multi-page documents easily.</p>
+                            </div>
+                        </div>
+
+                        {/* Related Tools Section */}
+                        <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl p-12">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">More PDF Tools</h3>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <Link to="/split-pdf" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                                    <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <Divide className="w-6 h-6 text-purple-600" />
+                                    </div>
+                                    <h4 className="font-semibold text-gray-800 mb-2">Split PDF</h4>
+                                    <p className="text-sm text-gray-600">Extract pages from PDF files</p>
+                                </Link>
+                                <Link to="/merge-pdf" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                                    <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <File className="w-6 h-6 text-purple-600" />
+                                    </div>
+                                    <h4 className="font-semibold text-gray-800 mb-2">Merge PDF</h4>
+                                    <p className="text-sm text-gray-600">Combine multiple PDFs into one</p>
+                                </Link>
+                                <Link to="/pdf-to-image" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                                    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <ImageIcon className="w-6 h-6 text-indigo-600" />
+                                    </div>
+                                    <h4 className="font-semibold text-gray-800 mb-2">PDF to Image</h4>
+                                    <p className="text-sm text-gray-600">Convert PDF pages to images</p>
+                                </Link>
+                                <Link to="/image-to-pdf" className="bg-white rounded-xl p-6 hover:shadow-lg transition-all duration-300 text-center">
+                                    <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <ImageIcon className="w-6 h-6 text-pink-600" />
+                                    </div>
+                                    <h4 className="font-semibold text-gray-800 mb-2">Image to PDF</h4>
+                                    <p className="text-sm text-gray-600">Convert images to PDF documents</p>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
